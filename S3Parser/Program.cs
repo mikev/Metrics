@@ -66,6 +66,9 @@ else
         var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
         Console.WriteLine(mData);
 
+        //HashSet<int> FreqSet= new HashSet<int>();
+        //HashSet<string>
+
         var row = PopulateParquetRow(message);
         rowWriter.WriteRow(row);
         var rows2 = rowWriter.FileMetaData?.NumRows;
@@ -78,26 +81,6 @@ else
     rowWriter.Close();
 }
 
-#if false
-message packet_router_packet_report_v1
-{
-    uint64 gateway_timestamp_ms = 1;
-    uint64 oui = 2;
-    uint64 net_id = 3;
-    // signal strength in dBm
-    sint32 rssi = 4;
-    // Frequency in hz
-    uint32 frequency = 5;
-  float snr = 6;
-    data_rate datarate = 7;
-    region region = 8;
-    bytes gateway = 9;
-    // Hash of `payload` within `message packet`
-    bytes payload_hash = 10;
-    uint32 payload_size = 11;
-}
-#endif
-
 static ParquetReport PopulateParquetRow(byte[]? message)
 {
     var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
@@ -105,16 +88,16 @@ static ParquetReport PopulateParquetRow(byte[]? message)
     var parquetRow = new ParquetReport
     {
         GatewayTimestamp = (long)mData.GatewayTimestampMs,
-        OUI = (long)mData.Oui,
-        NetID = (long)mData.NetId,
+        OUI = mData.Oui,
+        NetID = mData.NetId,
         RSSI = mData.Rssi,
-        Frequency = (int)mData.Frequency,
+        Frequency = mData.Frequency,
         SNR = mData.Snr,
         DataRate = (int)mData.Datarate,
-        Region = "EU868",
-        Gateway = "Gateway",
-        PayloadHash = "123",
-        PayloadSize = (int)mData.PayloadSize
+        Region = mData.Region.ToString(),
+        Gateway = mData.Gateway.ToBase64(),
+        PayloadHash = mData.Gateway.ToBase64(),
+        PayloadSize = mData.PayloadSize
     };
 
     return parquetRow;
@@ -158,43 +141,3 @@ static byte[] Decompress(byte[] gzip)
     }
 }
 
-//#region Designer generated code
-//#pragma warning disable CS0612, CS0618, CS1591, CS3021, IDE0079, IDE1006, RCS1036, RCS1057, RCS1085, RCS1192
-//[global::ProtoBuf.ProtoContract(Name = @"packet_router_packet_report_v1")]
-//public partial class PacketRouterPacketReportV1 : global::ProtoBuf.IExtensible
-//{
-//    private global::ProtoBuf.IExtension __pbn__extensionData;
-//    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-//        => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
-
-//    [global::ProtoBuf.ProtoMember(1, Name = @"gateway_timestamp_ms")]
-//    public ulong GatewayTimestampMs { get; set; }
-
-//    [global::ProtoBuf.ProtoMember(2, Name = @"oui")]
-//    public ulong Oui { get; set; }
-
-//    [global::ProtoBuf.ProtoMember(3, Name = @"net_id")]
-//    public ulong NetId { get; set; }
-
-//    [global::ProtoBuf.ProtoMember(4, Name = @"rssi", DataFormat = global::ProtoBuf.DataFormat.ZigZag)]
-//    public int Rssi { get; set; }
-
-//    [global::ProtoBuf.ProtoMember(5, Name = @"frequency")]
-//    public uint Frequency { get; set; }
-
-//    [global::ProtoBuf.ProtoMember(6, Name = @"snr")]
-//    public float Snr { get; set; }
-
-//    [global::ProtoBuf.ProtoMember(9, Name = @"gateway")]
-//    public byte[] Gateway { get; set; }
-
-//    [global::ProtoBuf.ProtoMember(10, Name = @"payload_hash")]
-//    public byte[] PayloadHash { get; set; }
-
-//    [global::ProtoBuf.ProtoMember(11, Name = @"payload_size")]
-//    public uint PayloadSize { get; set; }
-
-//}
-
-//#pragma warning restore CS0612, CS0618, CS1591, CS3021, IDE0079, IDE1006, RCS1036, RCS1057, RCS1085, RCS1192
-//#endregion

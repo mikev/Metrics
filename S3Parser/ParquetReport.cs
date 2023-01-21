@@ -8,16 +8,16 @@ struct ParquetReport
     public long GatewayTimestamp;
 
     [MapToColumn("OUI")]
-    public long OUI;
+    public ulong OUI;
 
     [MapToColumn("NetID")]
-    public long NetID;
+    public ulong NetID;
 
     [MapToColumn("RSSI")]
     public int RSSI;
 
     [MapToColumn("Frequency")]
-    public int Frequency;
+    public uint Frequency;
 
     [MapToColumn("SNR")]
     public float SNR;
@@ -35,5 +35,5 @@ struct ParquetReport
     public string PayloadHash;
 
     [MapToColumn("PayloadSize")]
-    public int PayloadSize;
+    public uint PayloadSize;
 };
