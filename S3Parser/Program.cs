@@ -1,14 +1,46 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Google.Protobuf;
 using Helium.PacketRouter;
-using ParquetSharp.IO;
-using ParquetSharp;
 using ParquetSharp.RowOriented;
-using System;
 using System.IO.Compression;
 using System.Collections.Immutable;
 
+// To interact with Amazon S3.
+using Amazon.S3;
+using Amazon.Runtime;
+using Helium.PocLora;
+
 Console.WriteLine("Hello, World!");
+
+
+// Create an S3 client object.
+var s3Client = new AmazonS3Client();
+var listResponse = await s3Client.ListBucketsAsync();
+foreach (var b in listResponse.Buckets)
+{
+    Console.WriteLine($"Bucket {b.BucketName}");
+}
+
+var getObjectResult = await s3Client.GetObjectAsync("foundation-iot-verified-rewards", "gateway_reward_share.1676167324554.gz");
+using var goStream = getObjectResult.ResponseStream;
+var unzip = DecompressSteam(goStream);
+
+if (unzip.Length < 5)
+    return;
+
+var bytes_4_a = unzip.Take(4).ToArray();
+if (BitConverter.IsLittleEndian)
+    Array.Reverse(bytes_4_a);
+int m_size_a = BitConverter.ToInt32(bytes_4_a, 0);
+Console.WriteLine($"m_size = {m_size_a}");
+
+var mLists = ParseRawData(unzip);
+
+foreach (var item in mLists)
+{
+    var gdata = gateway_reward_share.Parser.ParseFrom(item);
+    Console.WriteLine(gdata);
+}
 
 //string path = @"c:\temp\MyTest.txt";
 string path = @"c:\temp\packetreport.1666990455151.gz";
@@ -50,6 +82,11 @@ else
         rowWriter.StartNewRowGroup();
     }
 
+    HashSet<uint> freqSet = new HashSet<uint>();
+    HashSet<string> gatewaySet = new HashSet<string>();
+    HashSet<string> regionSet = new HashSet<string>();
+    HashSet<int> dataRateSet = new HashSet<int>();
+
     do
     {
         if (data.Length < 5)
@@ -66,11 +103,15 @@ else
         var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
         Console.WriteLine(mData);
 
-        //HashSet<int> FreqSet= new HashSet<int>();
-        //HashSet<string>
-
         var row = PopulateParquetRow(message);
+
+        freqSet.Add(row.Frequency);
+        gatewaySet.Add(row.Gateway);
+        regionSet.Add(row.Region);
+        dataRateSet.Add(row.DataRate);
+
         rowWriter.WriteRow(row);
+
         var rows2 = rowWriter.FileMetaData?.NumRows;
         Console.WriteLine($"rows = {rows2}");
 
@@ -79,6 +120,31 @@ else
     } while (true);
 
     rowWriter.Close();
+}
+
+static List<byte[]> ParseRawData(byte[] data)
+{
+    List<byte[]> list = new List<byte[]>();
+    do
+    {
+        if (data.Length < 5)
+            break;
+
+        var bytes_4 = data.Take(4).ToArray();
+        if (BitConverter.IsLittleEndian)
+            Array.Reverse(bytes_4);
+        int m_size = BitConverter.ToInt32(bytes_4, 0);
+        //Console.WriteLine($"m_size = {m_size}");
+
+        var message = data.Skip(4).ToArray().Take(m_size).ToArray();
+
+        list.Add(message);
+
+        data = data.Skip(4 + m_size).ToArray();
+
+    } while (true);
+
+    return list;
 }
 
 static ParquetReport PopulateParquetRow(byte[]? message)
@@ -141,3 +207,28 @@ static byte[] Decompress(byte[] gzip)
     }
 }
 
+
+static byte[] DecompressSteam(Stream gzip)
+{
+    // Create a GZIP stream with decompression mode.
+    // ... Then create a buffer and write into while reading from the GZIP stream.
+    using (GZipStream stream = new GZipStream(gzip, CompressionMode.Decompress))
+    {
+        const int size = 4096;
+        byte[] buffer = new byte[size];
+        using (MemoryStream memory = new MemoryStream())
+        {
+            int count = 0;
+            do
+            {
+                count = stream.Read(buffer, 0, size);
+                if (count > 0)
+                {
+                    memory.Write(buffer, 0, count);
+                }
+            }
+            while (count > 0);
+            return memory.ToArray();
+        }
+    }
+}
