@@ -125,22 +125,27 @@ else
 static List<byte[]> ParseRawData(byte[] data)
 {
     List<byte[]> list = new List<byte[]>();
+    var size_bytes = new byte[4];
+    int offset = 0;
     do
     {
-        if (data.Length < 5)
+        if (offset > (data.Length - 5))
             break;
 
-        var bytes_4 = data.Take(4).ToArray();
+        Array.Copy(data, offset, size_bytes, 0, 4);
         if (BitConverter.IsLittleEndian)
-            Array.Reverse(bytes_4);
-        int m_size = BitConverter.ToInt32(bytes_4, 0);
-        //Console.WriteLine($"m_size = {m_size}");
+            Array.Reverse(size_bytes);
+        int m_size = BitConverter.ToInt32(size_bytes, 0);
 
-        var message = data.Skip(4).ToArray().Take(m_size).ToArray();
+        //var message = data.Skip(4).ToArray().Take(m_size).ToArray();
+        offset += 4;
+        var message = new byte[m_size];
+        Array.Copy(data, offset, message, 0, m_size);
 
         list.Add(message);
 
-        data = data.Skip(4 + m_size).ToArray();
+        //data = data.Skip(4 + m_size).ToArray();
+        offset += m_size;
 
     } while (true);
 
