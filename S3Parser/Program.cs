@@ -9,6 +9,7 @@ using System.Collections.Immutable;
 using Amazon.S3;
 using Amazon.Runtime;
 using Helium.PocLora;
+using Amazon.S3.Model;
 
 Console.WriteLine("Hello, World!");
 
@@ -28,11 +29,10 @@ var unzip = DecompressSteam(goStream);
 if (unzip.Length < 5)
     return;
 
-var bytes_4_a = unzip.Take(4).ToArray();
-if (BitConverter.IsLittleEndian)
-    Array.Reverse(bytes_4_a);
-int m_size_a = BitConverter.ToInt32(bytes_4_a, 0);
+int m_size_a = MessageSize(unzip, 0);
 Console.WriteLine($"m_size = {m_size_a}");
+
+await BucketListAsync(s3Client, "foundation-iot-verified-rewards");
 
 var mLists = ParseRawData(unzip);
 
@@ -120,6 +120,41 @@ else
     } while (true);
 
     rowWriter.Close();
+}
+
+/// <summary>
+/// This method uses a paginator to retrieve the list of objects in an
+/// an Amazon S3 bucket.
+/// </summary>
+/// <param name="client">An Amazon S3 client object.</param>
+/// <param name="bucketName">The name of the S3 bucket whose objects
+/// you want to list.</param>
+static async Task BucketListAsync(IAmazonS3 client, string bucketName)
+{
+    var listObjectsV2Paginator = client.Paginators.ListObjectsV2(new ListObjectsV2Request
+    {
+        BucketName = bucketName
+    });
+
+    await foreach (var response in listObjectsV2Paginator.Responses)
+    {
+        Console.WriteLine($"HttpStatusCode: {response.HttpStatusCode}");
+        Console.WriteLine($"Number of Keys: {response.KeyCount}");
+        foreach (var entry in response.S3Objects)
+        {
+            Console.WriteLine($"Key = {entry.Key} Size = {entry.Size}");
+        }
+    }
+}
+
+static int MessageSize(byte[] data, int offset)
+{
+    var size_bytes = new byte[4];
+    Array.Copy(data, offset, size_bytes, 0, 4);
+    if (BitConverter.IsLittleEndian)
+        Array.Reverse(size_bytes);
+    int size = BitConverter.ToInt32(size_bytes, 0);
+    return size;
 }
 
 static List<byte[]> ParseRawData(byte[] data)
