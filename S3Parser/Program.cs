@@ -31,14 +31,22 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
     throw new Exception($"{ingestBucket} not found");
 }
 
-
 string startAfter = "packetreport.1681334821566";
 
 var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 await foreach( var item in list)
 {
-    Console.WriteLine($"key {item}");
+    Console.WriteLine($"report: {item}");
     var rawBytes = await DecompressS3Object(s3Client, ingestBucket, item);
+
+    var messageList = ExtractMessageList(rawBytes);
+    foreach( var message in messageList )
+    {
+        var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
+        var date = (new DateTime(2023, 3, 1)).AddMilliseconds(mData.GatewayTimestampMs);
+        Console.WriteLine(date);
+       // Console.WriteLine(mData);
+    }
 }
 
 
@@ -82,7 +90,7 @@ Console.WriteLine($"m_size = {m_size_a}");
 
 //await BucketListAsync(s3Client, "foundation-iot-verified-rewards");
 
-var mLists = ParseRawData(unzip);
+var mLists = ExtractMessageList(unzip);
 
 List<gateway_reward_share> rewardList = new List<gateway_reward_share>();
 foreach (var item in mLists)
@@ -141,7 +149,7 @@ else
     string parquetFileName = "packet_report.parquet";
     Console.WriteLine($"File {path} Found");
     byte[] file = File.ReadAllBytes(path);
-    byte[] data = Decompress(file);
+    byte[] data = DecompressGzipBytes(file);
     Console.WriteLine(file.Length);
     Console.WriteLine(data.Length);
 
@@ -243,7 +251,7 @@ static int MessageSize(byte[] data, int offset)
     return size;
 }
 
-static List<byte[]> ParseRawData(byte[] data)
+static List<byte[]> ExtractMessageList(byte[] data)
 {
     List<byte[]> list = new List<byte[]>();
     var size_bytes = new byte[4];
@@ -324,7 +332,7 @@ static async Task<byte[]> DecompressS3Object(AmazonS3Client s3Client, string buc
     return unzip;
 }
 
-static byte[] Decompress(byte[] gzip)
+static byte[] DecompressGzipBytes(byte[] gzip)
 {
     // Create a GZIP stream with decompression mode.
     // ... Then create a buffer and write into while reading from the GZIP stream.
@@ -381,7 +389,6 @@ static async IAsyncEnumerable<string> ListBucketsAsync(IAmazonS3 s3Client)
     foreach (var b in listResponse.Buckets)
     {
         yield return b.BucketName;
-        //Console.WriteLine($"Bucket {b.BucketName}");
     }
 }
 
