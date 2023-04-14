@@ -12,12 +12,20 @@ using Helium.PocLora;
 using Amazon.S3.Model;
 using static System.Net.Mime.MediaTypeNames;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 Console.WriteLine("Hello, World!");
 
 
 // Create an S3 client object.
 var s3Client = new AmazonS3Client();
+
+var list = ListBucketContentsAsync(s3Client, "foundation-iot-packet-ingest", "packetreport.1681334821566");
+await foreach( var item in list)
+{
+    Console.WriteLine($"key {item}");
+}
+
 var listResponse = await s3Client.ListBucketsAsync();
 foreach (var b in listResponse.Buckets)
 {
@@ -25,6 +33,17 @@ foreach (var b in listResponse.Buckets)
 }
 
 var rewardShareFile = "gateway_reward_share.1676167324554.gz";
+
+ListObjectsV2Request v2Request = new ListObjectsV2Request
+{
+    BucketName = "foundation_iot_packet_ingest",
+    StartAfter = "packetreport.1681334821566.gz"
+};
+
+//for (s3Client.ListObjectsV2Async(v2Request))
+//{
+
+//};
 
 var getObjectResult = await s3Client.GetObjectAsync("foundation-iot-verified-rewards", rewardShareFile);
 using var goStream = getObjectResult.ResponseStream;
@@ -327,4 +346,57 @@ static byte[] DecompressSteam(Stream gzip)
             return memory.ToArray();
         }
     }
+}
+
+/// <summary>
+/// Shows how to list the objects in an Amazon S3 bucket.
+/// </summary>
+/// <param name="client">An initialized Amazon S3 client object.</param>
+/// <param name="bucketName">The name of the bucket for which to list
+/// the contents.</param>
+/// <returns>A boolean value indicating the success or failure of the
+/// copy operation.</returns>
+static async IAsyncEnumerable<string> ListBucketContentsAsync(IAmazonS3 client, string bucketName, string startAfter)
+{
+    //try
+    //{
+        var request = new ListObjectsV2Request
+        {
+            BucketName = bucketName,
+            StartAfter = startAfter,
+            MaxKeys = 5,
+        };
+
+        Console.WriteLine("--------------------------------------");
+        Console.WriteLine($"Listing the contents of {bucketName}:");
+        Console.WriteLine("--------------------------------------");
+
+        ListObjectsV2Response response;
+
+        do
+        {
+            response = await client.ListObjectsV2Async(request);
+
+            var s3Obj = response.S3Objects;
+            foreach( var item in s3Obj)
+            {
+                var key = item.Key;
+                yield return key;
+            };
+                //.ForEach(obj => yieldAwaitable obj.key);
+                //.ForEach(obj => Console.WriteLine($"{obj.Key,-35}{obj.LastModified.ToShortDateString(),10}{obj.Size,10}"));
+
+            // If the response is truncated, set the request ContinuationToken
+            // from the NextContinuationToken property of the response.
+            request.ContinuationToken = response.NextContinuationToken;
+        }
+        while (response.IsTruncated);
+
+        //return true;
+    //}
+    //catch (AmazonS3Exception ex)
+    //{
+        //Console.WriteLine($"Error encountered on server. Message:'{ex.Message}' getting list of objects.");
+        //return false;
+    //}
 }

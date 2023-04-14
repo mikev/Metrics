@@ -20,6 +20,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="ParquetSharp" Version="8.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.96" />
 	<Protobuf Include="data_rate.proto" />
 	<Protobuf Include="poc_lora.proto" />
 	<Protobuf Include="region.proto" />
