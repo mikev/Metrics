@@ -16,21 +16,32 @@ using System.Runtime.CompilerServices;
 
 Console.WriteLine("Hello, World!");
 
-
 // Create an S3 client object.
 var s3Client = new AmazonS3Client();
 
-var list = ListBucketContentsAsync(s3Client, "foundation-iot-packet-ingest", "packetreport.1681334821566");
+var bucketList = ListBucketsAsync(s3Client);
+await foreach( var name in bucketList )
+{
+    Console.WriteLine($"Bucket {name}");
+}
+
+string ingestBucket = "foundation-iot-packet-ingest";
+if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket ))
+{
+    throw new Exception($"{ingestBucket} not found");
+}
+
+
+string startAfter = "packetreport.1681334821566";
+
+var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 await foreach( var item in list)
 {
     Console.WriteLine($"key {item}");
+    var rawBytes = await DecompressS3Object(s3Client, ingestBucket, item);
 }
 
-var listResponse = await s3Client.ListBucketsAsync();
-foreach (var b in listResponse.Buckets)
-{
-    Console.WriteLine($"Bucket {b.BucketName}");
-}
+
 
 var rewardShareFile = "gateway_reward_share.1676167324554.gz";
 
@@ -297,6 +308,22 @@ static void PrintMessage(IMessage message)
     }
 }
 
+static async Task<byte[]> DecompressS3Object(AmazonS3Client s3Client, string bucketName, string keyName)
+{
+    var getObjectResult = await s3Client.GetObjectAsync(bucketName, keyName);
+    using var goStream = getObjectResult.ResponseStream;
+
+    using MemoryStream memoryStream = new MemoryStream();
+
+    goStream.CopyTo(memoryStream);
+
+    memoryStream.Position = 0;
+    memoryStream.Seek(0, SeekOrigin.Begin);
+
+    var unzip = DecompressSteam(memoryStream);
+    return unzip;
+}
+
 static byte[] Decompress(byte[] gzip)
 {
     // Create a GZIP stream with decompression mode.
@@ -345,6 +372,16 @@ static byte[] DecompressSteam(Stream gzip)
             while (count > 0);
             return memory.ToArray();
         }
+    }
+}
+
+static async IAsyncEnumerable<string> ListBucketsAsync(IAmazonS3 s3Client)
+{
+    var listResponse = await s3Client.ListBucketsAsync();
+    foreach (var b in listResponse.Buckets)
+    {
+        yield return b.BucketName;
+        //Console.WriteLine($"Bucket {b.BucketName}");
     }
 }
 
