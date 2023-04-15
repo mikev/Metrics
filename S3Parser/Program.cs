@@ -33,20 +33,39 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
 
 string startAfter = "packetreport.1681334821566";
 
+HashSet<ByteString> hashSet = new HashSet<ByteString>();
+
 var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 await foreach( var item in list)
 {
-    Console.WriteLine($"report: {item}");
+    //Console.WriteLine($"report: {item}");
+    var timestamp = await S3ObjectTimeStamp(s3Client, ingestBucket, item);
     var rawBytes = await DecompressS3Object(s3Client, ingestBucket, item);
+    int messageCount = 0;
+    int dupeCount = 0;
+    UInt64 totalBytes = 0;
 
     var messageList = ExtractMessageList(rawBytes);
     foreach( var message in messageList )
     {
         var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
-        var date = (new DateTime(2023, 3, 1)).AddMilliseconds(mData.GatewayTimestampMs);
-        Console.WriteLine(date);
-       // Console.WriteLine(mData);
+        //Console.WriteLine(mData.GatewayTimestampMs);
+        var hash = mData.PayloadHash;
+        if (hashSet.Contains(hash))
+        {
+            dupeCount++;
+            continue;
+        }
+
+        hashSet.Add(hash);
+        messageCount++;
+        totalBytes += mData.PayloadSize;
+        //var date = (new DateTime(2023, 3, 1)).AddMilliseconds(mData.GatewayTimestampMs);
+        //Console.WriteLine(date);
+       //Console.WriteLine($"{item} ");
     }
+
+    Console.WriteLine($"{item} ts={timestamp} count={messageCount} dupe={dupeCount} total_bytes={totalBytes}");
 }
 
 
@@ -314,6 +333,12 @@ static void PrintMessage(IMessage message)
             field.Name,
             field.Accessor.GetValue(message));
     }
+}
+
+static async Task<DateTime> S3ObjectTimeStamp(AmazonS3Client s3Client, string bucketName, string keyName)
+{
+    var getObjectResult = await s3Client.GetObjectAsync(bucketName, keyName);
+    return getObjectResult.LastModified;
 }
 
 static async Task<byte[]> DecompressS3Object(AmazonS3Client s3Client, string bucketName, string keyName)
