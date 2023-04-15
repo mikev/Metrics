@@ -36,14 +36,20 @@ string startAfter = "packetreport.1681334821566";
 HashSet<ByteString> hashSet = new HashSet<ByteString>();
 var prevTimestamp = DateTime.MinValue;
 
+int currCount = 0;
+int currDupeCount = 0;
+UInt64 byteCount = 0;
+
 var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 await foreach( var item in list)
 {
+
     //Console.WriteLine($"report: {item}");
     var timestamp = await S3ObjectTimeStamp(s3Client, ingestBucket, item);
     if (TimeBoundaryTrigger(prevTimestamp, timestamp))
     {
         Console.WriteLine($"Time trigger {prevTimestamp} {timestamp}");
+        Console.WriteLine($"{item} count={currCount} dupes={currDupeCount} bytes={byteCount}");
     }
 
     if (hashSet.Count > 5000)
@@ -52,7 +58,11 @@ await foreach( var item in list)
     }
 
     var reportStats = await GetReportStatsAsync(s3Client, hashSet, ingestBucket, item);
-    Console.WriteLine($"{item} {reportStats}");
+    //Console.WriteLine($"{item} {reportStats}");
+
+    currCount += reportStats.Item1;
+    currDupeCount += reportStats.Item2;
+    byteCount += reportStats.Item3;
 
     prevTimestamp = timestamp;
 }
@@ -352,8 +362,13 @@ static async Task<(int, int, UInt64)> GetReportStatsAsync(AmazonS3Client s3Clien
 
 static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
 {
-    if (prior.Minute != later.Minute)
-        return true;
+    if (later.Minute % 5 == 0)
+    {
+        if (prior.Minute != later.Minute)
+            return true;
+        else
+            return false;
+    }
     else
         return false;
 }
