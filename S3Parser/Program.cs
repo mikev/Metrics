@@ -32,10 +32,7 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
     throw new Exception($"{ingestBucket} not found");
 }
 
-var startDate = DateTime.Parse("2023-4-12 2:27:01 PM");
-
-DateTimeOffset dto = new DateTimeOffset(startDate.ToUniversalTime());
-var startString = dto.ToUnixTimeSeconds().ToString();
+var startString = ToUnixEpochTime("2023-4-12 2:27:01 PM");
 
 string startAfterExpected = "packetreport.1681334821566";
 string startAfter = $"packetreport.{startString}";
@@ -91,24 +88,16 @@ ListObjectsV2Request v2Request = new ListObjectsV2Request
 
 var getObjectResult = await s3Client.GetObjectAsync("foundation-iot-verified-rewards", rewardShareFile);
 using var goStream = getObjectResult.ResponseStream;
+WriteStreamToFile(goStream, @"c:\temp\gateway_reward_share.1676167324554.gz");
 
-string tempFile = @"c:\temp\gateway_reward_share.1676167324554.gz";
-using MemoryStream memoryStream = new MemoryStream();
+var getObjectResult2 = await s3Client.GetObjectAsync("foundation-iot-verified-rewards", rewardShareFile);
 
-goStream.CopyTo(memoryStream);
-
-memoryStream.Position = 0;
-using Stream streamToWriteTo = File.Open(tempFile, FileMode.Create);
-await memoryStream.CopyToAsync(streamToWriteTo);
-memoryStream.Seek(0, SeekOrigin.Begin);
-
-var unzip = DecompressSteam(memoryStream);
+using var goStream2 = getObjectResult2.ResponseStream;
+var unzip = DecompressSteam(goStream2);
 if (unzip.Length < 5)
     return;
 
-using MemoryStream unzipStream = new MemoryStream(unzip);
-using Stream streamToWriteTo2 = File.Open(@"c:\temp\gateway_reward_share.1676167324554", FileMode.Create);
-await unzipStream.CopyToAsync(streamToWriteTo2);
+WriteBytesToFile(unzip, @"c:\temp\gateway_reward_share.1676167324554");
 
 int m_size_a = MessageSize(unzip, 0);
 Console.WriteLine($"m_size = {m_size_a}");
@@ -135,9 +124,7 @@ var rewardListProto = new gateway_reward_shares();
 rewardListProto.RewardShare.Add(rewardList);
 var rewardProtoBytes = rewardListProto.ToByteArray();
 
-using MemoryStream byteStream = new MemoryStream(rewardProtoBytes);
-using Stream streamToWriteTo3 = File.Open(@"c:\temp\gateway_reward_share.1676167324554.proto", FileMode.Create);
-await byteStream.CopyToAsync(streamToWriteTo3);
+WriteBytesToFile(rewardProtoBytes, @"c:\temp\gateway_reward_share.1676167324554.proto");
 
 string parquetFileName2 = @"c:\temp\gateway_reward_share.1676167324554.parquet";
 using var rowWriter2 = ParquetFile.CreateRowWriter<ParquetGatewayReward>(parquetFileName2);
@@ -241,6 +228,32 @@ else
     rowWriter.Close();
 }
 
+static async void WriteBytesToFile(byte[] bytes, string fileName)
+{
+    using MemoryStream byteStream = new MemoryStream(bytes);
+    using Stream streamToWriteTo = File.Open(fileName, FileMode.Create);
+    await byteStream.CopyToAsync(streamToWriteTo);
+}
+
+static async void WriteStreamToFile(Stream inStream, string filename)
+{
+    using MemoryStream memoryStream = new MemoryStream();
+    inStream.CopyTo(memoryStream);
+    memoryStream.Position = 0;
+    using Stream streamToWriteTo = File.Open(filename, FileMode.Create);
+    await memoryStream.CopyToAsync(streamToWriteTo);
+    memoryStream.Seek(0, SeekOrigin.Begin);
+}
+
+static string ToUnixEpochTime(string textDateTime)
+{
+    // textString "2023-4-12 2:27:01 PM"
+    var dateTime = DateTime.Parse(textDateTime);
+
+    DateTimeOffset dto = new DateTimeOffset(dateTime.ToUniversalTime());
+    return dto.ToUnixTimeSeconds().ToString();
+}
+
 /// <summary>
 /// This method uses a paginator to retrieve the list of objects in an
 /// an Amazon S3 bucket.
@@ -268,6 +281,8 @@ static async Task BucketListAsync(IAmazonS3 client, string bucketName)
 
 static int MessageSize(byte[] data, int offset)
 {
+    if (data.Length < 4)
+        return 0;
     var size_bytes = new byte[4];
     Array.Copy(data, offset, size_bytes, 0, 4);
     if (BitConverter.IsLittleEndian)
