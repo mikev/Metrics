@@ -14,6 +14,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System;
+using System.Text.RegularExpressions;
 
 Console.WriteLine("Hello, World!");
 
@@ -32,7 +33,10 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
     throw new Exception($"{ingestBucket} not found");
 }
 
-var startString = ToUnixEpochTime("2023-4-12 2:27:01 PM");
+ulong startUnix = 1681334821566;
+int minutes = 24 * 60;
+var startString = ToUnixEpochTime("2023-4-12 2:00:00 PM");
+var endString = ToUnixEpochTime("2023-4-12 3:00:00 PM");
 
 string startAfterExpected = "packetreport.1681334821566";
 string startAfter = $"packetreport.{startString}";
@@ -44,7 +48,9 @@ int currCount = 0;
 int currDupeCount = 0;
 UInt64 byteCount = 0;
 
-var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
+var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
+
+//var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 await foreach( var item in list)
 {
 
@@ -62,7 +68,10 @@ await foreach( var item in list)
     }
 
     var reportStats = await GetReportStatsAsync(s3Client, hashSet, ingestBucket, item);
-    //Console.WriteLine($"{item} {reportStats}");
+    var timestamp2 = Regex.Match(item, @"\d+").Value;
+    UInt64 microSeconds = UInt64.Parse(timestamp2);
+    var time = UnixTimeStampToDateTime(microSeconds);
+    Console.WriteLine($"{item} {reportStats} {time}");
 
     currCount += reportStats.Item1;
     currDupeCount += reportStats.Item2;
@@ -71,6 +80,7 @@ await foreach( var item in list)
     prevTimestamp = timestamp;
 }
 
+Console.WriteLine($"{startUnix} minutes={minutes} countTotal={currCount} byteTotal={byteCount}");
 
 ListObjectsV2Request v2Request = new ListObjectsV2Request
 {
@@ -246,6 +256,14 @@ static async void WriteStreamToFile(Stream inStream, string filename)
     using Stream streamToWriteTo = File.Open(filename, FileMode.Create);
     await memoryStream.CopyToAsync(streamToWriteTo);
     memoryStream.Seek(0, SeekOrigin.Begin);
+}
+
+static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+{
+    // Unix timestamp is seconds past epoch
+    DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+    dateTime = dateTime.AddMilliseconds(unixTimeStamp).ToLocalTime();
+    return dateTime;
 }
 
 static string ToUnixEpochTime(string textDateTime)
@@ -532,4 +550,45 @@ static async IAsyncEnumerable<string> ListBucketContentsAsync(IAmazonS3 client, 
         //Console.WriteLine($"Error encountered on server. Message:'{ex.Message}' getting list of objects.");
         //return false;
     //}
+}
+
+static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, string bucketName, UInt64 unixTime, int minutes)
+{
+    string startAfter = $"packetreport.{unixTime}";
+
+    var request = new ListObjectsV2Request
+    {
+        BucketName = bucketName,
+        StartAfter = startAfter,
+        MaxKeys = 100,
+    };
+
+    Console.WriteLine("--------------------------------------");
+    Console.WriteLine($"Iterating the keys of {bucketName}:");
+    Console.WriteLine("--------------------------------------");
+
+    ListObjectsV2Response response;
+
+    do
+    {
+        response = await client.ListObjectsV2Async(request);
+
+        var s3Obj = response.S3Objects;
+        foreach (var item in s3Obj)
+        {
+            var timestamp = Regex.Match(item.Key, @"\d+").Value;
+            UInt64 microSeconds = UInt64.Parse(timestamp);
+            var timeDiff = microSeconds - unixTime;
+            if (timeDiff > (ulong)minutes * 60 * 1000)
+            {
+                s3Obj.Clear();
+                response.IsTruncated = false;
+                break;
+            }
+            var key = item.Key;
+            yield return key;
+        };
+        request.ContinuationToken = response.NextContinuationToken;
+    }
+    while (response.IsTruncated);
 }
