@@ -72,9 +72,6 @@ await foreach( var item in list)
 }
 
 
-
-var rewardShareFile = "gateway_reward_share.1676167324554.gz";
-
 ListObjectsV2Request v2Request = new ListObjectsV2Request
 {
     BucketName = "foundation_iot_packet_ingest",
@@ -86,70 +83,7 @@ ListObjectsV2Request v2Request = new ListObjectsV2Request
 
 //};
 
-var getObjectResult = await s3Client.GetObjectAsync("foundation-iot-verified-rewards", rewardShareFile);
-using var goStream = getObjectResult.ResponseStream;
-WriteStreamToFile(goStream, @"c:\temp\gateway_reward_share.1676167324554.gz");
-
-var getObjectResult2 = await s3Client.GetObjectAsync("foundation-iot-verified-rewards", rewardShareFile);
-
-using var goStream2 = getObjectResult2.ResponseStream;
-var unzip = DecompressSteam(goStream2);
-if (unzip.Length < 5)
-    return;
-
-WriteBytesToFile(unzip, @"c:\temp\gateway_reward_share.1676167324554");
-
-int m_size_a = MessageSize(unzip, 0);
-Console.WriteLine($"m_size = {m_size_a}");
-
-//await BucketListAsync(s3Client, "foundation-iot-verified-rewards");
-
-var mLists = ExtractMessageList(unzip);
-
-List<gateway_reward_share> rewardList = new List<gateway_reward_share>();
-foreach (var item in mLists)
-{
-    var gdata = gateway_reward_share.Parser.ParseFrom(item);
-    rewardList.Add(gdata);
-    //Console.WriteLine(gdata);
-}
-
-var rewardProto = new gateway_reward_share
-{
-    BeaconAmount = 0,
-    EndPeriod = 0
-};
-
-var rewardListProto = new gateway_reward_shares();
-rewardListProto.RewardShare.Add(rewardList);
-var rewardProtoBytes = rewardListProto.ToByteArray();
-
-WriteBytesToFile(rewardProtoBytes, @"c:\temp\gateway_reward_share.1676167324554.proto");
-
-string parquetFileName2 = @"c:\temp\gateway_reward_share.1676167324554.parquet";
-using var rowWriter2 = ParquetFile.CreateRowWriter<ParquetGatewayReward>(parquetFileName2);
-
-List<ParquetGatewayReward> reports2 = new List<ParquetGatewayReward>();
-
-foreach(var reward in rewardList)
-{
-    var item = new ParquetGatewayReward
-    {
-        HotspotKey = reward.HotspotKey.ToStringUtf8(),
-        BeaconAmount = reward.BeaconAmount,
-        WitnessAmount = reward.WitnessAmount,
-        StartPeriod = reward.StartPeriod,
-        EndPeriod = reward.EndPeriod,
-    };
-    reports2.Add(item);
-}
-
-rowWriter2.WriteRows(reports2);
-rowWriter2.StartNewRowGroup();
-
-//string path = @"c:\temp\MyTest.txt";
-string path = @"c:\temp\packetreport.1666990455151.gz";
-return;
+string path = "";
 
 // Delete the file if it exists.  
 if (!File.Exists(path))
@@ -226,6 +160,75 @@ else
     } while (true);
 
     rowWriter.Close();
+}
+
+static async void IoTVerifiedRewards(AmazonS3Client s3Client)
+{
+    var rewardShareFile = "gateway_reward_share.1676167324554.gz";
+    var getObjectResult = await s3Client.GetObjectAsync("foundation-iot-verified-rewards", rewardShareFile);
+    using var goStream = getObjectResult.ResponseStream;
+    WriteStreamToFile(goStream, @"c:\temp\gateway_reward_share.1676167324554.gz");
+
+    var getObjectResult2 = await s3Client.GetObjectAsync("foundation-iot-verified-rewards", rewardShareFile);
+
+    using var goStream2 = getObjectResult2.ResponseStream;
+    var unzip = DecompressSteam(goStream2);
+    if (unzip.Length < 5)
+        return;
+
+    WriteBytesToFile(unzip, @"c:\temp\gateway_reward_share.1676167324554");
+
+    int m_size_a = MessageSize(unzip, 0);
+    Console.WriteLine($"m_size = {m_size_a}");
+
+    //await BucketListAsync(s3Client, "foundation-iot-verified-rewards");
+
+    var mLists = ExtractMessageList(unzip);
+
+    List<gateway_reward_share> rewardList = new List<gateway_reward_share>();
+    foreach (var item in mLists)
+    {
+        var gdata = gateway_reward_share.Parser.ParseFrom(item);
+        rewardList.Add(gdata);
+        //Console.WriteLine(gdata);
+    }
+
+    var rewardProto = new gateway_reward_share
+    {
+        BeaconAmount = 0,
+        EndPeriod = 0
+    };
+
+    var rewardListProto = new gateway_reward_shares();
+    rewardListProto.RewardShare.Add(rewardList);
+    var rewardProtoBytes = rewardListProto.ToByteArray();
+
+    WriteBytesToFile(rewardProtoBytes, @"c:\temp\gateway_reward_share.1676167324554.proto");
+
+    string parquetFileName2 = @"c:\temp\gateway_reward_share.1676167324554.parquet";
+    using var rowWriter2 = ParquetFile.CreateRowWriter<ParquetGatewayReward>(parquetFileName2);
+
+    List<ParquetGatewayReward> reports2 = new List<ParquetGatewayReward>();
+
+    foreach (var reward in rewardList)
+    {
+        var item = new ParquetGatewayReward
+        {
+            HotspotKey = reward.HotspotKey.ToStringUtf8(),
+            BeaconAmount = reward.BeaconAmount,
+            WitnessAmount = reward.WitnessAmount,
+            StartPeriod = reward.StartPeriod,
+            EndPeriod = reward.EndPeriod,
+        };
+        reports2.Add(item);
+    }
+
+    rowWriter2.WriteRows(reports2);
+    rowWriter2.StartNewRowGroup();
+
+    //string path = @"c:\temp\MyTest.txt";
+    string path = @"c:\temp\packetreport.1666990455151.gz";
+    return;
 }
 
 static async void WriteBytesToFile(byte[] bytes, string fileName)
