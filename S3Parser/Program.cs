@@ -13,6 +13,7 @@ using Amazon.S3.Model;
 using static System.Net.Mime.MediaTypeNames;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System;
 
 Console.WriteLine("Hello, World!");
 
@@ -31,7 +32,13 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
     throw new Exception($"{ingestBucket} not found");
 }
 
-string startAfter = "packetreport.1681334821566";
+var startDate = DateTime.Parse("2023-4-12 2:27:01 PM");
+
+DateTimeOffset dto = new DateTimeOffset(startDate.ToUniversalTime());
+var startString = dto.ToUnixTimeSeconds().ToString();
+
+string startAfterExpected = "packetreport.1681334821566";
+string startAfter = $"packetreport.{startString}";
 
 HashSet<ByteString> hashSet = new HashSet<ByteString>();
 var prevTimestamp = DateTime.MinValue;
@@ -473,6 +480,7 @@ static async IAsyncEnumerable<string> ListBucketContentsAsync(IAmazonS3 client, 
             StartAfter = startAfter,
             MaxKeys = 5,
         };
+
 
         Console.WriteLine("--------------------------------------");
         Console.WriteLine($"Listing the contents of {bucketName}:");
