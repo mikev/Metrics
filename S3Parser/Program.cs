@@ -28,7 +28,7 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
 
 ulong startUnixExpected = 1680332653569;
 int minutes = 24 * 60;
-var startString = ToUnixEpochTime("2023-4-1 12:00:00 AM"); // 1680332400;
+var startString = ToUnixEpochTime("2023-4-4 12:00:00 AM"); // 1680332400;
 ulong startUnix = ulong.Parse(startString);
 var endString = ToUnixEpochTime("2023-4-12 3:00:00 PM");
 
@@ -41,8 +41,11 @@ var prevTimestamp = DateTime.MinValue;
 int currCount = 0;
 int currDupeCount = 0;
 UInt64 byteCount = 0;
+UInt64 rawCount = 0;
+long gzCount = 0;
+int fileCount = 0;
 
-string parquetFileName2 = @"c:\temp\packet_report.parquet";
+string parquetFileName2 = $"c:\\temp\\packetreport_{startString}.parquet";
 using var rowWriter2 = ParquetFile.CreateRowWriter<ParquetReport>(parquetFileName2);
 rowWriter2.StartNewRowGroup();
 
@@ -62,11 +65,15 @@ var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
 await foreach( var item in list)
 {
     //Console.WriteLine($"report: {item}");
-    var timestamp = await S3ObjectTimeStamp(s3Client, ingestBucket, item);
+    var meta  = await S3ObjectMeta(s3Client, ingestBucket, item);
+    var timestamp = meta.Item1;
     if (TimeBoundaryTrigger(prevTimestamp, timestamp))
     {
         Console.WriteLine($"Time trigger {prevTimestamp} {timestamp}");
         Console.WriteLine($"{item} count={currCount} dupes={currDupeCount} bytes={byteCount}");
+        var fees2 = ((double)byteCount / 24) * 0.00001;
+        Console.WriteLine($"{startUnix} minutes={minutes} countTotal={currCount} byteTotal={byteCount} fc={fileCount} rawTotal={(float)rawCount / (1024 * 1024)} gzTotal={(float)gzCount / (1024 * 1024)} fees={fees2}");
+
     }
 
     if (hashSet.Count > 5000)
@@ -83,6 +90,9 @@ await foreach( var item in list)
     currCount += reportStats.Item1;
     currDupeCount += reportStats.Item2;
     byteCount += reportStats.Item3;
+    rawCount += reportStats.Item4;
+    gzCount += meta.Item2;
+    fileCount++;
 
     prevTimestamp = timestamp;
 }
@@ -90,7 +100,7 @@ await foreach( var item in list)
 rowWriter2.Close();
 
 var fees = ((double)byteCount / 24) * 0.00001;
-Console.WriteLine($"{startUnix} minutes={minutes} countTotal={currCount} byteTotal={byteCount} fees={fees}");
+Console.WriteLine($"{startUnix} minutes={minutes} countTotal={currCount} byteTotal={byteCount} fc={fileCount} rawTotal={(float)rawCount / (1024 * 1024)} gzTotal={(float)gzCount / (1024 * 1024)} fees={fees}");
 
 ListObjectsV2Request v2Request = new ListObjectsV2Request
 {
@@ -305,7 +315,7 @@ static void PrintMessage(IMessage message)
     }
 }
 
-static async Task<(int, int, UInt64)> GetReportStatsAsync(AmazonS3Client s3Client,
+static async Task<(int, int, UInt64, UInt64)> GetReportStatsAsync(AmazonS3Client s3Client,
     HashSet<ByteString> hashSet,
     string bucketName,
     string report,
@@ -338,7 +348,7 @@ static async Task<(int, int, UInt64)> GetReportStatsAsync(AmazonS3Client s3Clien
 
     }
 
-    return (messageCount, dupeCount, totalBytes);
+    return (messageCount, dupeCount, totalBytes, (UInt64)rawBytes.Length);
 }
 
 static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
@@ -354,10 +364,10 @@ static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
         return false;
 }
 
-static async Task<DateTime> S3ObjectTimeStamp(AmazonS3Client s3Client, string bucketName, string keyName)
+static async Task<(DateTime, long)> S3ObjectMeta(AmazonS3Client s3Client, string bucketName, string keyName)
 {
     var getObjectResult = await s3Client.GetObjectAsync(bucketName, keyName);
-    return getObjectResult.LastModified;
+    return (getObjectResult.LastModified, getObjectResult.Headers.ContentLength);
 }
 
 static async Task<byte[]> DecompressS3Object(AmazonS3Client s3Client, string bucketName, string keyName)
