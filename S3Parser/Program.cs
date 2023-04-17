@@ -33,12 +33,13 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
     throw new Exception($"{ingestBucket} not found");
 }
 
-ulong startUnix = 1681334821566;
+ulong startUnixExpected = 1680332653569;
 int minutes = 24 * 60;
-var startString = ToUnixEpochTime("2023-4-12 2:00:00 PM");
+var startString = ToUnixEpochTime("2023-4-1 12:00:00 AM"); // 1680332400;
+ulong startUnix = ulong.Parse(startString);
 var endString = ToUnixEpochTime("2023-4-12 3:00:00 PM");
 
-string startAfterExpected = "packetreport.1681334821566";
+string startAfterExpected = "packetreport.1680332653569";
 string startAfter = $"packetreport.{startString}";
 
 HashSet<ByteString> hashSet = new HashSet<ByteString>();
@@ -48,12 +49,10 @@ int currCount = 0;
 int currDupeCount = 0;
 UInt64 byteCount = 0;
 
-var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
-
 //var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
+var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
 await foreach( var item in list)
 {
-
     //Console.WriteLine($"report: {item}");
     var timestamp = await S3ObjectTimeStamp(s3Client, ingestBucket, item);
     if (TimeBoundaryTrigger(prevTimestamp, timestamp))
@@ -71,7 +70,7 @@ await foreach( var item in list)
     var timestamp2 = Regex.Match(item, @"\d+").Value;
     UInt64 microSeconds = UInt64.Parse(timestamp2);
     var time = UnixTimeStampToDateTime(microSeconds);
-    Console.WriteLine($"{item} {reportStats} {time}");
+    Console.WriteLine($"{item} {reportStats} {time.ToShortTimeString()}");
 
     currCount += reportStats.Item1;
     currDupeCount += reportStats.Item2;
@@ -80,18 +79,14 @@ await foreach( var item in list)
     prevTimestamp = timestamp;
 }
 
-Console.WriteLine($"{startUnix} minutes={minutes} countTotal={currCount} byteTotal={byteCount}");
+var fees = ((double)byteCount / 24) * 0.00001;
+Console.WriteLine($"{startUnix} minutes={minutes} countTotal={currCount} byteTotal={byteCount} fees={fees}");
 
 ListObjectsV2Request v2Request = new ListObjectsV2Request
 {
     BucketName = "foundation_iot_packet_ingest",
     StartAfter = "packetreport.1681334821566.gz"
 };
-
-//for (s3Client.ListObjectsV2Async(v2Request))
-//{
-
-//};
 
 string path = "";
 
@@ -405,7 +400,7 @@ static async Task<(int, int, UInt64)> GetReportStatsAsync(AmazonS3Client s3Clien
 
 static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
 {
-    if (later.Minute % 5 == 0)
+    if (later.Minute % 20 == 0)
     {
         if (prior.Minute != later.Minute)
             return true;
@@ -484,6 +479,8 @@ static byte[] DecompressSteam(Stream gzip)
                 }
             }
             while (count > 0);
+            var byteArray = memory.ToArray();
+            //Console.WriteLine($"gzip={gzip.Length / 1024} raw={byteArray.Length / 1024}");
             return memory.ToArray();
         }
     }
@@ -554,6 +551,9 @@ static async IAsyncEnumerable<string> ListBucketContentsAsync(IAmazonS3 client, 
 
 static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, string bucketName, UInt64 unixTime, int minutes)
 {
+    if (unixTime < 10_000_000_000)
+        unixTime = unixTime * 1000;
+
     string startAfter = $"packetreport.{unixTime}";
 
     var request = new ListObjectsV2Request
