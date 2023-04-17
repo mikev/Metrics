@@ -1,19 +1,12 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Google.Protobuf;
-using Helium.PacketRouter;
-using ParquetSharp.RowOriented;
-using System.IO.Compression;
-using System.Collections.Immutable;
-
 // To interact with Amazon S3.
 using Amazon.S3;
-using Amazon.Runtime;
-using Helium.PocLora;
 using Amazon.S3.Model;
-using static System.Net.Mime.MediaTypeNames;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System;
+using Google.Protobuf;
+using Helium.PacketRouter;
+using Helium.PocLora;
+using ParquetSharp.RowOriented;
+using System.IO.Compression;
 using System.Text.RegularExpressions;
 
 Console.WriteLine("Hello, World!");
@@ -49,6 +42,21 @@ int currCount = 0;
 int currDupeCount = 0;
 UInt64 byteCount = 0;
 
+string parquetFileName2 = @"c:\temp\packet_report.parquet";
+using var rowWriter2 = ParquetFile.CreateRowWriter<ParquetReport>(parquetFileName2);
+rowWriter2.StartNewRowGroup();
+
+//if (File.Exists(parquetFileName2))
+//{
+//    using var rowReader = ParquetFile.CreateRowReader<ParquetReport>(parquetFileName2);
+//    for (int rowGroup = 1; rowGroup < rowReader.FileMetaData.NumRowGroups; ++rowGroup)
+//    {
+//        var group = rowReader.ReadRows(rowGroup);
+//        reports.Concat(group.ToImmutableList());
+//    }
+//    rowReader.Dispose();
+//}
+
 //var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
 await foreach( var item in list)
@@ -66,7 +74,7 @@ await foreach( var item in list)
         hashSet.Clear();
     }
 
-    var reportStats = await GetReportStatsAsync(s3Client, hashSet, ingestBucket, item);
+    var reportStats = await GetReportStatsAsync(s3Client, hashSet, ingestBucket, item, rowWriter2);
     var timestamp2 = Regex.Match(item, @"\d+").Value;
     UInt64 microSeconds = UInt64.Parse(timestamp2);
     var time = UnixTimeStampToDateTime(microSeconds);
@@ -79,6 +87,8 @@ await foreach( var item in list)
     prevTimestamp = timestamp;
 }
 
+rowWriter2.Close();
+
 var fees = ((double)byteCount / 24) * 0.00001;
 Console.WriteLine($"{startUnix} minutes={minutes} countTotal={currCount} byteTotal={byteCount} fees={fees}");
 
@@ -89,83 +99,6 @@ ListObjectsV2Request v2Request = new ListObjectsV2Request
 };
 
 string path = "";
-
-// Delete the file if it exists.  
-if (!File.Exists(path))
-{
-    Console.WriteLine("File Not Found");
-}
-else
-{
-    string parquetFileName = "packet_report.parquet";
-    Console.WriteLine($"File {path} Found");
-    byte[] file = File.ReadAllBytes(path);
-    byte[] data = DecompressGzipBytes(file);
-    Console.WriteLine(file.Length);
-    Console.WriteLine(data.Length);
-
-    IEnumerable<ParquetReport> reports = new List<ParquetReport>();
-
-    if (File.Exists(parquetFileName))
-    {
-        using var rowReader = ParquetFile.CreateRowReader<ParquetReport>(parquetFileName);
-        for (int rowGroup = 1; rowGroup < rowReader.FileMetaData.NumRowGroups; ++rowGroup)
-        {
-            var group = rowReader.ReadRows(rowGroup);
-            reports.Concat(group.ToImmutableList());
-        }
-        rowReader.Dispose();
-    }
-
-    //using var stream = new FileStream("packet_report.parquet", FileMode.OpenOrCreate);
-    //using var rwFile = new ManagedRandomAccessFile(stream);
-    using var rowWriter = ParquetFile.CreateRowWriter<ParquetReport>(parquetFileName);
-
-    if (reports.LongCount() > 0)
-    {
-        rowWriter.WriteRows(reports);
-        rowWriter.StartNewRowGroup();
-    }
-
-    HashSet<uint> freqSet = new HashSet<uint>();
-    HashSet<string> gatewaySet = new HashSet<string>();
-    HashSet<string> regionSet = new HashSet<string>();
-    HashSet<int> dataRateSet = new HashSet<int>();
-
-    do
-    {
-        if (data.Length < 5)
-            break;
-
-        var bytes_4 = data.Take(4).ToArray();
-        if (BitConverter.IsLittleEndian)
-            Array.Reverse(bytes_4);
-        int m_size = BitConverter.ToInt32(bytes_4, 0);
-        Console.WriteLine($"m_size = {m_size}");
-
-        var message = data.Skip(4).ToArray().Take(m_size).ToArray();
-
-        var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
-        Console.WriteLine(mData);
-
-        var row = PopulateParquetRow(message);
-
-        freqSet.Add(row.Frequency);
-        gatewaySet.Add(row.Gateway);
-        regionSet.Add(row.Region);
-        dataRateSet.Add(row.DataRate);
-
-        rowWriter.WriteRow(row);
-
-        var rows2 = rowWriter.FileMetaData?.NumRows;
-        Console.WriteLine($"rows = {rows2}");
-
-        data = data.Skip(4 + m_size).ToArray();
-
-    } while (true);
-
-    rowWriter.Close();
-}
 
 static async void IoTVerifiedRewards(AmazonS3Client s3Client)
 {
@@ -372,7 +305,11 @@ static void PrintMessage(IMessage message)
     }
 }
 
-static async Task<(int, int, UInt64)> GetReportStatsAsync(AmazonS3Client s3Client, HashSet<ByteString> hashSet, string bucketName, string report)
+static async Task<(int, int, UInt64)> GetReportStatsAsync(AmazonS3Client s3Client,
+    HashSet<ByteString> hashSet,
+    string bucketName,
+    string report,
+    ParquetSharp.RowOriented.ParquetRowWriter<ParquetReport> parquet)
 {
     var rawBytes = await DecompressS3Object(s3Client, bucketName, report);
     int messageCount = 0;
@@ -393,6 +330,12 @@ static async Task<(int, int, UInt64)> GetReportStatsAsync(AmazonS3Client s3Clien
         hashSet.Add(hash);
         messageCount++;
         totalBytes += mData.PayloadSize;
+
+        using var rowWriter = ParquetFile.CreateRowWriter<ParquetReport>("HELLO");
+
+        var row = PopulateParquetRow(message);
+        parquet.WriteRow(row);
+
     }
 
     return (messageCount, dupeCount, totalBytes);
