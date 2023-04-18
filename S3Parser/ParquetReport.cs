@@ -1,39 +1,39 @@
 ﻿
 
-using ParquetSharp.RowOriented;
+//using ParquetSharp.RowOriented;
 
 struct ParquetReport
 {
-    [MapToColumn("GatewayTimestamp")]
+    //[MapToColumn("GatewayTimestamp")]
     public long GatewayTimestamp;
 
-    [MapToColumn("OUI")]
+    //[MapToColumn("OUI")]
     public ulong OUI;
 
-    [MapToColumn("NetID")]
+    //[MapToColumn("NetID")]
     public ulong NetID;
 
-    [MapToColumn("RSSI")]
+    //[MapToColumn("RSSI")]
     public int RSSI;
 
-    [MapToColumn("Frequency")]
+    //[MapToColumn("Frequency")]
     public uint Frequency;
 
-    [MapToColumn("SNR")]
+    //[MapToColumn("SNR")]
     public float SNR;
 
-    [MapToColumn("DataRate")]
+    //[MapToColumn("DataRate")]
     public int DataRate;
 
-    [MapToColumn("Region")]
+    //[MapToColumn("Region")]
     public string Region;
 
-    [MapToColumn("Gateway")]
+    //[MapToColumn("Gateway")]
     public string Gateway;
 
-    [MapToColumn("PayloadHash")]
+    //[MapToColumn("PayloadHash")]
     public string PayloadHash;
 
-    [MapToColumn("PayloadSize")]
+    //[MapToColumn("PayloadSize")]
     public uint PayloadSize;
 };

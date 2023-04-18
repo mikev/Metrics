@@ -5,11 +5,98 @@ using Amazon.S3.Model;
 using Google.Protobuf;
 using Helium.PacketRouter;
 using Helium.PocLora;
-using ParquetSharp.RowOriented;
+
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 
 Console.WriteLine("Hello, World!");
+
+string parFile = @"C:\temp\packet_report_4-1.parquet";
+
+
+//using Stream parStream = File.Open(parFile, FileMode.Open);
+
+//var options = new ParquetOptions { TreatByteArrayAsString = true };
+//using (var reader = await ParquetReader.CreateAsync(parStream, options))
+//{
+
+//    var fields = reader.Schema.GetDataFields();
+//    foreach (var field in fields)
+//    {
+//        Console.WriteLine($"field={field}");
+//    }
+//    var groupCount = reader.RowGroupCount;
+//    Console.WriteLine($"groupCount={groupCount}");
+
+
+//    var groupReader = reader.OpenRowGroupReader(0);
+
+//    DataColumn[] data = await reader.ReadEntireRowGroupAsync(1);
+
+
+//    var len = data[0].Data.Length;
+//    Console.WriteLine($"len={len}");
+//    var x1 = data[0].Data;
+
+//    Int64[] firstCol = (Int64[])x1;
+
+//    //var column = await groupReader.ReadColumnAsync(fields[0]);
+
+//    Console.WriteLine($"fields={fields}");
+//}
+
+
+
+//Table tbl = await Table.ReadAsync(parFile);
+//IEnumerable<PacketReport> tblList = tbl.ToList<PacketReport>();
+
+//IList<PacketReport> data = await ParquetSerializer.DeserializeAsync<PacketReport>(parStream);
+
+#if false
+using var fileReader = new ParquetFileReader(parFile);
+
+int numColumns = fileReader.FileMetaData.NumColumns;
+long numRows = fileReader.FileMetaData.NumRows;
+int numRowGroups = fileReader.FileMetaData.NumRowGroups;
+IReadOnlyDictionary<string, string> metadata = fileReader.FileMetaData.KeyValueMetadata;
+
+SchemaDescriptor schema = fileReader.FileMetaData.Schema;
+for (int columnIndex = 0; columnIndex < schema.NumColumns; ++columnIndex)
+{
+    ColumnDescriptor column = schema.Column(columnIndex);
+    string columnName = column.Name;
+    var columnType = column.LogicalType;
+    Console.WriteLine($"columnName={columnName} type={columnType}");
+}
+
+for (int rowGroup = 1; rowGroup < fileReader.FileMetaData.NumRowGroups; ++rowGroup)
+{
+    using var rowGroupReader = fileReader.RowGroup(rowGroup);
+    var groupNumRows = checked((int)rowGroupReader.MetaData.NumRows);
+
+    var groupTimestamps = rowGroupReader.Column(0).LogicalReader<Int64>().ReadAll(100);
+    var groupOUIs = rowGroupReader.Column(1).LogicalReader<UInt64>().ReadAll(100);
+    var groupNetIDs = rowGroupReader.Column(2).LogicalReader<UInt64>().ReadAll(100);
+}
+
+fileReader.Close();
+#endif
+//if (File.Exists(parFile))
+//{
+//    using var rowReader = ParquetFile.CreateRowReader<ParquetReport>(parFile);
+//    for (int rowGroup = 0; rowGroup < rowReader.FileMetaData.NumRowGroups; ++rowGroup)
+//    {
+//        using var rowGroupReader = rowReader.R RowGroup(rowGroup);
+//        ParquetReport[] rowGroupReader = rowReader.ReadRows(rowGroup);
+//        var groupList = rowGroupReader.ToImmutableList();
+//        //reports.Concat(group.ToImmutableList());
+//        foreach (var item in groupList)
+//        {
+//            Console.WriteLine($"item={item}");
+//        }
+//    }
+//    rowReader.Dispose();
+//}
 
 // Create an S3 client object.
 var s3Client = new AmazonS3Client();
@@ -27,8 +114,8 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
 }
 
 ulong startUnixExpected = 1680332653569;
-int minutes = 24 * 60;
-var startString = ToUnixEpochTime("2023-4-4 12:00:00 AM"); // 1680332400;
+int minutes = 12 * 60;
+var startString = ToUnixEpochTime("2023-4-4 12:00:00 PM"); // 1680332400;
 ulong startUnix = ulong.Parse(startString);
 var endString = ToUnixEpochTime("2023-4-12 3:00:00 PM");
 
@@ -46,19 +133,11 @@ long gzCount = 0;
 int fileCount = 0;
 
 string parquetFileName2 = $"c:\\temp\\packetreport_{startString}.parquet";
-using var rowWriter2 = ParquetFile.CreateRowWriter<ParquetReport>(parquetFileName2);
-rowWriter2.StartNewRowGroup();
 
-//if (File.Exists(parquetFileName2))
-//{
-//    using var rowReader = ParquetFile.CreateRowReader<ParquetReport>(parquetFileName2);
-//    for (int rowGroup = 1; rowGroup < rowReader.FileMetaData.NumRowGroups; ++rowGroup)
-//    {
-//        var group = rowReader.ReadRows(rowGroup);
-//        reports.Concat(group.ToImmutableList());
-//    }
-//    rowReader.Dispose();
-//}
+//using var rowWriter2 = ParquetFile.CreateRowWriter<ParquetReport>(parquetFileName2);
+//rowWriter2.StartNewRowGroup();
+
+
 
 //var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
@@ -81,7 +160,7 @@ await foreach( var item in list)
         hashSet.Clear();
     }
 
-    var reportStats = await GetReportStatsAsync(s3Client, hashSet, ingestBucket, item, rowWriter2);
+    var reportStats = await GetReportStatsAsync(s3Client, hashSet, ingestBucket, item, "rowWriter2");
     var timestamp2 = Regex.Match(item, @"\d+").Value;
     UInt64 microSeconds = UInt64.Parse(timestamp2);
     var time = UnixTimeStampToDateTime(microSeconds);
@@ -97,7 +176,7 @@ await foreach( var item in list)
     prevTimestamp = timestamp;
 }
 
-rowWriter2.Close();
+//rowWriter2.Close();
 
 var fees = ((double)byteCount / 24) * 0.00001;
 Console.WriteLine($"{startUnix} minutes={minutes} countTotal={currCount} byteTotal={byteCount} fc={fileCount} rawTotal={(float)rawCount / (1024 * 1024)} gzTotal={(float)gzCount / (1024 * 1024)} fees={fees}");
@@ -153,26 +232,26 @@ static async void IoTVerifiedRewards(AmazonS3Client s3Client)
 
     WriteBytesToFile(rewardProtoBytes, @"c:\temp\gateway_reward_share.1676167324554.proto");
 
-    string parquetFileName2 = @"c:\temp\gateway_reward_share.1676167324554.parquet";
-    using var rowWriter2 = ParquetFile.CreateRowWriter<ParquetGatewayReward>(parquetFileName2);
+    //string parquetFileName2 = @"c:\temp\gateway_reward_share.1676167324554.parquet";
+    //using var rowWriter2 = ParquetFile.CreateRowWriter<ParquetGatewayReward>(parquetFileName2);
 
-    List<ParquetGatewayReward> reports2 = new List<ParquetGatewayReward>();
+    //List<ParquetGatewayReward> reports2 = new List<ParquetGatewayReward>();
 
-    foreach (var reward in rewardList)
-    {
-        var item = new ParquetGatewayReward
-        {
-            HotspotKey = reward.HotspotKey.ToStringUtf8(),
-            BeaconAmount = reward.BeaconAmount,
-            WitnessAmount = reward.WitnessAmount,
-            StartPeriod = reward.StartPeriod,
-            EndPeriod = reward.EndPeriod,
-        };
-        reports2.Add(item);
-    }
+    //foreach (var reward in rewardList)
+    //{
+    //    var item = new ParquetGatewayReward
+    //    {
+    //        HotspotKey = reward.HotspotKey.ToStringUtf8(),
+    //        BeaconAmount = reward.BeaconAmount,
+    //        WitnessAmount = reward.WitnessAmount,
+    //        StartPeriod = reward.StartPeriod,
+    //        EndPeriod = reward.EndPeriod,
+    //    };
+    //    reports2.Add(item);
+    //}
 
-    rowWriter2.WriteRows(reports2);
-    rowWriter2.StartNewRowGroup();
+    //rowWriter2.WriteRows(reports2);
+    //rowWriter2.StartNewRowGroup();
 
     //string path = @"c:\temp\MyTest.txt";
     string path = @"c:\temp\packetreport.1666990455151.gz";
@@ -184,6 +263,11 @@ static async void WriteBytesToFile(byte[] bytes, string fileName)
     using MemoryStream byteStream = new MemoryStream(bytes);
     using Stream streamToWriteTo = File.Open(fileName, FileMode.Create);
     await byteStream.CopyToAsync(streamToWriteTo);
+}
+
+static Stream ReadStreamToFile(string filename)
+{
+    return File.Open(filename, FileMode.Open);
 }
 
 static async void WriteStreamToFile(Stream inStream, string filename)
@@ -319,7 +403,7 @@ static async Task<(int, int, UInt64, UInt64)> GetReportStatsAsync(AmazonS3Client
     HashSet<ByteString> hashSet,
     string bucketName,
     string report,
-    ParquetSharp.RowOriented.ParquetRowWriter<ParquetReport> parquet)
+    string parquet)
 {
     var rawBytes = await DecompressS3Object(s3Client, bucketName, report);
     int messageCount = 0;
@@ -341,10 +425,10 @@ static async Task<(int, int, UInt64, UInt64)> GetReportStatsAsync(AmazonS3Client
         messageCount++;
         totalBytes += mData.PayloadSize;
 
-        using var rowWriter = ParquetFile.CreateRowWriter<ParquetReport>("HELLO");
+        //using var rowWriter = ParquetFile.CreateRowWriter<ParquetReport>("HELLO");
 
-        var row = PopulateParquetRow(message);
-        parquet.WriteRow(row);
+        //var row = PopulateParquetRow(message);
+        //parquet.WriteRow(row);
 
     }
 

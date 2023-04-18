@@ -1,19 +1,19 @@
-﻿using ParquetSharp.RowOriented;
+﻿//using ParquetSharp.RowOriented;
 
 struct ParquetGatewayReward
 {
-    [MapToColumn("HotspotKey")]
+    //[MapToColumn("HotspotKey")]
     public string HotspotKey;
 
-    [MapToColumn("BeaconAmount")]
+    //[MapToColumn("BeaconAmount")]
     public ulong BeaconAmount;
 
-    [MapToColumn("WitnessAmount")]
+    //[MapToColumn("WitnessAmount")]
     public ulong WitnessAmount;
 
-    [MapToColumn("StartPeriod")]
+    //[MapToColumn("StartPeriod")]
     public ulong StartPeriod;
 
-    [MapToColumn("EndPeriod")]
+    //[MapToColumn("EndPeriod")]
     public ulong EndPeriod;
 };
