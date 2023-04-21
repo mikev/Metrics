@@ -5,7 +5,7 @@ using Amazon.S3.Model;
 using Google.Protobuf;
 using Helium.PacketRouter;
 using Helium.PocLora;
-
+using Microsoft.AspNetCore.Builder;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 
@@ -176,6 +176,9 @@ await foreach( var item in list)
     prevTimestamp = timestamp;
 }
 
+var fees = ((double)byteCount / 24) * 0.00001;
+Console.WriteLine($"{startUnix} minutes={minutes} countTotal= {currCount} byteTotal= {byteCount} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {fees}");
+
 long[] nums;
 long k = 10;
 PriorityQueue<ulong, ulong> heap = new PriorityQueue<ulong, ulong>(
@@ -191,20 +194,22 @@ foreach (var freqEntry in ouiCounter)
 ulong[] result = new ulong[k];
 for (long i = k - 1; i >= 0; i--)
 {
+    if (heap.Count == 0)
+        break;
     result[i] = heap.Dequeue();
 }
 
 foreach(ulong value in result)
 {
-    var ouiTotal = ouiCounter[value];
-    var ouiPercentage = (double)ouiTotal * 100 / (double)byteCount;
-    Console.WriteLine($"OUI= {value} Percentage= {ouiPercentage} %");
+    if (value > 0)
+    {
+        var ouiTotal = ouiCounter[value];
+        var ouiPercentage = (double)ouiTotal * 100 / (double)byteCount;
+        Console.WriteLine($"OUI= {value} Percentage= {ouiPercentage} %");
+    }
 }
 
 //rowWriter2.Close();
-
-var fees = ((double)byteCount / 24) * 0.00001;
-Console.WriteLine($"{startUnix} minutes={minutes} countTotal= {currCount} byteTotal= {byteCount} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {fees}");
 
 ListObjectsV2Request v2Request = new ListObjectsV2Request
 {
@@ -424,7 +429,8 @@ static void PrintMessage(IMessage message)
     }
 }
 
-static async Task<(int, int, UInt64, UInt64)> GetReportStatsAsync(AmazonS3Client s3Client,
+static async Task<(int, int, UInt64, UInt64)> GetReportStatsAsync(
+    AmazonS3Client s3Client,
     HashSet<ByteString> hashSet,
     Dictionary<ulong, ulong> ouiCounter,
     string bucketName,
@@ -473,15 +479,17 @@ static async Task<(int, int, UInt64, UInt64)> GetReportStatsAsync(AmazonS3Client
 
 static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
 {
-    if (later.Minute % 20 == 0)
+    if (prior.Minute != later.Minute)
     {
-        if (prior.Minute != later.Minute)
-            return true;
-        else
-            return false;
+        for (int i = prior.Minute + 1; i <= later.Minute; i++)
+        {
+            if (i % 20 == 0)
+            {
+                return true;
+            }
+        }
     }
-    else
-        return false;
+    return false;
 }
 
 static async Task<(DateTime, long)> S3ObjectMeta(AmazonS3Client s3Client, string bucketName, string keyName)
