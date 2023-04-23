@@ -115,7 +115,7 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
 
 ulong startUnixExpected = 1680332653569;
 int minutes = 24 * 60;
-var startString = ToUnixEpochTime("2023-4-20 12:00:00 AM"); // 1680332400;
+var startString = ToUnixEpochTime("2023-4-21 12:00:00 AM"); // 1680332400;
 ulong startUnix = ulong.Parse(startString);
 var endString = ToUnixEpochTime("2023-4-12 3:00:00 PM");
 
@@ -131,6 +131,7 @@ UInt64 byteCount = 0;
 UInt64 rawCount = 0;
 long gzCount = 0;
 int fileCount = 0;
+ulong unit24Count = 0;
 
 string parquetFileName2 = $"c:\\temp\\packetreport_{startString}.parquet";
 
@@ -138,6 +139,7 @@ string parquetFileName2 = $"c:\\temp\\packetreport_{startString}.parquet";
 //rowWriter2.StartNewRowGroup();
 
 Dictionary<ulong, ulong> ouiCounter = new Dictionary<ulong, ulong>();
+Dictionary<ulong, ulong> regionCounter = new Dictionary<ulong, ulong>();
 
 //var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
@@ -151,7 +153,7 @@ await foreach( var item in list)
         Console.WriteLine($"Time trigger {prevTimestamp} {timestamp}");
         Console.WriteLine($"{item} count={currCount} dupes={currDupeCount} bytes={byteCount}");
         var fees2 = ((double)byteCount / 24) * 0.00001;
-        Console.WriteLine($"{startUnix} minutes={minutes} countTotal={currCount} byteTotal={byteCount} fc={fileCount} rawTotal={(float)rawCount / (1024 * 1024)} gzTotal={(float)gzCount / (1024 * 1024)} fees={fees2}");
+        Console.WriteLine($"{startUnix} minutes={minutes} countTotal={currCount} byteTotal={byteCount} u24Count={unit24Count} fc={fileCount} rawTotal={(float)rawCount / (1024 * 1024)} gzTotal={(float)gzCount / (1024 * 1024)} fees={fees2}");
 
     }
 
@@ -160,7 +162,7 @@ await foreach( var item in list)
         hashSet.Clear();
     }
 
-    var reportStats = await GetReportStatsAsync(s3Client, hashSet, ouiCounter, ingestBucket, item, "rowWriter2");
+    var reportStats = await GetReportStatsAsync(s3Client, hashSet, ouiCounter, regionCounter, ingestBucket, item, "rowWriter2");
     var timestamp2 = Regex.Match(item, @"\d+").Value;
     UInt64 microSeconds = UInt64.Parse(timestamp2);
     var time = UnixTimeStampToDateTime(microSeconds);
@@ -169,15 +171,17 @@ await foreach( var item in list)
     currCount += reportStats.Item1;
     currDupeCount += reportStats.Item2;
     byteCount += reportStats.Item3;
-    rawCount += reportStats.Item4;
+    unit24Count += reportStats.Item4;
+    rawCount += reportStats.Item5;
     gzCount += meta.Item2;
     fileCount++;
 
     prevTimestamp = timestamp;
 }
 
+var predictedDC = (double)unit24Count * 0.00001;
 var fees = ((double)byteCount / 24) * 0.00001;
-Console.WriteLine($"{startUnix} minutes={minutes} countTotal= {currCount} byteTotal= {byteCount} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {fees}");
+Console.WriteLine($"{startUnix} minutes={minutes} countTotal= {currCount} dupeTotal= {currDupeCount} byteTotal= {byteCount} predDC= {predictedDC} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {fees}");
 
 long[] nums;
 long k = 10;
@@ -206,6 +210,31 @@ foreach(ulong value in result)
         var ouiTotal = ouiCounter[value];
         var ouiPercentage = (double)ouiTotal * 100 / (double)byteCount;
         Console.WriteLine($"OUI= {value} Percentage= {ouiPercentage} %");
+    }
+}
+
+heap.Clear();
+foreach (var freqEntry in regionCounter)
+{
+    heap.Enqueue(freqEntry.Key, freqEntry.Value);
+    if (heap.Count > k)
+        heap.Dequeue();
+}
+
+for (long i = k - 1; i >= 0; i--)
+{
+    if (heap.Count == 0)
+        break;
+    result[i] = heap.Dequeue();
+}
+
+foreach (ulong value in result)
+{
+    if (value > 0)
+    {
+        var regionTotal = regionCounter[value];
+        var regionPercentage = (double)regionTotal * 100 / (double)byteCount;
+        Console.WriteLine($"Region= {value} Percentage= {regionPercentage} %");
     }
 }
 
@@ -429,10 +458,11 @@ static void PrintMessage(IMessage message)
     }
 }
 
-static async Task<(int, int, UInt64, UInt64)> GetReportStatsAsync(
+static async Task<(int, int, UInt64, ulong, UInt64)> GetReportStatsAsync(
     AmazonS3Client s3Client,
     HashSet<ByteString> hashSet,
     Dictionary<ulong, ulong> ouiCounter,
+    Dictionary<ulong, ulong> regionCounter,
     string bucketName,
     string report,
     string parquet)
@@ -441,6 +471,7 @@ static async Task<(int, int, UInt64, UInt64)> GetReportStatsAsync(
     int messageCount = 0;
     int dupeCount = 0;
     ulong totalBytes = 0;
+    ulong predictedDC = 0;
 
     var messageList = ExtractMessageList(rawBytes);
     foreach (var message in messageList)
@@ -456,7 +487,10 @@ static async Task<(int, int, UInt64, UInt64)> GetReportStatsAsync(
         hashSet.Add(hash);
         messageCount++;
         totalBytes += mData.PayloadSize;
+        ulong dc = (mData.PayloadSize / 24) + 1;
+        predictedDC += dc;
         ulong oui = mData.Oui;
+        ulong region = (ulong)mData.Region;
 
         if (!(ouiCounter.ContainsKey(oui)))
         {
@@ -467,6 +501,15 @@ static async Task<(int, int, UInt64, UInt64)> GetReportStatsAsync(
             ouiCounter[oui] += mData.PayloadSize;
         }
 
+        if (!(regionCounter.ContainsKey(region)))
+        {
+            regionCounter.Add(region, mData.PayloadSize);
+        }
+        else
+        {
+            regionCounter[region] += mData.PayloadSize;
+        }
+
         //using var rowWriter = ParquetFile.CreateRowWriter<ParquetReport>("HELLO");
 
         //var row = PopulateParquetRow(message);
@@ -474,7 +517,7 @@ static async Task<(int, int, UInt64, UInt64)> GetReportStatsAsync(
 
     }
 
-    return (messageCount, dupeCount, totalBytes, (UInt64)rawBytes.Length);
+    return (messageCount, dupeCount, totalBytes, predictedDC, (UInt64)rawBytes.Length);
 }
 
 static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
