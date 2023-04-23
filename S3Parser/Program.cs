@@ -4,8 +4,6 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Google.Protobuf;
 using Helium.PacketRouter;
-using Helium.PocLora;
-using Microsoft.AspNetCore.Builder;
 using Parquet.Serialization;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
@@ -252,52 +250,6 @@ ListObjectsV2Request v2Request = new ListObjectsV2Request
 };
 
 string path = "";
-
-static async void IoTVerifiedRewards(AmazonS3Client s3Client)
-{
-    var rewardShareFile = "gateway_reward_share.1676167324554.gz";
-    var getObjectResult = await s3Client.GetObjectAsync("foundation-iot-verified-rewards", rewardShareFile);
-    using var goStream = getObjectResult.ResponseStream;
-    WriteStreamToFile(goStream, @"c:\temp\gateway_reward_share.1676167324554.gz");
-
-    var getObjectResult2 = await s3Client.GetObjectAsync("foundation-iot-verified-rewards", rewardShareFile);
-
-    using var goStream2 = getObjectResult2.ResponseStream;
-    var unzip = DecompressSteam(goStream2);
-    if (unzip.Length < 5)
-        return;
-
-    WriteBytesToFile(unzip, @"c:\temp\gateway_reward_share.1676167324554");
-
-    int m_size_a = MessageSize(unzip, 0);
-    Console.WriteLine($"m_size = {m_size_a}");
-
-    //await BucketListAsync(s3Client, "foundation-iot-verified-rewards");
-
-    var mLists = ExtractMessageList(unzip);
-
-    List<gateway_reward_share> rewardList = new List<gateway_reward_share>();
-    foreach (var item in mLists)
-    {
-        var gdata = gateway_reward_share.Parser.ParseFrom(item);
-        rewardList.Add(gdata);
-        //Console.WriteLine(gdata);
-    }
-
-    var rewardProto = new gateway_reward_share
-    {
-        BeaconAmount = 0,
-        EndPeriod = 0
-    };
-
-    var rewardListProto = new gateway_reward_shares();
-    rewardListProto.RewardShare.Add(rewardList);
-    var rewardProtoBytes = rewardListProto.ToByteArray();
-
-    WriteBytesToFile(rewardProtoBytes, @"c:\temp\gateway_reward_share.1676167324554.proto");
-
-    return;
-}
 
 static async void WriteBytesToFile(byte[] bytes, string fileName)
 {
