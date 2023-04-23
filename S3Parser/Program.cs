@@ -6,6 +6,7 @@ using Google.Protobuf;
 using Helium.PacketRouter;
 using Helium.PocLora;
 using Microsoft.AspNetCore.Builder;
+using Parquet.Serialization;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 
@@ -115,9 +116,8 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
 
 ulong startUnixExpected = 1680332653569;
 int minutes = 24 * 60;
-var startString = ToUnixEpochTime("2023-4-21 12:00:00 AM"); // 1680332400;
+var startString = ToUnixEpochTime("2023-3-29 12:00:00 AM"); // 1680332400;
 ulong startUnix = ulong.Parse(startString);
-var endString = ToUnixEpochTime("2023-4-12 3:00:00 PM");
 
 string startAfterExpected = "packetreport.1680332653569";
 string startAfter = $"packetreport.{startString}";
@@ -140,6 +140,9 @@ string parquetFileName2 = $"c:\\temp\\packetreport_{startString}.parquet";
 
 Dictionary<ulong, ulong> ouiCounter = new Dictionary<ulong, ulong>();
 Dictionary<ulong, ulong> regionCounter = new Dictionary<ulong, ulong>();
+List<ParquetReport> packetList = new List<ParquetReport>();
+
+//IList<ParquetReport> readData = await ParquetSerializer.DeserializeAsync()
 
 //var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
@@ -162,7 +165,7 @@ await foreach( var item in list)
         hashSet.Clear();
     }
 
-    var reportStats = await GetReportStatsAsync(s3Client, hashSet, ouiCounter, regionCounter, ingestBucket, item, "rowWriter2");
+    var reportStats = await GetPacketReportsAsync(s3Client, hashSet, ouiCounter, regionCounter, packetList, ingestBucket, item);
     var timestamp2 = Regex.Match(item, @"\d+").Value;
     UInt64 microSeconds = UInt64.Parse(timestamp2);
     var time = UnixTimeStampToDateTime(microSeconds);
@@ -178,6 +181,8 @@ await foreach( var item in list)
 
     prevTimestamp = timestamp;
 }
+
+await ParquetSerializer.SerializeAsync(packetList, parquetFileName2);
 
 var predictedDC = (double)unit24Count * 0.00001;
 var fees = ((double)byteCount / 24) * 0.00001;
@@ -291,29 +296,6 @@ static async void IoTVerifiedRewards(AmazonS3Client s3Client)
 
     WriteBytesToFile(rewardProtoBytes, @"c:\temp\gateway_reward_share.1676167324554.proto");
 
-    //string parquetFileName2 = @"c:\temp\gateway_reward_share.1676167324554.parquet";
-    //using var rowWriter2 = ParquetFile.CreateRowWriter<ParquetGatewayReward>(parquetFileName2);
-
-    //List<ParquetGatewayReward> reports2 = new List<ParquetGatewayReward>();
-
-    //foreach (var reward in rewardList)
-    //{
-    //    var item = new ParquetGatewayReward
-    //    {
-    //        HotspotKey = reward.HotspotKey.ToStringUtf8(),
-    //        BeaconAmount = reward.BeaconAmount,
-    //        WitnessAmount = reward.WitnessAmount,
-    //        StartPeriod = reward.StartPeriod,
-    //        EndPeriod = reward.EndPeriod,
-    //    };
-    //    reports2.Add(item);
-    //}
-
-    //rowWriter2.WriteRows(reports2);
-    //rowWriter2.StartNewRowGroup();
-
-    //string path = @"c:\temp\MyTest.txt";
-    string path = @"c:\temp\packetreport.1666990455151.gz";
     return;
 }
 
@@ -429,7 +411,7 @@ static ParquetReport PopulateParquetRow(byte[]? message)
 
     var parquetRow = new ParquetReport
     {
-        GatewayTimestamp = (long)mData.GatewayTimestampMs,
+        GatewayTimestamp = mData.GatewayTimestampMs,
         OUI = mData.Oui,
         NetID = mData.NetId,
         RSSI = mData.Rssi,
@@ -458,14 +440,14 @@ static void PrintMessage(IMessage message)
     }
 }
 
-static async Task<(int, int, UInt64, ulong, UInt64)> GetReportStatsAsync(
+static async Task<(int, int, UInt64, ulong, UInt64)> GetPacketReportsAsync(
     AmazonS3Client s3Client,
     HashSet<ByteString> hashSet,
     Dictionary<ulong, ulong> ouiCounter,
     Dictionary<ulong, ulong> regionCounter,
+    List<ParquetReport> packetList,
     string bucketName,
-    string report,
-    string parquet)
+    string report)
 {
     var rawBytes = await DecompressS3Object(s3Client, bucketName, report);
     int messageCount = 0;
@@ -483,6 +465,21 @@ static async Task<(int, int, UInt64, ulong, UInt64)> GetReportStatsAsync(
             dupeCount++;
             continue;
         }
+
+        var pData = new ParquetReport()
+        {
+            GatewayTimestamp = mData.GatewayTimestampMs,
+            OUI = mData.Oui,
+            NetID = mData.NetId,
+            RSSI = mData.Rssi,
+            Frequency = mData.Frequency,
+            SNR = mData.Snr,
+            Region = mData.Region.ToString(),
+            Gateway = mData.Gateway.ToBase64(),
+            PayloadHash = mData.PayloadHash.ToBase64(),
+            PayloadSize = mData.PayloadSize
+        };
+        packetList.Add(pData);
 
         hashSet.Add(hash);
         messageCount++;
@@ -509,12 +506,6 @@ static async Task<(int, int, UInt64, ulong, UInt64)> GetReportStatsAsync(
         {
             regionCounter[region] += mData.PayloadSize;
         }
-
-        //using var rowWriter = ParquetFile.CreateRowWriter<ParquetReport>("HELLO");
-
-        //var row = PopulateParquetRow(message);
-        //parquet.WriteRow(row);
-
     }
 
     return (messageCount, dupeCount, totalBytes, predictedDC, (UInt64)rawBytes.Length);
