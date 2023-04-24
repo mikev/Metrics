@@ -25,13 +25,13 @@ struct ParquetReport
     public int DataRate { get; set; }
 
     //[MapToColumn("Region")]
-    public string Region { get; set; }
+    public string? Region { get; set; }
 
     //[MapToColumn("Gateway")]
-    public string Gateway { get; set; }
+    public string? Gateway { get; set; }
 
     //[MapToColumn("PayloadHash")]
-    public string PayloadHash { get; set; }
+    public string? PayloadHash { get; set; }
 
     //[MapToColumn("PayloadSize")]
     public uint PayloadSize { get; set; }

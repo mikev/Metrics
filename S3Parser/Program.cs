@@ -5,15 +5,24 @@ using Amazon.S3.Model;
 using Google.Protobuf;
 using Helium.PacketRouter;
 using Parquet.Serialization;
+using Parquet.File;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
+using Google.Protobuf.WellKnownTypes;
 
 Console.WriteLine("Hello, World!");
 
+int minutes = 30;
+var startString = ToUnixEpochTime("2023-4-22 12:00:00 AM"); // 1680332400;
+
 string parFile = @"C:\temp\packet_report_4-1.parquet";
+string parFile2 = @"C:\temp\packetreport_1680073200.parquet";
 
 
-//using Stream parStream = File.Open(parFile, FileMode.Open);
+//using Stream parStream = File.Open(parFile2, FileMode.OpenOrCreate);
+
+//IList<ParquetReport> readData = await ParquetSerializer.DeserializeAsync<ParquetReport>(parStream);
+//var rdCount = readData.Count;
 
 //var options = new ParquetOptions { TreatByteArrayAsString = true };
 //using (var reader = await ParquetReader.CreateAsync(parStream, options))
@@ -113,11 +122,9 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
 }
 
 ulong startUnixExpected = 1680332653569;
-int minutes = 24 * 60;
-var startString = ToUnixEpochTime("2023-3-29 12:00:00 AM"); // 1680332400;
 ulong startUnix = ulong.Parse(startString);
 
-string startAfterExpected = "packetreport.1680332653569";
+string startAfterExpected = $"packetreport.{startUnixExpected}";
 string startAfter = $"packetreport.{startString}";
 
 HashSet<ByteString> hashSet = new HashSet<ByteString>();
@@ -133,14 +140,9 @@ ulong unit24Count = 0;
 
 string parquetFileName2 = $"c:\\temp\\packetreport_{startString}.parquet";
 
-//using var rowWriter2 = ParquetFile.CreateRowWriter<ParquetReport>(parquetFileName2);
-//rowWriter2.StartNewRowGroup();
-
 Dictionary<ulong, ulong> ouiCounter = new Dictionary<ulong, ulong>();
 Dictionary<ulong, ulong> regionCounter = new Dictionary<ulong, ulong>();
 List<ParquetReport> packetList = new List<ParquetReport>();
-
-//IList<ParquetReport> readData = await ParquetSerializer.DeserializeAsync()
 
 //var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
@@ -180,76 +182,60 @@ await foreach( var item in list)
     prevTimestamp = timestamp;
 }
 
-await ParquetSerializer.SerializeAsync(packetList, parquetFileName2);
-
 var predictedDC = (double)unit24Count * 0.00001;
 var fees = ((double)byteCount / 24) * 0.00001;
 Console.WriteLine($"{startUnix} minutes={minutes} countTotal= {currCount} dupeTotal= {currDupeCount} byteTotal= {byteCount} predDC= {predictedDC} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {fees}");
 
-long[] nums;
-long k = 10;
-PriorityQueue<ulong, ulong> heap = new PriorityQueue<ulong, ulong>(
-    Comparer<ulong>.Create((x, y) => (int)(x - y))
-);
-foreach (var freqEntry in ouiCounter)
+var vpList = ComputeValuePercent(byteCount, ouiCounter);
+foreach(var vp in vpList)
 {
-    heap.Enqueue(freqEntry.Key, freqEntry.Value);
-    if (heap.Count > k)
-        heap.Dequeue();
-}
-
-ulong[] result = new ulong[k];
-for (long i = k - 1; i >= 0; i--)
-{
-    if (heap.Count == 0)
-        break;
-    result[i] = heap.Dequeue();
-}
-
-foreach(ulong value in result)
-{
-    if (value > 0)
-    {
-        var ouiTotal = ouiCounter[value];
-        var ouiPercentage = (double)ouiTotal * 100 / (double)byteCount;
-        Console.WriteLine($"OUI= {value} Percentage= {ouiPercentage} %");
-    }
-}
-
-heap.Clear();
-foreach (var freqEntry in regionCounter)
-{
-    heap.Enqueue(freqEntry.Key, freqEntry.Value);
-    if (heap.Count > k)
-        heap.Dequeue();
-}
-
-for (long i = k - 1; i >= 0; i--)
-{
-    if (heap.Count == 0)
-        break;
-    result[i] = heap.Dequeue();
-}
-
-foreach (ulong value in result)
-{
-    if (value > 0)
-    {
-        var regionTotal = regionCounter[value];
-        var regionPercentage = (double)regionTotal * 100 / (double)byteCount;
-        Console.WriteLine($"Region= {value} Percentage= {regionPercentage} %");
-    }
-}
-
-//rowWriter2.Close();
-
-ListObjectsV2Request v2Request = new ListObjectsV2Request
-{
-    BucketName = "foundation_iot_packet_ingest",
-    StartAfter = "packetreport.1681334821566.gz"
+    Console.WriteLine($"OUI= {vp.Item1} Percentage= {vp.Item2} %");
 };
 
-string path = "";
+var vpList2 = ComputeValuePercent(byteCount, regionCounter);
+foreach (var vp in vpList2)
+{
+    Console.WriteLine($"Region= {vp.Item1} Percentage= {vp.Item2} %");
+};
+
+await ParquetSerializer.SerializeAsync(packetList, parquetFileName2);
+
+static List<(ulong, double)> ComputeValuePercent(double byteCount, Dictionary<ulong, ulong> valueCounter)
+{
+    List<(ulong, double)> valuePercentList = new List<(ulong, double)>();
+    long k = 10;
+    ulong[] result = new ulong[k];
+
+    PriorityQueue<ulong, ulong> heap = new PriorityQueue<ulong, ulong>(
+        Comparer<ulong>.Create((x, y) => (int)(x - y)));
+
+    heap.Clear();
+    foreach (var freqEntry in valueCounter)
+    {
+        heap.Enqueue(freqEntry.Key, freqEntry.Value);
+        if (heap.Count > k)
+            heap.Dequeue();
+    }
+
+    long k2 = Math.Min(k, heap.Count);
+    for (long i = k2 - 1; i >= 0; i--)
+    {
+        if (heap.Count == 0)
+            break;
+        result[i] = heap.Dequeue();
+    }
+
+    for (int i = 0; i < k2; i++)
+    {
+        ulong value = result[i];
+        if (valueCounter.TryGetValue(value, out ulong count))
+        {
+            var regionPercentage = (double)count * 100 / (double)byteCount;
+            valuePercentList.Add((value, regionPercentage));
+        }
+    }
+    return valuePercentList;
+}
 
 static async void WriteBytesToFile(byte[] bytes, string fileName)
 {
