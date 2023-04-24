@@ -12,12 +12,14 @@ using Google.Protobuf.WellKnownTypes;
 
 Console.WriteLine("Hello, World!");
 
-int minutes = 30;
-var startString = ToUnixEpochTime("2023-4-22 12:00:00 AM"); // 1680332400;
+int minutes = 24 * 60;
+var startString = ToUnixEpochTime("2023-4-23 12:00:00 AM"); // 1680332400;
 
 string parFile = @"C:\temp\packet_report_4-1.parquet";
 string parFile2 = @"C:\temp\packetreport_1680073200.parquet";
 
+List<ParquetReport> packetList = new List<ParquetReport>();
+//packetList = null;
 
 //using Stream parStream = File.Open(parFile2, FileMode.OpenOrCreate);
 
@@ -142,7 +144,6 @@ string parquetFileName2 = $"c:\\temp\\packetreport_{startString}.parquet";
 
 Dictionary<ulong, ulong> ouiCounter = new Dictionary<ulong, ulong>();
 Dictionary<ulong, ulong> regionCounter = new Dictionary<ulong, ulong>();
-List<ParquetReport> packetList = new List<ParquetReport>();
 
 //var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
@@ -198,7 +199,10 @@ foreach (var vp in vpList2)
     Console.WriteLine($"Region= {vp.Item1} Percentage= {vp.Item2} %");
 };
 
-await ParquetSerializer.SerializeAsync(packetList, parquetFileName2);
+if (packetList is not null)
+{
+    await ParquetSerializer.SerializeAsync(packetList, parquetFileName2);
+}
 
 static List<(ulong, double)> ComputeValuePercent(double byteCount, Dictionary<ulong, ulong> valueCounter)
 {
@@ -383,7 +387,7 @@ static async Task<(int, int, UInt64, ulong, UInt64)> GetPacketReportsAsync(
     HashSet<ByteString> hashSet,
     Dictionary<ulong, ulong> ouiCounter,
     Dictionary<ulong, ulong> regionCounter,
-    List<ParquetReport> packetList,
+    List<ParquetReport>? packetList,
     string bucketName,
     string report)
 {
@@ -404,20 +408,23 @@ static async Task<(int, int, UInt64, ulong, UInt64)> GetPacketReportsAsync(
             continue;
         }
 
-        var pData = new ParquetReport()
+        if (packetList is not null)
         {
-            GatewayTimestamp = mData.GatewayTimestampMs,
-            OUI = mData.Oui,
-            NetID = mData.NetId,
-            RSSI = mData.Rssi,
-            Frequency = mData.Frequency,
-            SNR = mData.Snr,
-            Region = mData.Region.ToString(),
-            Gateway = mData.Gateway.ToBase64(),
-            PayloadHash = mData.PayloadHash.ToBase64(),
-            PayloadSize = mData.PayloadSize
-        };
-        packetList.Add(pData);
+            var pData = new ParquetReport()
+            {
+                GatewayTimestamp = mData.GatewayTimestampMs,
+                OUI = mData.Oui,
+                NetID = mData.NetId,
+                RSSI = mData.Rssi,
+                Frequency = mData.Frequency,
+                SNR = mData.Snr,
+                Region = mData.Region.ToString(),
+                Gateway = mData.Gateway.ToBase64(),
+                PayloadHash = mData.PayloadHash.ToBase64(),
+                PayloadSize = mData.PayloadSize
+            };
+            packetList.Add(pData);
+        }
 
         hashSet.Add(hash);
         messageCount++;
