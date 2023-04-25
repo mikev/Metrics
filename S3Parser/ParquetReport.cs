@@ -1,7 +1,4 @@
 ﻿
-
-//using ParquetSharp.RowOriented;
-
 struct ParquetReport
 {
     //[MapToColumn("GatewayTimestamp")]

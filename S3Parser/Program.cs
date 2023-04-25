@@ -9,104 +9,60 @@ using Parquet.File;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using Google.Protobuf.WellKnownTypes;
-
-Console.WriteLine("Hello, World!");
+using System.CommandLine;
 
 int minutes = 24 * 60;
 var startString = ToUnixEpochTime("2023-4-23 12:00:00 AM"); // 1680332400;
+
+if (args.Length > 0)
+{
+    var startOption = new Option<string?>(
+        name: "--starttime",
+        description: "The time to start processing files.",
+        getDefaultValue: () => "2023-4-1"
+    );
+
+
+    var durationOption = new Option<int?>(
+        name: "--duration",
+        description: "The number of minutes to process, e.g. duration is 60 minutes",
+        getDefaultValue: () => 10
+    );
+
+    var rootCommand = new RootCommand("Sample app for System.CommandLine");
+    rootCommand.AddOption(startOption);
+    rootCommand.AddOption(durationOption);
+
+    rootCommand.SetHandler((inStartTime, inMinutes) =>
+    {
+        startString = ToUnixEpochTime(inStartTime);
+        minutes = inMinutes.GetValueOrDefault(10);
+    }, startOption, durationOption);
+
+    await rootCommand.InvokeAsync(args);
+}
+else
+{
+    Console.WriteLine("No arguments");
+}
+
+ulong startUnixExpected = 1680332653569;
+ulong startUnix = ulong.Parse(startString);
+
+string startAfterExpected = $"packetreport.{startUnixExpected}";
+string startAfter = $"packetreport.{startString}";
+
+var dateTime = UnixTimeMillisecondsToDateTime(double.Parse(startString) * 1000);
+
+Console.WriteLine($"Start time is {dateTime}");
+Console.WriteLine($"S3 startAfter file is {startAfter}");
+Console.WriteLine($"Duration is {minutes} minutes");
 
 string parFile = @"C:\temp\packet_report_4-1.parquet";
 string parFile2 = @"C:\temp\packetreport_1680073200.parquet";
 
 List<ParquetReport> packetList = new List<ParquetReport>();
 //packetList = null;
-
-//using Stream parStream = File.Open(parFile2, FileMode.OpenOrCreate);
-
-//IList<ParquetReport> readData = await ParquetSerializer.DeserializeAsync<ParquetReport>(parStream);
-//var rdCount = readData.Count;
-
-//var options = new ParquetOptions { TreatByteArrayAsString = true };
-//using (var reader = await ParquetReader.CreateAsync(parStream, options))
-//{
-
-//    var fields = reader.Schema.GetDataFields();
-//    foreach (var field in fields)
-//    {
-//        Console.WriteLine($"field={field}");
-//    }
-//    var groupCount = reader.RowGroupCount;
-//    Console.WriteLine($"groupCount={groupCount}");
-
-
-//    var groupReader = reader.OpenRowGroupReader(0);
-
-//    DataColumn[] data = await reader.ReadEntireRowGroupAsync(1);
-
-
-//    var len = data[0].Data.Length;
-//    Console.WriteLine($"len={len}");
-//    var x1 = data[0].Data;
-
-//    Int64[] firstCol = (Int64[])x1;
-
-//    //var column = await groupReader.ReadColumnAsync(fields[0]);
-
-//    Console.WriteLine($"fields={fields}");
-//}
-
-
-
-//Table tbl = await Table.ReadAsync(parFile);
-//IEnumerable<PacketReport> tblList = tbl.ToList<PacketReport>();
-
-//IList<PacketReport> data = await ParquetSerializer.DeserializeAsync<PacketReport>(parStream);
-
-#if false
-using var fileReader = new ParquetFileReader(parFile);
-
-int numColumns = fileReader.FileMetaData.NumColumns;
-long numRows = fileReader.FileMetaData.NumRows;
-int numRowGroups = fileReader.FileMetaData.NumRowGroups;
-IReadOnlyDictionary<string, string> metadata = fileReader.FileMetaData.KeyValueMetadata;
-
-SchemaDescriptor schema = fileReader.FileMetaData.Schema;
-for (int columnIndex = 0; columnIndex < schema.NumColumns; ++columnIndex)
-{
-    ColumnDescriptor column = schema.Column(columnIndex);
-    string columnName = column.Name;
-    var columnType = column.LogicalType;
-    Console.WriteLine($"columnName={columnName} type={columnType}");
-}
-
-for (int rowGroup = 1; rowGroup < fileReader.FileMetaData.NumRowGroups; ++rowGroup)
-{
-    using var rowGroupReader = fileReader.RowGroup(rowGroup);
-    var groupNumRows = checked((int)rowGroupReader.MetaData.NumRows);
-
-    var groupTimestamps = rowGroupReader.Column(0).LogicalReader<Int64>().ReadAll(100);
-    var groupOUIs = rowGroupReader.Column(1).LogicalReader<UInt64>().ReadAll(100);
-    var groupNetIDs = rowGroupReader.Column(2).LogicalReader<UInt64>().ReadAll(100);
-}
-
-fileReader.Close();
-#endif
-//if (File.Exists(parFile))
-//{
-//    using var rowReader = ParquetFile.CreateRowReader<ParquetReport>(parFile);
-//    for (int rowGroup = 0; rowGroup < rowReader.FileMetaData.NumRowGroups; ++rowGroup)
-//    {
-//        using var rowGroupReader = rowReader.R RowGroup(rowGroup);
-//        ParquetReport[] rowGroupReader = rowReader.ReadRows(rowGroup);
-//        var groupList = rowGroupReader.ToImmutableList();
-//        //reports.Concat(group.ToImmutableList());
-//        foreach (var item in groupList)
-//        {
-//            Console.WriteLine($"item={item}");
-//        }
-//    }
-//    rowReader.Dispose();
-//}
 
 // Create an S3 client object.
 var s3Client = new AmazonS3Client();
@@ -122,12 +78,6 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
 {
     throw new Exception($"{ingestBucket} not found");
 }
-
-ulong startUnixExpected = 1680332653569;
-ulong startUnix = ulong.Parse(startString);
-
-string startAfterExpected = $"packetreport.{startUnixExpected}";
-string startAfter = $"packetreport.{startString}";
 
 HashSet<ByteString> hashSet = new HashSet<ByteString>();
 var prevTimestamp = DateTime.MinValue;
@@ -154,10 +104,9 @@ await foreach( var item in list)
     var timestamp = meta.Item1;
     if (TimeBoundaryTrigger(prevTimestamp, timestamp))
     {
-        Console.WriteLine($"Time trigger {prevTimestamp} {timestamp}");
-        Console.WriteLine($"{item} count={currCount} dupes={currDupeCount} bytes={byteCount}");
+        Console.WriteLine($"Delta {prevTimestamp.ToShortTimeString()} {timestamp.ToShortTimeString()}");
         var fees2 = ((double)byteCount / 24) * 0.00001;
-        Console.WriteLine($"{startUnix} minutes={minutes} countTotal={currCount} byteTotal={byteCount} u24Count={unit24Count} fc={fileCount} rawTotal={(float)rawCount / (1024 * 1024)} gzTotal={(float)gzCount / (1024 * 1024)} fees={fees2}");
+        Console.WriteLine($"Cumulative countTotal={currCount} dupes={currDupeCount} byteTotal={byteCount} u24Count={unit24Count} fc={fileCount} rawTotal={(float)rawCount / (1024 * 1024)} gzTotal={(float)gzCount / (1024 * 1024)} fees={fees2}");
 
     }
 
@@ -169,8 +118,8 @@ await foreach( var item in list)
     var reportStats = await GetPacketReportsAsync(s3Client, hashSet, ouiCounter, regionCounter, packetList, ingestBucket, item);
     var timestamp2 = Regex.Match(item, @"\d+").Value;
     UInt64 microSeconds = UInt64.Parse(timestamp2);
-    var time = UnixTimeStampToDateTime(microSeconds);
-    Console.WriteLine($"{item} {reportStats} {time.ToShortTimeString()}");
+    var time = UnixTimeMillisecondsToDateTime(microSeconds);
+    Console.WriteLine($"{time.ToShortTimeString()} {item} {reportStats}");
 
     currCount += reportStats.Item1;
     currDupeCount += reportStats.Item2;
@@ -263,9 +212,9 @@ static async void WriteStreamToFile(Stream inStream, string filename)
     memoryStream.Seek(0, SeekOrigin.Begin);
 }
 
-static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+static DateTime UnixTimeMillisecondsToDateTime(double unixTimeStamp)
 {
-    // Unix timestamp is seconds past epoch
+    // Unix timestamp is seconds past the 1970 epoch
     DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
     dateTime = dateTime.AddMilliseconds(unixTimeStamp).ToLocalTime();
     return dateTime;

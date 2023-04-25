@@ -21,6 +21,7 @@
     </PackageReference>
     <PackageReference Include="Parquet.Net" Version="4.7.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.96" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
 	<Protobuf Include="data_rate.proto" />
 	<Protobuf Include="poc_lora.proto" />
 	<Protobuf Include="region.proto" />
