@@ -23,10 +23,6 @@ message packet_router_packet_report_v1 {
   bool free = 12;
 }
 
-message packet_reports {
-  repeated packet_router_packet_report_v1 results = 1;
-}
-
 message packet_router_packet_up_v1 {
   bytes payload = 1;
   uint64 timestamp = 2;
