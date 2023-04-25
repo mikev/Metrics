@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S3Parser", "S3Parser.csproj", "{8F3375BF-5384-4501-9CB8-8562CAABAC16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTPacketIngestParser", "IOTPacketIngestParser.csproj", "{8F3375BF-5384-4501-9CB8-8562CAABAC16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
