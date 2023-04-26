@@ -54,7 +54,7 @@ string startAfter = $"packetreport.{startString}";
 
 var dateTime = UnixTimeMillisecondsToDateTime(double.Parse(startString) * 1000);
 
-Console.WriteLine($"Start time is {dateTime}");
+Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
 
@@ -67,13 +67,8 @@ List<ParquetReport> packetList = new List<ParquetReport>();
 // Create an S3 client object.
 var s3Client = new AmazonS3Client();
 
-var bucketList = ListBucketsAsync(s3Client);
-await foreach( var name in bucketList )
-{
-    Console.WriteLine($"Bucket {name}");
-}
-
 string ingestBucket = "foundation-iot-packet-ingest";
+var bucketList = ListBucketsAsync(s3Client);
 if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket ))
 {
     throw new Exception($"{ingestBucket} not found");
@@ -104,9 +99,9 @@ await foreach( var item in list)
     var timestamp = meta.Item1;
     if (TimeBoundaryTrigger(prevTimestamp, timestamp))
     {
-        Console.WriteLine($"Delta {prevTimestamp.ToShortTimeString()} {timestamp.ToShortTimeString()}");
+        Console.WriteLine($"Delta {prevTimestamp.ToUniversalTime().ToShortTimeString()} {timestamp.ToUniversalTime().ToShortTimeString()}");
         var fees2 = ((double)byteCount / 24) * 0.00001;
-        Console.WriteLine($"Cumulative countTotal={currCount} dupes={currDupeCount} byteTotal={byteCount} u24Count={unit24Count} fc={fileCount} rawTotal={(float)rawCount / (1024 * 1024)} gzTotal={(float)gzCount / (1024 * 1024)} fees={fees2}");
+        Console.WriteLine($"Cumulative countTotal={currCount} dupes={currDupeCount} byteTotal={byteCount} u24Count={unit24Count} fc={fileCount} rawTotal={(float)rawCount / (1024 * 1024)} gzTotal={(float)gzCount / (1024 * 1024)} fees={fees2.ToString("######.#")}");
 
     }
 
@@ -119,7 +114,7 @@ await foreach( var item in list)
     var timestamp2 = Regex.Match(item, @"\d+").Value;
     UInt64 microSeconds = UInt64.Parse(timestamp2);
     var time = UnixTimeMillisecondsToDateTime(microSeconds);
-    Console.WriteLine($"{time.ToShortTimeString()} {item} {reportStats}");
+    Console.WriteLine($"{time.ToUniversalTime().ToShortTimeString()} {item} {reportStats}");
 
     currCount += reportStats.Item1;
     currDupeCount += reportStats.Item2;
@@ -134,7 +129,10 @@ await foreach( var item in list)
 
 var predictedDC = (double)unit24Count * 0.00001;
 var fees = ((double)byteCount / 24) * 0.00001;
-Console.WriteLine($"{startUnix} minutes={minutes} countTotal= {currCount} dupeTotal= {currDupeCount} byteTotal= {byteCount} predDC= {predictedDC} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {fees}");
+
+Console.WriteLine("--------------------------------------");
+Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {currCount} dupeTotal= {currDupeCount} byteTotal= {byteCount} predDC= {predictedDC} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {fees.ToString("######.#")}");
+Console.WriteLine("--------------------------------------");
 
 var vpList = ComputeValuePercent(byteCount, ouiCounter);
 foreach(var vp in vpList)
@@ -223,9 +221,9 @@ static DateTime UnixTimeMillisecondsToDateTime(double unixTimeStamp)
 static string ToUnixEpochTime(string textDateTime)
 {
     // textString "2023-4-12 2:27:01 PM"
-    var dateTime = DateTime.Parse(textDateTime);
+    var dateTime = DateTime.Parse( textDateTime).ToUniversalTime();
 
-    DateTimeOffset dto = new DateTimeOffset(dateTime.ToUniversalTime());
+    DateTimeOffset dto = new DateTimeOffset(dateTime);
     return dto.ToUnixTimeSeconds().ToString();
 }
 
@@ -423,7 +421,7 @@ static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
 static async Task<(DateTime, long)> S3ObjectMeta(AmazonS3Client s3Client, string bucketName, string keyName)
 {
     var getObjectResult = await s3Client.GetObjectAsync(bucketName, keyName);
-    return (getObjectResult.LastModified, getObjectResult.Headers.ContentLength);
+    return (getObjectResult.LastModified.ToUniversalTime(), getObjectResult.Headers.ContentLength);
 }
 
 static async Task<byte[]> DecompressS3Object(AmazonS3Client s3Client, string bucketName, string keyName)
