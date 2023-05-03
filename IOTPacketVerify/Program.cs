@@ -107,15 +107,14 @@ await foreach( var item in list)
     prevTimestamp = timestamp;
 }
 
-var predictedDC = (double)unit24Count * 0.00001;
-var fees = (predictedDC) * 0.00001;
+var burnedDCFees = (unit24Count) * 0.00001;
 
 Console.WriteLine("--------------------------------------");
 Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
 Console.WriteLine("--------------------------------------");
-Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {currCount} dupeTotal= {currDupeCount} byteTotal= {byteCount} dcCount= {unit24Count} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {fees}");
+Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {currCount} dupeTotal= {currDupeCount} byteTotal= {byteCount} dcCount= {unit24Count} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {burnedDCFees.ToString("########.##")}");
 Console.WriteLine("--------------------------------------");
 
 static async Task<PacketSummary> GetValidPacketsAsync(
