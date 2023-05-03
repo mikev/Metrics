@@ -3,8 +3,6 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 using Google.Protobuf;
-using Parquet.Serialization;
-using Parquet.File;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using Google.Protobuf.WellKnownTypes;
@@ -12,7 +10,7 @@ using System.CommandLine;
 using Helium.PacketVerifier;
 
 int minutes = 24 * 60;
-var startString = ToUnixEpochTime("2023-4-23Z"); // "2023-4-23 12:00:00 AM" or 1680332400;
+var startString = ToUnixEpochTime("2023-4-19Z"); // "2023-4-23 12:00:00 AM" or 1680332400;
 
 if (args.Length > 0)
 {
@@ -58,11 +56,8 @@ Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
 
-string parFile = @"C:\temp\packet_report_4-1.parquet";
-string parFile2 = @"C:\temp\iot_valid_packet_1680073200.parquet";
-
 List<ParquetReport> packetList = new List<ParquetReport>();
-//packetList = null;
+packetList = null;
 
 // Create an S3 client object.
 var s3Client = new AmazonS3Client();
@@ -74,51 +69,39 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
     throw new Exception($"{ingestBucket} not found");
 }
 
+
 HashSet<ByteString> hashSet = new HashSet<ByteString>();
 var prevTimestamp = DateTime.MinValue;
 
-int currCount = 0;
-int currDupeCount = 0;
-UInt64 byteCount = 0;
-UInt64 rawCount = 0;
-long gzCount = 0;
+ulong currCount = 0;
+ulong currDupeCount = 0;
+ulong byteCount = 0;
+ulong rawCount = 0;
+ulong gzCount = 0;
 int fileCount = 0;
 ulong unit24Count = 0;
 
-string parquetFileName2 = $"c:\\temp\\iot_valid_packet_{startString}.parquet";
-
-//var list = ListBucketContentsAsync(s3Client, ingestBucket, startAfter);
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
 await foreach( var item in list)
 {
-    //Console.WriteLine($"report: {item}");
-    var meta  = await S3ObjectMeta(s3Client, ingestBucket, item);
-    var timestamp = meta.Item1;
-    if (TimeBoundaryTrigger(prevTimestamp, timestamp))
-    {
-        Console.WriteLine($"Delta {prevTimestamp.ToUniversalTime().ToShortTimeString()} {timestamp.ToUniversalTime().ToShortTimeString()}");
-        var fees2 = (unit24Count) * 0.00001;
-        Console.WriteLine($"Cumulative countTotal={currCount} dupes={currDupeCount} byteTotal={byteCount} u24Count={unit24Count} fc={fileCount} rawTotal={(float)rawCount / (1024 * 1024)} gzTotal={(float)gzCount / (1024 * 1024)} fees={fees2.ToString("######.#")}");
-
-    }
-
     if (hashSet.Count > 5000)
     {
         hashSet.Clear();
     }
 
-    var reportStats = await GetValidPacketsAsync(s3Client, hashSet, packetList, ingestBucket, item);
+    var summary = await GetValidPacketsAsync(s3Client, hashSet, packetList, ingestBucket, item);
     var timestamp2 = Regex.Match(item, @"\d+").Value;
     UInt64 microSeconds = UInt64.Parse(timestamp2);
     var time = UnixTimeMillisecondsToDateTime(microSeconds);
-    Console.WriteLine($"{time.ToUniversalTime().ToShortTimeString()} {item} {reportStats}");
+    Console.WriteLine($"{time.ToUniversalTime().ToShortTimeString()} {item} {summary.ToString()}");
 
-    currCount += reportStats.Item1;
-    currDupeCount += reportStats.Item2;
-    byteCount += reportStats.Item3;
-    unit24Count += reportStats.Item4;
-    rawCount += reportStats.Item5;
-    gzCount += meta.Item2;
+    var timestamp = summary.ModTime;
+    currCount += summary.MessageCount;
+    currDupeCount += summary.DupeCount;
+    byteCount += summary.TotalBytes;
+    unit24Count += summary.DCCount;
+    rawCount += summary.RawSize;
+    gzCount += summary.GzipSize;
     fileCount++;
 
     prevTimestamp = timestamp;
@@ -135,34 +118,29 @@ Console.WriteLine("--------------------------------------");
 Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {currCount} dupeTotal= {currDupeCount} byteTotal= {byteCount} dcCount= {unit24Count} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {fees}");
 Console.WriteLine("--------------------------------------");
 
-if (packetList is not null)
-{
-    await ParquetSerializer.SerializeAsync(packetList, parquetFileName2);
-}
-
-static async Task<(int, int, UInt64, ulong, UInt64)> GetValidPacketsAsync(
+static async Task<PacketSummary> GetValidPacketsAsync(
     AmazonS3Client s3Client,
     HashSet<ByteString> hashSet,
     List<ParquetReport>? packetList,
     string bucketName,
     string report)
 {
-    var rawBytes = await DecompressS3Object(s3Client, bucketName, report);
-    int messageCount = 0;
-    int dupeCount = 0;
+    (var modTime, var gzipSize, var rawSize, var rawBytes) = await DownloadS3Object(s3Client, bucketName, report);
+    ulong messageCount = 0;
+    ulong dupeCount = 0;
     ulong totalBytes = 0;
-    ulong predictedDC = 0;
+    ulong dcCount = 0;
 
     var messageList = ExtractMessageList(rawBytes);
     foreach (var message in messageList)
     {
         var mData = valid_packet.Parser.ParseFrom(message);
         var hash = mData.PayloadHash;
-        if (hashSet.Contains(hash))
-        {
-            dupeCount++;
-            //continue;
-        }
+        //if (hashSet.Contains(hash))
+        //{
+        //    dupeCount++;
+        //    continue;
+        //}
 
         if (packetList is not null)
         {
@@ -177,13 +155,24 @@ static async Task<(int, int, UInt64, ulong, UInt64)> GetValidPacketsAsync(
             packetList.Add(pData);
         }
 
-        hashSet.Add(hash);
+        //hashSet.Add(hash);
         messageCount++;
         totalBytes += mData.PayloadSize;
-        predictedDC += mData.NumDcs;
+        dcCount += mData.NumDcs;
     }
 
-    return (messageCount, dupeCount, totalBytes, predictedDC, (UInt64)rawBytes.Length);
+    var summary = new PacketSummary()
+    {
+        ModTime = modTime,
+        MessageCount = messageCount,
+        DupeCount = dupeCount,
+        TotalBytes = totalBytes,
+        DCCount = dcCount,
+        RawSize = rawSize,
+        GzipSize = gzipSize
+    };
+
+    return summary;
 }
 
 static List<(ulong, double)> ComputeValuePercent(double byteCount, Dictionary<ulong, ulong> valueCounter)
@@ -393,6 +382,24 @@ static async Task<byte[]> DecompressS3Object(AmazonS3Client s3Client, string buc
 
     var unzip = DecompressSteam(memoryStream);
     return unzip;
+}
+
+static async Task<(DateTime, ulong, ulong, byte[])> DownloadS3Object(AmazonS3Client s3Client, string bucketName, string keyName)
+{
+    var getObjectResult = await s3Client.GetObjectAsync(bucketName, keyName);
+    var modTime = getObjectResult.LastModified.ToUniversalTime();
+    var gzipSize = getObjectResult.Headers.ContentLength;
+    using var goStream = getObjectResult.ResponseStream;
+
+    using MemoryStream memoryStream = new MemoryStream();
+
+    goStream.CopyTo(memoryStream);
+
+    memoryStream.Position = 0;
+    memoryStream.Seek(0, SeekOrigin.Begin);
+
+    var unzip = DecompressSteam(memoryStream);
+    return (modTime, (ulong)gzipSize, (ulong)unzip.LongLength, unzip);
 }
 
 static byte[] DecompressGzipBytes(byte[] gzip)

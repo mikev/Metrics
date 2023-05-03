@@ -1,4 +1,6 @@
 ﻿
+using System.Xml.Linq;
+
 struct ParquetReport
 {
     public ulong PacketTimestamp { get; set; }
@@ -10,4 +12,20 @@ struct ParquetReport
     public uint PayloadSize { get; set; }
 
     public uint NumDCs { get; set; }
+};
+
+public struct PacketSummary
+{
+    public DateTime ModTime;
+    public ulong MessageCount;
+    public ulong DupeCount;
+    public ulong TotalBytes;
+    public ulong DCCount;
+    public ulong RawSize;
+    public ulong GzipSize;
+
+    public override String ToString()
+    {
+        return $"{MessageCount} {DupeCount} {TotalBytes} {DCCount} {RawSize} {GzipSize}";
+    }
 };
