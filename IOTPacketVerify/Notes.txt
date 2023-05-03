@@ -1,0 +1,86 @@
+﻿//using Stream parStream = File.Open(parFile2, FileMode.OpenOrCreate);
+
+//IList<ParquetReport> readData = await ParquetSerializer.DeserializeAsync<ParquetReport>(parStream);
+//var rdCount = readData.Count;
+
+//var options = new ParquetOptions { TreatByteArrayAsString = true };
+//using (var reader = await ParquetReader.CreateAsync(parStream, options))
+//{
+
+//    var fields = reader.Schema.GetDataFields();
+//    foreach (var field in fields)
+//    {
+//        Console.WriteLine($"field={field}");
+//    }
+//    var groupCount = reader.RowGroupCount;
+//    Console.WriteLine($"groupCount={groupCount}");
+
+
+//    var groupReader = reader.OpenRowGroupReader(0);
+
+//    DataColumn[] data = await reader.ReadEntireRowGroupAsync(1);
+
+
+//    var len = data[0].Data.Length;
+//    Console.WriteLine($"len={len}");
+//    var x1 = data[0].Data;
+
+//    Int64[] firstCol = (Int64[])x1;
+
+//    //var column = await groupReader.ReadColumnAsync(fields[0]);
+
+//    Console.WriteLine($"fields={fields}");
+//}
+
+
+
+//Table tbl = await Table.ReadAsync(parFile);
+//IEnumerable<PacketReport> tblList = tbl.ToList<PacketReport>();
+
+//IList<PacketReport> data = await ParquetSerializer.DeserializeAsync<PacketReport>(parStream);
+
+#if false
+using var fileReader = new ParquetFileReader(parFile);
+
+int numColumns = fileReader.FileMetaData.NumColumns;
+long numRows = fileReader.FileMetaData.NumRows;
+int numRowGroups = fileReader.FileMetaData.NumRowGroups;
+IReadOnlyDictionary<string, string> metadata = fileReader.FileMetaData.KeyValueMetadata;
+
+SchemaDescriptor schema = fileReader.FileMetaData.Schema;
+for (int columnIndex = 0; columnIndex < schema.NumColumns; ++columnIndex)
+{
+    ColumnDescriptor column = schema.Column(columnIndex);
+    string columnName = column.Name;
+    var columnType = column.LogicalType;
+    Console.WriteLine($"columnName={columnName} type={columnType}");
+}
+
+for (int rowGroup = 1; rowGroup < fileReader.FileMetaData.NumRowGroups; ++rowGroup)
+{
+    using var rowGroupReader = fileReader.RowGroup(rowGroup);
+    var groupNumRows = checked((int)rowGroupReader.MetaData.NumRows);
+
+    var groupTimestamps = rowGroupReader.Column(0).LogicalReader<Int64>().ReadAll(100);
+    var groupOUIs = rowGroupReader.Column(1).LogicalReader<UInt64>().ReadAll(100);
+    var groupNetIDs = rowGroupReader.Column(2).LogicalReader<UInt64>().ReadAll(100);
+}
+
+fileReader.Close();
+#endif
+//if (File.Exists(parFile))
+//{
+//    using var rowReader = ParquetFile.CreateRowReader<ParquetReport>(parFile);
+//    for (int rowGroup = 0; rowGroup < rowReader.FileMetaData.NumRowGroups; ++rowGroup)
+//    {
+//        using var rowGroupReader = rowReader.R RowGroup(rowGroup);
+//        ParquetReport[] rowGroupReader = rowReader.ReadRows(rowGroup);
+//        var groupList = rowGroupReader.ToImmutableList();
+//        //reports.Concat(group.ToImmutableList());
+//        foreach (var item in groupList)
+//        {
+//            Console.WriteLine($"item={item}");
+//        }
+//    }
+//    rowReader.Dispose();
+//}
