@@ -77,11 +77,11 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
 HashSet<ByteString> hashSet = new HashSet<ByteString>();
 var prevTimestamp = DateTime.MinValue;
 
-int currCount = 0;
-int currDupeCount = 0;
-UInt64 byteCount = 0;
-UInt64 rawCount = 0;
-long gzCount = 0;
+ulong currCount = 0;
+ulong currDupeCount = 0;
+ulong byteCount = 0;
+ulong rawCount = 0;
+ulong gzCount = 0;
 int fileCount = 0;
 ulong unit24Count = 0;
 
@@ -116,12 +116,12 @@ await foreach( var item in list)
     var time = UnixTimeMillisecondsToDateTime(microSeconds);
     Console.WriteLine($"{time.ToUniversalTime().ToShortTimeString()} {item} {reportStats}");
 
-    currCount += reportStats.Item1;
-    currDupeCount += reportStats.Item2;
-    byteCount += reportStats.Item3;
-    unit24Count += reportStats.Item4;
-    rawCount += reportStats.Item5;
-    gzCount += meta.Item2;
+    currCount += reportStats.MessageCount;
+    currDupeCount += reportStats.DupeCount;
+    byteCount += reportStats.TotalBytes;
+    unit24Count += reportStats.DCCount;
+    rawCount += reportStats.RawSize;
+    gzCount += reportStats.GzipSize;
     fileCount++;
 
     prevTimestamp = timestamp;
@@ -133,6 +133,93 @@ var fees = ((double)byteCount / 24) * 0.00001;
 Console.WriteLine("--------------------------------------");
 Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {currCount} dupeTotal= {currDupeCount} byteTotal= {byteCount} predDC= {predictedDC} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {fees.ToString("######.#")}");
 Console.WriteLine("--------------------------------------");
+
+static async Task<PacketSummary> GetPacketReportsAsync(
+    AmazonS3Client s3Client,
+    HashSet<ByteString> hashSet,
+    Dictionary<ulong, ulong> ouiCounter,
+    Dictionary<ulong, ulong> regionCounter,
+    List<ParquetReport>? packetList,
+    string bucketName,
+    string report)
+{
+    (var modTime, var gzipSize, var rawSize, var rawBytes) = await DownloadS3Object(s3Client, bucketName, report);
+    ulong messageCount = 0;
+    ulong dupeCount = 0;
+    ulong totalBytes = 0;
+    ulong predictedDC = 0;
+
+    var messageList = ExtractMessageList(rawBytes);
+    foreach (var message in messageList)
+    {
+        var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
+        var hash = mData.PayloadHash;
+        if (hashSet.Contains(hash))
+        {
+            dupeCount++;
+            continue;
+        }
+
+        if (packetList is not null)
+        {
+            var pData = new ParquetReport()
+            {
+                GatewayTimestamp = mData.GatewayTimestampMs,
+                OUI = mData.Oui,
+                NetID = mData.NetId,
+                RSSI = mData.Rssi,
+                Frequency = mData.Frequency,
+                SNR = mData.Snr,
+                Region = mData.Region.ToString(),
+                Gateway = mData.Gateway.ToBase64(),
+                PayloadHash = mData.PayloadHash.ToBase64(),
+                PayloadSize = mData.PayloadSize
+            };
+            packetList.Add(pData);
+        }
+
+        hashSet.Add(hash);
+        messageCount++;
+        totalBytes += mData.PayloadSize;
+        ulong dc = (mData.PayloadSize / 24) + 1;
+        predictedDC += dc;
+        ulong oui = mData.Oui;
+        ulong region = (ulong)mData.Region;
+
+        if (!(ouiCounter.ContainsKey(oui)))
+        {
+            ouiCounter.Add(oui, mData.PayloadSize);
+        }
+        else
+        {
+            ouiCounter[oui] += mData.PayloadSize;
+        }
+
+        if (!(regionCounter.ContainsKey(region)))
+        {
+            regionCounter.Add(region, mData.PayloadSize);
+        }
+        else
+        {
+            regionCounter[region] += mData.PayloadSize;
+        }
+    }
+
+    var summary = new PacketSummary()
+    {
+        ModTime = modTime,
+        MessageCount = messageCount,
+        DupeCount = dupeCount,
+        TotalBytes = totalBytes,
+        DCCount = predictedDC,
+        FileCount = 1,
+        RawSize = rawSize,
+        GzipSize = gzipSize
+    };
+
+    return summary;
+}
+
 
 var vpList = ComputeValuePercent(byteCount, ouiCounter);
 foreach(var vp in vpList)
@@ -329,79 +416,6 @@ static void PrintMessage(IMessage message)
     }
 }
 
-static async Task<(int, int, UInt64, ulong, UInt64)> GetPacketReportsAsync(
-    AmazonS3Client s3Client,
-    HashSet<ByteString> hashSet,
-    Dictionary<ulong, ulong> ouiCounter,
-    Dictionary<ulong, ulong> regionCounter,
-    List<ParquetReport>? packetList,
-    string bucketName,
-    string report)
-{
-    var rawBytes = await DecompressS3Object(s3Client, bucketName, report);
-    int messageCount = 0;
-    int dupeCount = 0;
-    ulong totalBytes = 0;
-    ulong predictedDC = 0;
-
-    var messageList = ExtractMessageList(rawBytes);
-    foreach (var message in messageList)
-    {
-        var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
-        var hash = mData.PayloadHash;
-        if (hashSet.Contains(hash))
-        {
-            dupeCount++;
-            continue;
-        }
-
-        if (packetList is not null)
-        {
-            var pData = new ParquetReport()
-            {
-                GatewayTimestamp = mData.GatewayTimestampMs,
-                OUI = mData.Oui,
-                NetID = mData.NetId,
-                RSSI = mData.Rssi,
-                Frequency = mData.Frequency,
-                SNR = mData.Snr,
-                Region = mData.Region.ToString(),
-                Gateway = mData.Gateway.ToBase64(),
-                PayloadHash = mData.PayloadHash.ToBase64(),
-                PayloadSize = mData.PayloadSize
-            };
-            packetList.Add(pData);
-        }
-
-        hashSet.Add(hash);
-        messageCount++;
-        totalBytes += mData.PayloadSize;
-        ulong dc = (mData.PayloadSize / 24) + 1;
-        predictedDC += dc;
-        ulong oui = mData.Oui;
-        ulong region = (ulong)mData.Region;
-
-        if (!(ouiCounter.ContainsKey(oui)))
-        {
-            ouiCounter.Add(oui, mData.PayloadSize);
-        }
-        else
-        {
-            ouiCounter[oui] += mData.PayloadSize;
-        }
-
-        if (!(regionCounter.ContainsKey(region)))
-        {
-            regionCounter.Add(region, mData.PayloadSize);
-        }
-        else
-        {
-            regionCounter[region] += mData.PayloadSize;
-        }
-    }
-
-    return (messageCount, dupeCount, totalBytes, predictedDC, (UInt64)rawBytes.Length);
-}
 
 static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
 {
@@ -416,6 +430,24 @@ static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
         }
     }
     return false;
+}
+
+static async Task<(DateTime, ulong, ulong, byte[])> DownloadS3Object(AmazonS3Client s3Client, string bucketName, string keyName)
+{
+    var getObjectResult = await s3Client.GetObjectAsync(bucketName, keyName);
+    var modTime = getObjectResult.LastModified.ToUniversalTime();
+    var gzipSize = getObjectResult.Headers.ContentLength;
+    using var goStream = getObjectResult.ResponseStream;
+
+    using MemoryStream memoryStream = new MemoryStream();
+
+    goStream.CopyTo(memoryStream);
+
+    memoryStream.Position = 0;
+    memoryStream.Seek(0, SeekOrigin.Begin);
+
+    var unzip = DecompressSteam(memoryStream);
+    return (modTime, (ulong)gzipSize, (ulong)unzip.LongLength, unzip);
 }
 
 static async Task<(DateTime, long)> S3ObjectMeta(AmazonS3Client s3Client, string bucketName, string keyName)
