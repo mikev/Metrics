@@ -10,6 +10,8 @@ using System.Diagnostics;
 
 int minutes = 24 * 60;
 var startString = ToUnixEpochTime("2023-4-19Z"); // "2023-4-23 12:00:00 AM" or 1680332400;
+string ingestBucket = "foundation-iot-packet-verifier";
+string keyPrefix = "iot_valid_packet";
 
 if (args.Length > 0)
 {
@@ -47,14 +49,16 @@ var stopWatch = Stopwatch.StartNew();
 ulong startUnixExpected = 1680332653569;
 ulong startUnix = ulong.Parse(startString);
 
-string startAfterExpected = $"iot_valid_packet.{startUnixExpected}";
-string startAfter = $"iot_valid_packet.{startString}";
+string startAfterExpected = $"{keyPrefix}.{startUnixExpected}";
+string startAfter = $"{keyPrefix}.{startString}";
 
 var dateTime = UnixTimeMillisecondsToDateTime(double.Parse(startString) * 1000);
 
+Console.WriteLine("--------------------------------------");
 Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
+Console.WriteLine("--------------------------------------");
 
 List<ParquetReport> packetList = new List<ParquetReport>();
 packetList = null;
@@ -62,7 +66,6 @@ packetList = null;
 // Create an S3 client object.
 var s3Client = new AmazonS3Client();
 
-string ingestBucket = "foundation-iot-packet-verifier";
 var bucketList = ListBucketsAsync(s3Client);
 if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket ))
 {
@@ -118,7 +121,6 @@ Console.WriteLine($"Elapsed time is {stopWatch.Elapsed}");
 Console.WriteLine("--------------------------------------");
 Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {theSummary.MessageCount} dupes= {theSummary.DupeCount} byteTotal= {theSummary.TotalBytes} dcCount= {theSummary.DCCount} fc= {theSummary.FileCount} rawTotal= {(float)theSummary.RawSize / (1024 * 1024)} gzTotal= {(float)theSummary.GzipSize / (1024 * 1024)} fees= {burnedDCFees.ToString("########.##")}");
 Console.WriteLine("--------------------------------------");
-
 
 static List<Task<PacketSummary>> LoopFiles(AmazonS3Client s3Client, string ingestBucket, List<string> files)
 {
