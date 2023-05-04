@@ -8,6 +8,9 @@ using System.Text.RegularExpressions;
 using Google.Protobuf.WellKnownTypes;
 using System.CommandLine;
 using Helium.PacketVerifier;
+using System.ComponentModel;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 int minutes = 24 * 60;
 var startString = ToUnixEpochTime("2023-4-19Z"); // "2023-4-23 12:00:00 AM" or 1680332400;
@@ -44,6 +47,7 @@ else
     Console.WriteLine("No arguments");
 }
 
+var stopWatch = Stopwatch.StartNew();
 ulong startUnixExpected = 1680332653569;
 ulong startUnix = ulong.Parse(startString);
 
@@ -73,54 +77,68 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
 HashSet<ByteString> hashSet = new HashSet<ByteString>();
 var prevTimestamp = DateTime.MinValue;
 
-ulong currCount = 0;
-ulong currDupeCount = 0;
-ulong byteCount = 0;
-ulong rawCount = 0;
-ulong gzCount = 0;
-int fileCount = 0;
-ulong unit24Count = 0;
+PacketSummary theSummary = new PacketSummary();
+List<string> itemList = new List<string>();
 
-var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes);
-await foreach( var item in list)
+var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes).ToBlockingEnumerable();
+var last = list.Last();
+var listCount = list.Count();
+Console.WriteLine($"Starting {ingestBucket} of key size {listCount}");
+foreach ( var item in list)
 {
-    if (hashSet.Count > 5000)
+    itemList.Add(item);
+    if (itemList.Count >= 16 || item == last)
     {
-        hashSet.Clear();
+        var taskList = LoopFiles(s3Client, ingestBucket, itemList);
+        int total = 0;
+        while (taskList.Any())
+        {
+            Task<PacketSummary> finishedTask = await Task<PacketSummary>.WhenAny(taskList);
+            taskList.Remove(finishedTask);
+            var taskSummary = await finishedTask;
+            theSummary.MessageCount += taskSummary.MessageCount;
+            theSummary.DupeCount += taskSummary.DupeCount;
+            theSummary.DCCount += taskSummary.DCCount;
+            theSummary.TotalBytes += taskSummary.TotalBytes;
+            theSummary.FileCount += taskSummary.FileCount;
+            theSummary.RawSize += taskSummary.RawSize;
+            theSummary.GzipSize += taskSummary.GzipSize;
+
+            var timestamp2 = Regex.Match(item, @"\d+").Value;
+            UInt64 microSeconds = UInt64.Parse(timestamp2);
+            var time = UnixTimeMillisecondsToDateTime(microSeconds);
+            Console.WriteLine($"{time.ToUniversalTime().ToShortTimeString()} {item} {theSummary.ToString()}");
+        }
+        Console.WriteLine($"Clear item list");
+        itemList.Clear();
     }
-
-    var summary = await GetValidPacketsAsync(s3Client, hashSet, packetList, ingestBucket, item);
-    var timestamp2 = Regex.Match(item, @"\d+").Value;
-    UInt64 microSeconds = UInt64.Parse(timestamp2);
-    var time = UnixTimeMillisecondsToDateTime(microSeconds);
-    Console.WriteLine($"{time.ToUniversalTime().ToShortTimeString()} {item} {summary.ToString()}");
-
-    var timestamp = summary.ModTime;
-    currCount += summary.MessageCount;
-    currDupeCount += summary.DupeCount;
-    byteCount += summary.TotalBytes;
-    unit24Count += summary.DCCount;
-    rawCount += summary.RawSize;
-    gzCount += summary.GzipSize;
-    fileCount++;
-
-    prevTimestamp = timestamp;
 }
 
-var burnedDCFees = (unit24Count) * 0.00001;
+var burnedDCFees = (theSummary.DCCount) * 0.00001;
+stopWatch.Stop();
 
 Console.WriteLine("--------------------------------------");
 Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
+Console.WriteLine($"Elapsed time is {stopWatch.Elapsed}");
 Console.WriteLine("--------------------------------------");
-Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {currCount} dupeTotal= {currDupeCount} byteTotal= {byteCount} dcCount= {unit24Count} fc= {fileCount} rawTotal= {(float)rawCount / (1024 * 1024)} gzTotal= {(float)gzCount / (1024 * 1024)} fees= {burnedDCFees.ToString("########.##")}");
+Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {theSummary.MessageCount} dupes= {theSummary.DupeCount} byteTotal= {theSummary.TotalBytes} dcCount= {theSummary.DCCount} fc= {theSummary.FileCount} rawTotal= {(float)theSummary.RawSize / (1024 * 1024)} gzTotal= {(float)theSummary.GzipSize / (1024 * 1024)} fees= {burnedDCFees.ToString("########.##")}");
 Console.WriteLine("--------------------------------------");
 
+
+static List<Task<PacketSummary>> LoopFiles(AmazonS3Client s3Client, string ingestBucket, List<string> files)
+{
+    List<Task<PacketSummary>> taskList = new List<Task<PacketSummary>> ();
+    foreach (var file in files)
+    {
+        var summary = GetValidPacketsAsync(s3Client, ingestBucket, file);
+        taskList.Add(summary);
+    }
+    return taskList;
+}
 static async Task<PacketSummary> GetValidPacketsAsync(
     AmazonS3Client s3Client,
-    HashSet<ByteString> hashSet,
-    List<ParquetReport>? packetList,
     string bucketName,
     string report)
 {
@@ -135,24 +153,6 @@ static async Task<PacketSummary> GetValidPacketsAsync(
     {
         var mData = valid_packet.Parser.ParseFrom(message);
         var hash = mData.PayloadHash;
-        //if (hashSet.Contains(hash))
-        //{
-        //    dupeCount++;
-        //    continue;
-        //}
-
-        if (packetList is not null)
-        {
-            var pData = new ParquetReport()
-            {
-                PacketTimestamp = mData.PacketTimestamp,
-                Gateway = mData.Gateway.ToBase64(),
-                PayloadHash = mData.PayloadHash.ToBase64(),
-                PayloadSize = mData.PayloadSize,
-                NumDCs = mData.NumDcs
-            };
-            packetList.Add(pData);
-        }
 
         //hashSet.Add(hash);
         messageCount++;
@@ -167,6 +167,7 @@ static async Task<PacketSummary> GetValidPacketsAsync(
         DupeCount = dupeCount,
         TotalBytes = totalBytes,
         DCCount = dcCount,
+        FileCount = 1,
         RawSize = rawSize,
         GzipSize = gzipSize
     };

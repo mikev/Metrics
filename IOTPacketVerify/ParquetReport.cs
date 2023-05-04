@@ -21,11 +21,12 @@ public struct PacketSummary
     public ulong DupeCount;
     public ulong TotalBytes;
     public ulong DCCount;
+    public ulong FileCount;
     public ulong RawSize;
     public ulong GzipSize;
 
     public override String ToString()
     {
-        return $"{MessageCount} {DupeCount} {TotalBytes} {DCCount} {RawSize} {GzipSize}";
+        return $"{MessageCount} {DupeCount} {TotalBytes} {DCCount} {FileCount} {RawSize} {GzipSize}";
     }
 };
