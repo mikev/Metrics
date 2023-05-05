@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-// To interact with Amazon S3.
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
 using Google.Protobuf;
 using Helium.PacketRouter;
@@ -70,8 +68,6 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket )
 
 ConcurrentBag<ByteString> hashSet = new ConcurrentBag<ByteString>();
 var prevTimestamp = DateTime.MinValue;
-
-string parquetFileName2 = $"c:\\temp\\packetreport_{startString}.parquet";
 
 ConcurrentDictionary<ulong, ulong> ouiCounter = new ConcurrentDictionary<ulong, ulong>();
 ConcurrentDictionary<ulong, ulong> regionCounter = new ConcurrentDictionary<ulong, ulong>();
@@ -264,28 +260,6 @@ static List<(ulong, double)> ComputeValuePercent(double byteCount, ConcurrentDic
     return valuePercentList;
 }
 
-static async void WriteBytesToFile(byte[] bytes, string fileName)
-{
-    using MemoryStream byteStream = new MemoryStream(bytes);
-    using Stream streamToWriteTo = File.Open(fileName, FileMode.Create);
-    await byteStream.CopyToAsync(streamToWriteTo);
-}
-
-static Stream ReadStreamToFile(string filename)
-{
-    return File.Open(filename, FileMode.Open);
-}
-
-static async void WriteStreamToFile(Stream inStream, string filename)
-{
-    using MemoryStream memoryStream = new MemoryStream();
-    inStream.CopyTo(memoryStream);
-    memoryStream.Position = 0;
-    using Stream streamToWriteTo = File.Open(filename, FileMode.Create);
-    await memoryStream.CopyToAsync(streamToWriteTo);
-    memoryStream.Seek(0, SeekOrigin.Begin);
-}
-
 static DateTime UnixTimeMillisecondsToDateTime(double unixTimeStamp)
 {
     // Unix timestamp is seconds past the 1970 epoch
@@ -301,43 +275,6 @@ static string ToUnixEpochTime(string textDateTime)
 
     DateTimeOffset dto = new DateTimeOffset(dateTime);
     return dto.ToUnixTimeSeconds().ToString();
-}
-
-/// <summary>
-/// This method uses a paginator to retrieve the list of objects in an
-/// an Amazon S3 bucket.
-/// </summary>
-/// <param name="client">An Amazon S3 client object.</param>
-/// <param name="bucketName">The name of the S3 bucket whose objects
-/// you want to list.</param>
-static async Task BucketListAsync(IAmazonS3 client, string bucketName)
-{
-    var listObjectsV2Paginator = client.Paginators.ListObjectsV2(new ListObjectsV2Request
-    {
-        BucketName = bucketName
-    });
-
-    await foreach (var response in listObjectsV2Paginator.Responses)
-    {
-        Console.WriteLine($"HttpStatusCode: {response.HttpStatusCode}");
-        Console.WriteLine($"Number of Keys: {response.KeyCount}");
-        foreach (var entry in response.S3Objects)
-        {
-            Console.WriteLine($"Key = {entry.Key} Size = {entry.Size}");
-        }
-    }
-}
-
-static int MessageSize(byte[] data, int offset)
-{
-    if (data.Length < 4)
-        return 0;
-    var size_bytes = new byte[4];
-    Array.Copy(data, offset, size_bytes, 0, 4);
-    if (BitConverter.IsLittleEndian)
-        Array.Reverse(size_bytes);
-    int size = BitConverter.ToInt32(size_bytes, 0);
-    return size;
 }
 
 static List<byte[]> ExtractMessageList(byte[] data)
@@ -369,42 +306,6 @@ static List<byte[]> ExtractMessageList(byte[] data)
 
     return list;
 }
-
-static ParquetReport PopulateParquetRow(byte[]? message)
-{
-    var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
-
-    var parquetRow = new ParquetReport
-    {
-        GatewayTimestamp = mData.GatewayTimestampMs,
-        OUI = mData.Oui,
-        NetID = mData.NetId,
-        RSSI = mData.Rssi,
-        Frequency = mData.Frequency,
-        SNR = mData.Snr,
-        DataRate = (int)mData.Datarate,
-        Region = mData.Region.ToString(),
-        Gateway = mData.Gateway.ToBase64(),
-        PayloadHash = mData.Gateway.ToBase64(),
-        PayloadSize = mData.PayloadSize
-    };
-
-    return parquetRow;
-}
-
-static void PrintMessage(IMessage message)
-{
-    var descriptor = message.Descriptor;
-    foreach (var field in descriptor.Fields.InDeclarationOrder())
-    {
-        Console.WriteLine(
-            "Field {0} ({1}): {2}",
-            field.FieldNumber,
-            field.Name,
-            field.Accessor.GetValue(message));
-    }
-}
-
 
 static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
 {
@@ -438,54 +339,6 @@ static async Task<(DateTime, ulong, ulong, byte[])> DownloadS3Object(AmazonS3Cli
     var unzip = DecompressSteam(memoryStream);
     return (modTime, (ulong)gzipSize, (ulong)unzip.LongLength, unzip);
 }
-
-static async Task<(DateTime, long)> S3ObjectMeta(AmazonS3Client s3Client, string bucketName, string keyName)
-{
-    var getObjectResult = await s3Client.GetObjectAsync(bucketName, keyName);
-    return (getObjectResult.LastModified.ToUniversalTime(), getObjectResult.Headers.ContentLength);
-}
-
-static async Task<byte[]> DecompressS3Object(AmazonS3Client s3Client, string bucketName, string keyName)
-{
-    var getObjectResult = await s3Client.GetObjectAsync(bucketName, keyName);
-    using var goStream = getObjectResult.ResponseStream;
-
-    using MemoryStream memoryStream = new MemoryStream();
-
-    goStream.CopyTo(memoryStream);
-
-    memoryStream.Position = 0;
-    memoryStream.Seek(0, SeekOrigin.Begin);
-
-    var unzip = DecompressSteam(memoryStream);
-    return unzip;
-}
-
-static byte[] DecompressGzipBytes(byte[] gzip)
-{
-    // Create a GZIP stream with decompression mode.
-    // ... Then create a buffer and write into while reading from the GZIP stream.
-    using (GZipStream stream = new GZipStream(new MemoryStream(gzip), CompressionMode.Decompress))
-    {
-        const int size = 4096;
-        byte[] buffer = new byte[size];
-        using (MemoryStream memory = new MemoryStream())
-        {
-            int count = 0;
-            do
-            {
-                count = stream.Read(buffer, 0, size);
-                if (count > 0)
-                {
-                    memory.Write(buffer, 0, count);
-                }
-            }
-            while (count > 0);
-            return memory.ToArray();
-        }
-    }
-}
-
 
 static byte[] DecompressSteam(Stream gzip)
 {
@@ -521,60 +374,6 @@ static async IAsyncEnumerable<string> ListBucketsAsync(IAmazonS3 s3Client)
     {
         yield return b.BucketName;
     }
-}
-
-/// <summary>
-/// Shows how to list the objects in an Amazon S3 bucket.
-/// </summary>
-/// <param name="client">An initialized Amazon S3 client object.</param>
-/// <param name="bucketName">The name of the bucket for which to list
-/// the contents.</param>
-/// <returns>A boolean value indicating the success or failure of the
-/// copy operation.</returns>
-static async IAsyncEnumerable<string> ListBucketContentsAsync(IAmazonS3 client, string bucketName, string startAfter)
-{
-    //try
-    //{
-        var request = new ListObjectsV2Request
-        {
-            BucketName = bucketName,
-            StartAfter = startAfter,
-            MaxKeys = 5,
-        };
-
-
-        Console.WriteLine("--------------------------------------");
-        Console.WriteLine($"Listing the contents of {bucketName}:");
-        Console.WriteLine("--------------------------------------");
-
-        ListObjectsV2Response response;
-
-        do
-        {
-            response = await client.ListObjectsV2Async(request);
-
-            var s3Obj = response.S3Objects;
-            foreach( var item in s3Obj)
-            {
-                var key = item.Key;
-                yield return key;
-            };
-                //.ForEach(obj => yieldAwaitable obj.key);
-                //.ForEach(obj => Console.WriteLine($"{obj.Key,-35}{obj.LastModified.ToShortDateString(),10}{obj.Size,10}"));
-
-            // If the response is truncated, set the request ContinuationToken
-            // from the NextContinuationToken property of the response.
-            request.ContinuationToken = response.NextContinuationToken;
-        }
-        while (response.IsTruncated);
-
-        //return true;
-    //}
-    //catch (AmazonS3Exception ex)
-    //{
-        //Console.WriteLine($"Error encountered on server. Message:'{ex.Message}' getting list of objects.");
-        //return false;
-    //}
 }
 
 static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, string bucketName, UInt64 unixTime, int minutes)
