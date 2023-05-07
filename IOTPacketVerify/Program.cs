@@ -2,11 +2,11 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 using Google.Protobuf;
+using Helium.PacketVerifier;
+using System.CommandLine;
+using System.Diagnostics;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
-using System.CommandLine;
-using Helium.PacketVerifier;
-using System.Diagnostics;
 
 int minutes = 24 * 60;
 var startString = ToUnixEpochTime("2023-4-19Z"); // "2023-4-23 12:00:00 AM" or 1680332400;
@@ -67,7 +67,7 @@ packetList = null;
 var s3Client = new AmazonS3Client();
 
 var bucketList = ListBucketsAsync(s3Client);
-if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket ))
+if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains(ingestBucket))
 {
     throw new Exception($"{ingestBucket} not found");
 }
@@ -82,7 +82,7 @@ var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes).ToBlo
 var last = list.Last();
 var listCount = list.Count();
 Console.WriteLine($"Starting {ingestBucket} of key size {listCount}");
-foreach ( var item in list)
+foreach (var item in list)
 {
     itemList.Add(item);
     if (itemList.Count >= 16 || item == last)
@@ -124,7 +124,7 @@ Console.WriteLine("--------------------------------------");
 
 static List<Task<PacketSummary>> LoopFiles(AmazonS3Client s3Client, string ingestBucket, List<string> files)
 {
-    List<Task<PacketSummary>> taskList = new List<Task<PacketSummary>> ();
+    List<Task<PacketSummary>> taskList = new List<Task<PacketSummary>>();
     foreach (var file in files)
     {
         var summary = GetValidPacketsAsync(s3Client, ingestBucket, file);
@@ -181,7 +181,7 @@ static DateTime UnixTimeMillisecondsToDateTime(double unixTimeStamp)
 static string ToUnixEpochTime(string textDateTime)
 {
     // textString "2023-4-12 2:27:01 PM"
-    var dateTime = DateTime.Parse( textDateTime).ToUniversalTime();
+    var dateTime = DateTime.Parse(textDateTime).ToUniversalTime();
 
     DateTimeOffset dto = new DateTimeOffset(dateTime);
     return dto.ToUnixTimeSeconds().ToString();

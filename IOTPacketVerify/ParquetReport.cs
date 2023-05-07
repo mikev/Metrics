@@ -1,7 +1,4 @@
-﻿
-using System.Xml.Linq;
-
-struct ParquetReport
+﻿struct ParquetReport
 {
     public ulong PacketTimestamp { get; set; }
 

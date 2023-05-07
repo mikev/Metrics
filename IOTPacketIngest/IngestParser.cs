@@ -2,14 +2,15 @@
 using Amazon.S3.Model;
 using Google.Protobuf;
 using Helium.PacketRouter;
+using System.Collections.Concurrent;
+using System.CommandLine;
+using System.Diagnostics;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
-using System.CommandLine;
-using System.Collections.Concurrent;
-using System.Diagnostics;
 
 int minutes = 24 * 60;
-var startString = ToUnixEpochTime("2023-4-27Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
+var startString = ToUnixEpochTime("2023-4-28Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
+string ingestBucket = "foundation-iot-packet-ingest";
 
 if (args.Length > 0)
 {
@@ -59,9 +60,8 @@ Console.WriteLine($"Duration is {minutes} minutes");
 // Create an S3 client object.
 var s3Client = new AmazonS3Client();
 
-string ingestBucket = "foundation-iot-packet-ingest";
 var bucketList = ListBucketsAsync(s3Client);
-if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains( ingestBucket ))
+if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains(ingestBucket))
 {
     throw new Exception($"{ingestBucket} not found");
 }
@@ -124,7 +124,7 @@ Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {theSummary.Mess
 Console.WriteLine("--------------------------------------");
 
 var vpList = ComputeValuePercent(theSummary.TotalBytes, ouiCounter);
-foreach(var vp in vpList)
+foreach (var vp in vpList)
 {
     Console.WriteLine($"OUI= {vp.Item1} Percentage= {vp.Item2} %");
 };
@@ -271,7 +271,7 @@ static DateTime UnixTimeMillisecondsToDateTime(double unixTimeStamp)
 static string ToUnixEpochTime(string textDateTime)
 {
     // textString "2023-4-12 2:27:01 PM"
-    var dateTime = DateTime.Parse( textDateTime).ToUniversalTime();
+    var dateTime = DateTime.Parse(textDateTime).ToUniversalTime();
 
     DateTimeOffset dto = new DateTimeOffset(dateTime);
     return dto.ToUnixTimeSeconds().ToString();
