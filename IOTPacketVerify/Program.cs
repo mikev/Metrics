@@ -5,13 +5,17 @@ using Google.Protobuf;
 using Helium.PacketVerifier;
 using System.CommandLine;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Compression;
+using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
-int minutes = 24 * 60;
+uint minutes = 24 * 60;
 var startString = ToUnixEpochTime("2023-4-19Z"); // "2023-4-23 12:00:00 AM" or 1680332400;
 string ingestBucket = "foundation-iot-packet-verifier";
 string keyPrefix = "iot_valid_packet";
+var metricsFile = @"c:\temp\lorawan_metrics.json";
 
 if (args.Length > 0)
 {
@@ -22,7 +26,7 @@ if (args.Length > 0)
     );
 
 
-    var durationOption = new Option<int?>(
+    var durationOption = new Option<uint?>(
         name: "--duration",
         description: "The number of minutes to process, e.g. duration is 60 minutes",
         getDefaultValue: () => 10
@@ -60,7 +64,7 @@ Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
 Console.WriteLine("--------------------------------------");
 
-List<ParquetReport> packetList = new List<ParquetReport>();
+List<Data> packetList = new List<Data>();
 packetList = null;
 
 // Create an S3 client object.
@@ -75,7 +79,7 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains(ingestBucket))
 HashSet<ByteString> hashSet = new HashSet<ByteString>();
 var prevTimestamp = DateTime.MinValue;
 
-PacketSummary theSummary = new PacketSummary();
+ReportSummary theSummary = new ReportSummary();
 List<string> itemList = new List<string>();
 
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes).ToBlockingEnumerable();
@@ -90,7 +94,7 @@ foreach (var item in list)
         var taskList = LoopFiles(s3Client, ingestBucket, itemList);
         while (taskList.Any())
         {
-            Task<PacketSummary> finishedTask = await Task<PacketSummary>.WhenAny(taskList);
+            Task<ReportSummary> finishedTask = await Task<ReportSummary>.WhenAny(taskList);
             taskList.Remove(finishedTask);
             var taskSummary = await finishedTask;
             theSummary.MessageCount += taskSummary.MessageCount;
@@ -122,9 +126,59 @@ Console.WriteLine("--------------------------------------");
 Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {theSummary.MessageCount} dupes= {theSummary.DupeCount} byteTotal= {theSummary.TotalBytes} dcCount= {theSummary.DCCount} fc= {theSummary.FileCount} rawTotal= {(float)theSummary.RawSize / (1024 * 1024)} gzTotal= {(float)theSummary.GzipSize / (1024 * 1024)} fees= {burnedDCFees.ToString("########.##")}");
 Console.WriteLine("--------------------------------------");
 
-static List<Task<PacketSummary>> LoopFiles(AmazonS3Client s3Client, string ingestBucket, List<string> files)
+InitMetricsFile(metricsFile);
+WriteToMetricsFile(metricsFile, theSummary, dateTime, minutes);
+
+return;
+
+static void WriteToMetricsFile(string metricsFile, ReportSummary report, DateTime dateTime, uint duration)
 {
-    List<Task<PacketSummary>> taskList = new List<Task<PacketSummary>>();
+    var jsonMetrics = File.ReadAllText(metricsFile);
+
+    LoRaWANMetrics? metrics = JsonSerializer.Deserialize<LoRaWANMetrics>(jsonMetrics);
+
+    var packetSummary = new PacketSummary()
+    {
+        IDHash = 0,
+        Time = dateTime.ToUniversalTime(),
+        Duration = duration,
+        DCCount = report.DCCount,
+        PacketCount = report.MessageCount,
+        DupeCount = report.DupeCount,
+        PacketBytes = report.TotalBytes,
+        Files = report.FileCount,
+        RawBytes = report.RawSize,
+        GzipBytes = report.GzipSize
+    };
+    packetSummary.IDHash = packetSummary.GetHashCode();
+
+    metrics?.VerifyByDay?.Add(packetSummary);
+
+    jsonMetrics = JsonSerializer.Serialize<LoRaWANMetrics>(metrics);
+
+    File.WriteAllText(metricsFile, jsonMetrics);
+}
+
+static void InitMetricsFile(string metricsFile)
+{
+    if (!File.Exists(metricsFile))
+    {
+        LoRaWANMetrics metrics = new LoRaWANMetrics()
+        {
+            IngestByDay = new HashSet<PacketSummary>(),
+            VerifyByDay = new HashSet<PacketSummary>(),
+            OUIByDay = new HashSet<OUISummary>(),
+            RegionByDay = new HashSet<RegionSummary>()
+        };
+
+        string jsonMetrics = JsonSerializer.Serialize(metrics);
+        File.WriteAllText(metricsFile, jsonMetrics);
+    }
+}
+
+static List<Task<ReportSummary>> LoopFiles(AmazonS3Client s3Client, string ingestBucket, List<string> files)
+{
+    List<Task<ReportSummary>> taskList = new List<Task<ReportSummary>>();
     foreach (var file in files)
     {
         var summary = GetValidPacketsAsync(s3Client, ingestBucket, file);
@@ -132,7 +186,7 @@ static List<Task<PacketSummary>> LoopFiles(AmazonS3Client s3Client, string inges
     }
     return taskList;
 }
-static async Task<PacketSummary> GetValidPacketsAsync(
+static async Task<ReportSummary> GetValidPacketsAsync(
     AmazonS3Client s3Client,
     string bucketName,
     string report)
@@ -155,7 +209,7 @@ static async Task<PacketSummary> GetValidPacketsAsync(
         dcCount += mData.NumDcs;
     }
 
-    var summary = new PacketSummary()
+    var summary = new ReportSummary()
     {
         ModTime = modTime,
         MessageCount = messageCount,
@@ -286,7 +340,7 @@ static async IAsyncEnumerable<string> ListBucketsAsync(IAmazonS3 s3Client)
     }
 }
 
-static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, string bucketName, UInt64 unixTime, int minutes)
+static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, string bucketName, UInt64 unixTime, uint minutes)
 {
     if (unixTime < 10_000_000_000)
         unixTime = unixTime * 1000;
