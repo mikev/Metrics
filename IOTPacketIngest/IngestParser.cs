@@ -9,7 +9,7 @@ using System.IO.Compression;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-uint minutes = 5; // 24 * 60;
+uint minutes = 2; // 24 * 60;
 var startString = ToUnixEpochTime("2023-5-8Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 string ingestBucket = "foundation-iot-packet-ingest";
 var metricsFile = @"c:\temp\lorawan_metrics.json";
@@ -136,30 +136,91 @@ Console.WriteLine("--------------------------------------");
 Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {theSummary.MessageCount} dupes= {theSummary.DupeCount} byteTotal= {theSummary.TotalBytes} dcCount= {theSummary.DCCount} fc= {theSummary.FileCount} rawTotal= {(float)theSummary.RawSize / (1024 * 1024)} gzTotal= {(float)theSummary.GzipSize / (1024 * 1024)} fees= {burnedDCFees.ToString("########.##")}");
 Console.WriteLine("--------------------------------------");
 
-var vpList = ComputeValuePercent(theSummary.TotalBytes, ouiCounter);
+var metrics = InitMetricsFile(metricsFile, dateTime);
+
+List<OUISummary>? ouiList = metrics?.OUIByDay;
+var vpList = ComputeValuePercent(theSummary.DCCount, ouiCounter);
 foreach (var vp in vpList)
 {
-    Console.WriteLine($"OUI= {vp.Item1} Percentage= {vp.Item2} %");
+    var ouiItem = new OUISummary()
+    {
+        Time = dateTime.ToUniversalTime(),
+        OUI = (uint)vp.Item1,
+        DCCount = vp.Item2,
+        Percent = vp.Item3
+    };
+    ouiList?.Add(ouiItem);
+    Console.WriteLine($"OUI= {vp.Item1} DC={vp.Item2} Percentage= {vp.Item3} %");
 };
 
-var vpList2 = ComputeValuePercent(theSummary.TotalBytes, regionCounter);
+List<RegionSummary>? regionList = metrics?.RegionByDay;
+var vpList2 = ComputeValuePercent(theSummary.DCCount, regionCounter);
 foreach (var vp in vpList2)
 {
-    Console.WriteLine($"Region= {vp.Item1} Percentage= {vp.Item2} %");
+    var regionItem = new RegionSummary()
+    {
+        Time = dateTime.ToUniversalTime(),
+        Region = (uint)vp.Item1,
+        DCCount = vp.Item2,
+        Percent = vp.Item3
+    };
+    regionList?.Add(regionItem);
+    Console.WriteLine($"Region= {vp.Item1} DC={vp.Item2} Percentage= {vp.Item3} %");
 };
 
-InitMetricsFile(metricsFile);
-WriteToMetricsFile(metricsFile, theSummary, dateTime, minutes);
+WriteToMetricsFile(metricsFile, metrics, theSummary, dateTime, minutes);
+return;
 
-static void WriteToMetricsFile(string metricsFile, ReportSummary report, DateTime dateTime, uint duration)
+static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
 {
-    var jsonMetrics = File.ReadAllText(metricsFile);
+    if (!File.Exists(metricsFile))
+    {
+        LoRaWANMetrics metrics = new LoRaWANMetrics()
+        {
+            IngestByDay = new List<PacketSummary>(),
+            VerifyByDay = new List<PacketSummary>(),
+            OUIByDay = new List<OUISummary>(),
+            RegionByDay = new List<RegionSummary>()
+        };
 
-    LoRaWANMetrics? metrics = JsonSerializer.Deserialize<LoRaWANMetrics>(jsonMetrics);
+        string jsonMetrics = JsonSerializer.Serialize(metrics);
+        File.WriteAllText(metricsFile, jsonMetrics);
+        return metrics;
+    }
+    else
+    {
+        var jsonMetrics = File.ReadAllText(metricsFile);
 
+        LoRaWANMetrics? metrics = JsonSerializer.Deserialize<LoRaWANMetrics>(jsonMetrics);
+
+        var items = metrics?.IngestByDay;
+        var toRemove = items?.Where(item => item.Time == dateTime.ToUniversalTime()).ToList();
+        foreach (var s in toRemove)
+        {
+            items?.Remove(s);
+        }
+
+        var items2 = metrics?.OUIByDay;
+        var toRemove2 = items2?.Where(item => item.Time == dateTime.ToUniversalTime()).ToList();
+        foreach (var s in toRemove2)
+        {
+            items2?.Remove(s);
+        }
+
+        var items3 = metrics?.RegionByDay;
+        var toRemove3 = items3?.Where(item => item.Time == dateTime.ToUniversalTime()).ToList();
+        foreach (var s in toRemove3)
+        {
+            items3?.Remove(s);
+        }
+
+        return metrics;
+    }
+}
+static void WriteToMetricsFile(string metricsFile, LoRaWANMetrics? metrics, ReportSummary report, DateTime dateTime, uint duration)
+{
     var packetSummary = new PacketSummary()
     {
-        IDHash = 0,
         Time = dateTime.ToUniversalTime(),
         Duration = duration,
         DCCount = report.DCCount,
@@ -170,31 +231,13 @@ static void WriteToMetricsFile(string metricsFile, ReportSummary report, DateTim
         RawBytes = report.RawSize,
         GzipBytes = report.GzipSize
     };
-    packetSummary.IDHash = packetSummary.GetHashCode();
 
-    metrics?.IngestByDay?.Add(packetSummary);
+    metrics.IngestByDay?.Add(packetSummary);
 
     JsonSerializerOptions options = new() { WriteIndented = true };
-    jsonMetrics = JsonSerializer.Serialize<LoRaWANMetrics>(metrics, options);
+    var jsonMetrics = JsonSerializer.Serialize<LoRaWANMetrics>(metrics, options);
 
     File.WriteAllText(metricsFile, jsonMetrics);
-}
-
-static void InitMetricsFile(string metricsFile)
-{
-    if (!File.Exists(metricsFile))
-    {
-        LoRaWANMetrics metrics = new LoRaWANMetrics()
-        {
-            IngestByDay = new HashSet<PacketSummary>(),
-            VerifyByDay = new HashSet<PacketSummary>(),
-            OUIByDay = new HashSet<OUISummary>(),
-            RegionByDay = new HashSet<RegionSummary>()
-        };
-
-        string jsonMetrics = JsonSerializer.Serialize(metrics);
-        File.WriteAllText(metricsFile, jsonMetrics);
-    }
 }
 
 static List<Task<ReportSummary>> LoopFiles(
@@ -244,18 +287,19 @@ static async Task<ReportSummary> GetPacketReportsAsync(
         hashSet.Add(hash);
         messageCount++;
         totalBytes += mData.PayloadSize;
-        dcCount += (mData.PayloadSize / 24) + 1;
+        var u24 = (mData.PayloadSize / 24) + 1;
+        dcCount += u24;
 
         lock (reportLock)
         {
             ulong oui = mData.Oui;
             ulong region = (ulong)mData.Region;
             var mapValue = ouiCounter.GetOrAdd(oui, 0);
-            mapValue += mData.PayloadSize;
+            mapValue += u24;
             ouiCounter[oui] = mapValue;
 
             mapValue = regionCounter.GetOrAdd(region, 0);
-            mapValue += mData.PayloadSize;
+            mapValue += u24;
             regionCounter[region] = mapValue;
         }
     }
@@ -285,9 +329,9 @@ static DateTime ReportToUnixTime(string reportName)
     return time.ToUniversalTime();
 }
 
-static List<(ulong, double)> ComputeValuePercent(double byteCount, ConcurrentDictionary<ulong, ulong> valueCounter)
+static List<(ulong, ulong, float)> ComputeValuePercent(double dcCount, ConcurrentDictionary<ulong, ulong> valueCounter)
 {
-    List<(ulong, double)> valuePercentList = new List<(ulong, double)>();
+    List<(ulong, ulong, float)> valuePercentList = new List<(ulong, ulong, float)>();
     long k = 10;
     ulong[] result = new ulong[k];
 
@@ -315,8 +359,8 @@ static List<(ulong, double)> ComputeValuePercent(double byteCount, ConcurrentDic
         ulong value = result[i];
         if (valueCounter.TryGetValue(value, out ulong count))
         {
-            var regionPercentage = (double)count * 100 / (double)byteCount;
-            valuePercentList.Add((value, regionPercentage));
+            var regionPercentage = (float)count * 100 / (float)dcCount;
+            valuePercentList.Add((value, count, regionPercentage));
         }
     }
     return valuePercentList;

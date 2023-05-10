@@ -46,7 +46,6 @@ public static class XX
 
 public class PacketSummary
 {
-    public int IDHash { get; set; }
     public DateTime Time { get; set; }
     public uint Duration { get; set; }
     public ulong DCCount { get; set; }
@@ -62,7 +61,8 @@ public class PacketSummary
     }
     public override int GetHashCode()
     {
-        return Time.GetHashCode();
+        var hashCode = Time.GetHashCode();
+        return hashCode;
         //unchecked // Allow arithmetic overflow, numbers will just "wrap around"
         //{
         //    int hashcode = 1430287;
@@ -81,28 +81,39 @@ public class PacketSummary
 
 public class OUISummary
 {
-    public uint IDHash { get; set; }
     public DateTime Time { get; set; }
     public uint OUI { get; set; }
     public ulong DCCount { get; set; }
     public float Percent { get; set; }
+
+    public override int GetHashCode()
+    {
+        var hashCode = Time.GetHashCode();
+        return hashCode;
+    }
+
 }
 
 public class RegionSummary
 {
-    public uint IDHash { get; set; }
     public DateTime Time { get; set; }
     public uint Region { get; set; }
     public ulong DCCount { get; set; }
     public float Percent { get; set; }
+
+    public override int GetHashCode()
+    {
+        var hashCode = Time.GetHashCode();
+        return hashCode;
+    }
 }
 
 public class LoRaWANMetrics
 {
-    public HashSet<PacketSummary>? VerifyByDay { get; set; }
-    public HashSet<PacketSummary>? IngestByDay { get; set; }
-    public HashSet<OUISummary>? OUIByDay { get; set; }
-    public HashSet<RegionSummary>? RegionByDay { get; set; }
+    public List<PacketSummary>? VerifyByDay { get; set; }
+    public List<PacketSummary>? IngestByDay { get; set; }
+    public List<OUISummary>? OUIByDay { get; set; }
+    public List<RegionSummary>? RegionByDay { get; set; }
 };
 
 public struct ReportSummary
