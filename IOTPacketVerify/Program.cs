@@ -154,7 +154,8 @@ static void WriteToMetricsFile(string metricsFile, ReportSummary report, DateTim
 
     metrics?.VerifyByDay?.Add(packetSummary);
 
-    jsonMetrics = JsonSerializer.Serialize<LoRaWANMetrics>(metrics);
+    JsonSerializerOptions options = new() { WriteIndented = true };
+    jsonMetrics = JsonSerializer.Serialize<LoRaWANMetrics>(metrics, options);
 
     File.WriteAllText(metricsFile, jsonMetrics);
 }

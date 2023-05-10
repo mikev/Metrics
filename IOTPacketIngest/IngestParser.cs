@@ -6,11 +6,13 @@ using System.Collections.Concurrent;
 using System.CommandLine;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
-int minutes = 24 * 60;
-var startString = ToUnixEpochTime("2023-4-28Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
+uint minutes = 5; // 24 * 60;
+var startString = ToUnixEpochTime("2023-5-8Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 string ingestBucket = "foundation-iot-packet-ingest";
+var metricsFile = @"c:\temp\lorawan_metrics.json";
 
 if (args.Length > 0)
 {
@@ -20,22 +22,29 @@ if (args.Length > 0)
         getDefaultValue: () => "2023-4-1"
     );
 
-
-    var durationOption = new Option<int?>(
+    var durationOption = new Option<uint?>(
         name: "--duration",
         description: "The number of minutes to process, e.g. duration is 60 minutes",
         getDefaultValue: () => 10
     );
 
+    var outputOption = new Option<string?>(
+        name: "--output",
+        description: "Output json file. For example",
+        getDefaultValue: () => "metrics.json"
+    );
+
     var rootCommand = new RootCommand("Sample app for System.CommandLine");
     rootCommand.AddOption(startOption);
     rootCommand.AddOption(durationOption);
+    rootCommand.AddOption(outputOption);
 
-    rootCommand.SetHandler((inStartTime, inMinutes) =>
+    rootCommand.SetHandler((inStartTime, inMinutes, output) =>
     {
         startString = ToUnixEpochTime(inStartTime);
         minutes = inMinutes.GetValueOrDefault(10);
-    }, startOption, durationOption);
+        metricsFile = output;
+    }, startOption, durationOption, outputOption);
 
     await rootCommand.InvokeAsync(args);
 }
@@ -66,21 +75,26 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains(ingestBucket))
     throw new Exception($"{ingestBucket} not found");
 }
 
-ConcurrentBag<ByteString> hashSet = new ConcurrentBag<ByteString>();
+ConcurrentBag<int> hashSet = new ConcurrentBag<int>();
 var prevTimestamp = DateTime.MinValue;
 
 ConcurrentDictionary<ulong, ulong> ouiCounter = new ConcurrentDictionary<ulong, ulong>();
 ConcurrentDictionary<ulong, ulong> regionCounter = new ConcurrentDictionary<ulong, ulong>();
 object reportLock = new();
 
-PacketSummary theSummary = new PacketSummary();
+ReportSummary theSummary = new ReportSummary();
 List<string> itemList = new List<string>();
 
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes).ToBlockingEnumerable();
-var last = list.Last();
-var listCount = list.Count();
+var sortedList = list.OrderBy(s => s).ToList();
+var last = sortedList.Last();
+var listCount = sortedList.Count();
 Console.WriteLine($"Starting {ingestBucket} of key size {listCount}");
-foreach (var item in list)
+foreach (var item in sortedList)
+{
+    Console.WriteLine($"Key {item}");
+}
+foreach (var item in sortedList)
 {
     itemList.Add(item);
     if (itemList.Count >= 8 || item == last)
@@ -88,7 +102,7 @@ foreach (var item in list)
         var taskList = LoopFiles(reportLock, s3Client, hashSet, ouiCounter, regionCounter, ingestBucket, itemList);
         while (taskList.Any())
         {
-            Task<PacketSummary> finishedTask = await Task<PacketSummary>.WhenAny(taskList);
+            Task<ReportSummary> finishedTask = await Task<ReportSummary>.WhenAny(taskList);
             taskList.Remove(finishedTask);
             var taskSummary = await finishedTask;
             lock (reportLock)
@@ -103,11 +117,10 @@ foreach (var item in list)
             }
         }
         itemList.Clear();
-        if (hashSet.Count > 5000)
+        if (hashSet.Count > 500000)
         {
             hashSet.Clear();
         }
-
     }
 }
 
@@ -135,16 +148,65 @@ foreach (var vp in vpList2)
     Console.WriteLine($"Region= {vp.Item1} Percentage= {vp.Item2} %");
 };
 
-static List<Task<PacketSummary>> LoopFiles(
+InitMetricsFile(metricsFile);
+WriteToMetricsFile(metricsFile, theSummary, dateTime, minutes);
+
+static void WriteToMetricsFile(string metricsFile, ReportSummary report, DateTime dateTime, uint duration)
+{
+    var jsonMetrics = File.ReadAllText(metricsFile);
+
+    LoRaWANMetrics? metrics = JsonSerializer.Deserialize<LoRaWANMetrics>(jsonMetrics);
+
+    var packetSummary = new PacketSummary()
+    {
+        IDHash = 0,
+        Time = dateTime.ToUniversalTime(),
+        Duration = duration,
+        DCCount = report.DCCount,
+        PacketCount = report.MessageCount,
+        DupeCount = report.DupeCount,
+        PacketBytes = report.TotalBytes,
+        Files = report.FileCount,
+        RawBytes = report.RawSize,
+        GzipBytes = report.GzipSize
+    };
+    packetSummary.IDHash = packetSummary.GetHashCode();
+
+    metrics?.IngestByDay?.Add(packetSummary);
+
+    JsonSerializerOptions options = new() { WriteIndented = true };
+    jsonMetrics = JsonSerializer.Serialize<LoRaWANMetrics>(metrics, options);
+
+    File.WriteAllText(metricsFile, jsonMetrics);
+}
+
+static void InitMetricsFile(string metricsFile)
+{
+    if (!File.Exists(metricsFile))
+    {
+        LoRaWANMetrics metrics = new LoRaWANMetrics()
+        {
+            IngestByDay = new HashSet<PacketSummary>(),
+            VerifyByDay = new HashSet<PacketSummary>(),
+            OUIByDay = new HashSet<OUISummary>(),
+            RegionByDay = new HashSet<RegionSummary>()
+        };
+
+        string jsonMetrics = JsonSerializer.Serialize(metrics);
+        File.WriteAllText(metricsFile, jsonMetrics);
+    }
+}
+
+static List<Task<ReportSummary>> LoopFiles(
     object reportLock,
     AmazonS3Client s3Client,
-    ConcurrentBag<ByteString> hashSet,
+    ConcurrentBag<int> hashSet,
     ConcurrentDictionary<ulong, ulong> ouiCounter,
     ConcurrentDictionary<ulong, ulong> regionCounter,
     string ingestBucket,
     List<string> files)
 {
-    List<Task<PacketSummary>> taskList = new List<Task<PacketSummary>>();
+    List<Task<ReportSummary>> taskList = new List<Task<ReportSummary>>();
     foreach (var file in files)
     {
         var summary = GetPacketReportsAsync(reportLock, s3Client, hashSet, ouiCounter, regionCounter, ingestBucket, file);
@@ -153,10 +215,10 @@ static List<Task<PacketSummary>> LoopFiles(
     return taskList;
 }
 
-static async Task<PacketSummary> GetPacketReportsAsync(
+static async Task<ReportSummary> GetPacketReportsAsync(
     object reportLock,
     AmazonS3Client s3Client,
-    ConcurrentBag<ByteString> hashSet,
+    ConcurrentBag<int> hashSet,
     ConcurrentDictionary<ulong, ulong> ouiCounter,
     ConcurrentDictionary<ulong, ulong> regionCounter,
     string bucketName,
@@ -172,8 +234,8 @@ static async Task<PacketSummary> GetPacketReportsAsync(
     foreach (var message in messageList)
     {
         var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
-        var hash = mData.PayloadHash;
-        if (hashSet.Contains(hash))
+        var hash = mData.PayloadHash.ToIntHash();
+        if (hashSet.Contains<int>(hash))
         {
             dupeCount++;
             continue;
@@ -198,7 +260,7 @@ static async Task<PacketSummary> GetPacketReportsAsync(
         }
     }
 
-    var summary = new PacketSummary()
+    var summary = new ReportSummary()
     {
         ModTime = modTime,
         MessageCount = messageCount,
@@ -376,7 +438,7 @@ static async IAsyncEnumerable<string> ListBucketsAsync(IAmazonS3 s3Client)
     }
 }
 
-static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, string bucketName, UInt64 unixTime, int minutes)
+static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, string bucketName, UInt64 unixTime, uint minutes)
 {
     if (unixTime < 10_000_000_000)
         unixTime = unixTime * 1000;
