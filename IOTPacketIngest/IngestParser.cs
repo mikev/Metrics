@@ -13,6 +13,7 @@ uint minutes = 2; // 24 * 60;
 var startString = ToUnixEpochTime("2023-5-8Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 string ingestBucket = "foundation-iot-packet-ingest";
 var metricsFile = @"c:\temp\lorawan_metrics.json";
+int hashSizeMaximum = 25000;
 
 if (args.Length > 0)
 {
@@ -117,7 +118,7 @@ foreach (var item in sortedList)
             }
         }
         itemList.Clear();
-        if (hashSet.Count > 500000)
+        if (hashSet.Count > hashSizeMaximum)
         {
             hashSet.Clear();
         }
