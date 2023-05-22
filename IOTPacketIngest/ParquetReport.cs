@@ -79,6 +79,13 @@ public class PacketSummary
     }
 }
 
+public class RedundantSummary
+{
+    public DateTime Time { get; set; }
+    public float Percent { get; set; }
+    public uint Region { get; set; }
+}
+
 public class OUISummary
 {
     public DateTime Time { get; set; }
@@ -110,10 +117,12 @@ public class RegionSummary
 
 public class LoRaWANMetrics
 {
+    public DateTime LastUpdate { get; set; }
     public List<PacketSummary>? VerifyByDay { get; set; }
     public List<PacketSummary>? IngestByDay { get; set; }
     public List<OUISummary>? OUIByDay { get; set; }
     public List<RegionSummary>? RegionByDay { get; set; }
+    public List<RedundantSummary>? RedundantByDay { get; set; }
 };
 
 public struct ReportSummary

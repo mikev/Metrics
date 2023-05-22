@@ -9,7 +9,7 @@ using System.IO.Compression;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-uint minutes = 2; // 24 * 60;
+uint minutes = 60; // 24 * 60;
 var startString = ToUnixEpochTime("2023-5-8Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 string ingestBucket = "foundation-iot-packet-ingest";
 var metricsFile = @"c:\temp\lorawan_metrics.json";
@@ -76,8 +76,8 @@ if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains(ingestBucket))
     throw new Exception($"{ingestBucket} not found");
 }
 
-ConcurrentBag<int> hashSet = new ConcurrentBag<int>();
-var prevTimestamp = DateTime.MinValue;
+ConcurrentBag<int> uniqueSet = new ConcurrentBag<int>();
+ConcurrentDictionary<int, int> freqSet = new ConcurrentDictionary<int, int>();
 
 ConcurrentDictionary<ulong, ulong> ouiCounter = new ConcurrentDictionary<ulong, ulong>();
 ConcurrentDictionary<ulong, ulong> regionCounter = new ConcurrentDictionary<ulong, ulong>();
@@ -95,12 +95,17 @@ foreach (var item in sortedList)
 {
     Console.WriteLine($"Key {item}");
 }
+
+int frMax = 100000;
+int[] frArray = new int[frMax];
+float[] frPercent = new float[frMax];
+
 foreach (var item in sortedList)
 {
     itemList.Add(item);
     if (itemList.Count >= 8 || item == last)
     {
-        var taskList = LoopFiles(reportLock, s3Client, hashSet, ouiCounter, regionCounter, ingestBucket, itemList);
+        var taskList = LoopFiles(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, ingestBucket, itemList);
         while (taskList.Any())
         {
             Task<ReportSummary> finishedTask = await Task<ReportSummary>.WhenAny(taskList);
@@ -118,15 +123,22 @@ foreach (var item in sortedList)
             }
         }
         itemList.Clear();
-        if (hashSet.Count > hashSizeMaximum)
+        if (uniqueSet.Count > hashSizeMaximum)
         {
-            hashSet.Clear();
+            foreach(var keyValue in freqSet)
+            {
+                frArray[keyValue.Value]++;
+            }
+            uniqueSet.Clear();
+            freqSet.Clear();
         }
     }
 }
 
 var burnedDCFees = (theSummary.DCCount) * 0.00001;
 stopWatch.Stop();
+
+Console.WriteLine($"Duration is {minutes} minutes");
 
 Console.WriteLine("--------------------------------------");
 Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
@@ -138,6 +150,30 @@ Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {theSummary.Mess
 Console.WriteLine("--------------------------------------");
 
 var metrics = InitMetricsFile(metricsFile, dateTime);
+
+int frTotal = 0;
+for (int i = 0; i < frMax; i++)
+{
+    frTotal += frArray[i];
+}
+
+for (int i = 0; i < 10; i++)
+{
+    float percent = (float)frArray[i] / (float)frTotal;
+    frPercent[i] = percent;
+    if (percent >= 0.001)
+    {
+        Console.WriteLine($"Frequency of {i} copy is {(percent * 100).ToString("##.##")}");
+    }
+}
+
+float redundantPercent = 100 - frPercent[0];
+var redundantSummary = new RedundantSummary()
+{
+    Time = dateTime.ToUniversalTime(),
+    Percent = redundantPercent,
+    Region = (uint)Helium.region.Eu868
+};
 
 List<OUISummary>? ouiList = metrics?.OUIByDay;
 var vpList = ComputeValuePercent(theSummary.DCCount, ouiCounter);
@@ -169,6 +205,7 @@ foreach (var vp in vpList2)
     Console.WriteLine($"Region= {vp.Item1} DC={vp.Item2} Percentage= {vp.Item3} %");
 };
 
+metrics.LastUpdate = dateTime.ToUniversalTime();
 WriteToMetricsFile(metricsFile, metrics, theSummary, dateTime, minutes);
 return;
 
@@ -181,7 +218,8 @@ static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
             IngestByDay = new List<PacketSummary>(),
             VerifyByDay = new List<PacketSummary>(),
             OUIByDay = new List<OUISummary>(),
-            RegionByDay = new List<RegionSummary>()
+            RegionByDay = new List<RegionSummary>(),
+            RedundantByDay = new List<RedundantSummary>()
         };
 
         string jsonMetrics = JsonSerializer.Serialize(metrics);
@@ -215,6 +253,13 @@ static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
             items3?.Remove(s);
         }
 
+        var items4 = metrics?.RedundantByDay;
+        var toRemove4 = items4?.Where(item => item.Time == dateTime.ToUniversalTime()).ToList();
+        foreach (var s in toRemove4)
+        {
+            items4?.Remove(s);
+        }
+
         return metrics;
     }
 }
@@ -244,7 +289,8 @@ static void WriteToMetricsFile(string metricsFile, LoRaWANMetrics? metrics, Repo
 static List<Task<ReportSummary>> LoopFiles(
     object reportLock,
     AmazonS3Client s3Client,
-    ConcurrentBag<int> hashSet,
+    ConcurrentBag<int> uniqueSet,
+    ConcurrentDictionary<int, int> freqSet,
     ConcurrentDictionary<ulong, ulong> ouiCounter,
     ConcurrentDictionary<ulong, ulong> regionCounter,
     string ingestBucket,
@@ -253,7 +299,7 @@ static List<Task<ReportSummary>> LoopFiles(
     List<Task<ReportSummary>> taskList = new List<Task<ReportSummary>>();
     foreach (var file in files)
     {
-        var summary = GetPacketReportsAsync(reportLock, s3Client, hashSet, ouiCounter, regionCounter, ingestBucket, file);
+        var summary = GetPacketReportsAsync(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, ingestBucket, file);
         taskList.Add(summary);
     }
     return taskList;
@@ -262,7 +308,8 @@ static List<Task<ReportSummary>> LoopFiles(
 static async Task<ReportSummary> GetPacketReportsAsync(
     object reportLock,
     AmazonS3Client s3Client,
-    ConcurrentBag<int> hashSet,
+    ConcurrentBag<int> uniqueSet,
+    ConcurrentDictionary<int, int> freqSet,
     ConcurrentDictionary<ulong, ulong> ouiCounter,
     ConcurrentDictionary<ulong, ulong> regionCounter,
     string bucketName,
@@ -278,14 +325,32 @@ static async Task<ReportSummary> GetPacketReportsAsync(
     foreach (var message in messageList)
     {
         var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
-        var hash = mData.PayloadHash.ToIntHash();
-        if (hashSet.Contains<int>(hash))
+        var dataRate = mData.Datarate;
+
+        var uniqueHash = mData.PayloadHash.ToIntHash();
+        if (mData.Region == Helium.region.Eu868 && mData.Datarate == Helium.data_rate.Sf12Bw125)
+        {
+            int freqCount = 0;
+            if (freqSet.TryGetValue(uniqueHash, out freqCount)) {
+                int newValue = freqCount + 1;
+                freqSet.TryUpdate(uniqueHash, newValue, freqCount);
+            }
+            else
+            {
+                freqSet.TryAdd(uniqueHash, 0);
+            }
+        }
+
+        if (uniqueSet.Contains(uniqueHash))
         {
             dupeCount++;
             continue;
         }
+        else
+        {
+            uniqueSet.Add(uniqueHash);
+        }
 
-        hashSet.Add(hash);
         messageCount++;
         totalBytes += mData.PayloadSize;
         var u24 = (mData.PayloadSize / 24) + 1;
