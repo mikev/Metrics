@@ -167,13 +167,14 @@ for (int i = 0; i < 10; i++)
     }
 }
 
-float redundantPercent = 100 - frPercent[0];
+float redundantPercent = 1.0f - frPercent[0];
 var redundantSummary = new RedundantSummary()
 {
     Time = dateTime.ToUniversalTime(),
     Percent = redundantPercent,
     Region = (uint)Helium.region.Eu868
 };
+metrics.RedundantByDay.Add(redundantSummary);
 
 List<OUISummary>? ouiList = metrics?.OUIByDay;
 var vpList = ComputeValuePercent(theSummary.DCCount, ouiCounter);
