@@ -7,6 +7,7 @@ using Parquet.Schema;
 using System.CommandLine;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 uint minutes = 60; // 24 * 60;
@@ -54,10 +55,7 @@ else
 }
 
 var stopWatch = Stopwatch.StartNew();
-ulong startUnixExpected = 1680332653569;
 ulong startUnix = ulong.Parse(startString);
-
-string startAfterExpected = $"packetreport.{startUnixExpected}";
 string startAfter = $"packetreport.{startString}";
 
 var dateTime = UnixTimeMillisecondsToDateTime(double.Parse(startString) * 1000);
@@ -137,67 +135,21 @@ stopWatch.Stop();
 
 Console.WriteLine($"Duration is {minutes} minutes");
 
-using (Stream fileStream = System.IO.File.OpenWrite(parquetFile))
-{
-    using (ParquetWriter parquetWriter = await ParquetWriter.CreateAsync(schema, fileStream))
-    {
-        parquetWriter.CompressionMethod = CompressionMethod.Zstd;
-        parquetWriter.CompressionLevel = System.IO.Compression.CompressionLevel.Optimal;
-        // create a new row group in the file
-        using (ParquetRowGroupWriter groupWriter = parquetWriter.CreateRowGroup())
-        {
-            ulong[] gatewayTimestampArray = parquetData?.GatewayTimestampMSList?.ToArray();
-            var gatewayTimestampColumn = new DataColumn(
-                schema.DataFields[0],
-                gatewayTimestampArray);
-            await groupWriter.WriteColumnAsync(gatewayTimestampColumn);
-            var ouiColumn = new DataColumn(
-                schema.DataFields[1],
-                parquetData?.OUIList?.ToArray());
-            await groupWriter.WriteColumnAsync(ouiColumn);
-            var netIDColumn = new DataColumn(
-                schema.DataFields[2],
-                parquetData?.NetIDList?.ToArray());
-            await groupWriter.WriteColumnAsync(netIDColumn);
-            var rssiColumn = new DataColumn(
-                schema.DataFields[3],
-                parquetData?.RSSIList?.ToArray());
-            await groupWriter.WriteColumnAsync(rssiColumn);
-            var freqColumn = new DataColumn(
-                schema.DataFields[4],
-                parquetData?.FrequencyList?.ToArray());
-            await groupWriter.WriteColumnAsync(freqColumn);
-            var snrColumn = new DataColumn(
-                schema.DataFields[5],
-                parquetData?.SNRList?.ToArray());
-            await groupWriter.WriteColumnAsync(snrColumn);
-            var drColumn = new DataColumn(
-                schema.DataFields[6],
-                parquetData?.DataRateList?.ToArray());
-            await groupWriter.WriteColumnAsync(drColumn);
-            var regionColumn = new DataColumn(
-                schema.DataFields[7],
-                parquetData?.RegionList?.ToArray());
-            await groupWriter.WriteColumnAsync(regionColumn);
-            var gatewayColumn = new DataColumn(
-                schema.DataFields[8],
-                parquetData?.GatewayList?.ToArray());
-            await groupWriter.WriteColumnAsync(gatewayColumn);
-            var payloadHashColumn = new DataColumn(
-                schema.DataFields[9],
-                parquetData?.PayloadHashList?.ToArray());
-            await groupWriter.WriteColumnAsync(payloadHashColumn);
-            var payloadSizeColumn = new DataColumn(
-                schema.DataFields[10],
-                parquetData?.PayloadSizeList?.ToArray());
-            await groupWriter.WriteColumnAsync(payloadSizeColumn);
-            var freeColumn = new DataColumn(
-                schema.DataFields[11],
-                parquetData?.FreeList?.ToArray());
-            await groupWriter.WriteColumnAsync(freeColumn);
-        }
-    }
-}
+List<Array> parquetArray = new List<Array>();
+
+parquetArray?.Add(parquetData?.GatewayTimestampMSList?.ToArray());
+parquetArray?.Add(parquetData?.OUIList?.ToArray());
+parquetArray?.Add(parquetData?.NetIDList?.ToArray());
+parquetArray?.Add(parquetData?.RSSIList?.ToArray());
+parquetArray?.Add(parquetData?.FrequencyList?.ToArray());
+parquetArray?.Add(parquetData?.SNRList?.ToArray());
+parquetArray?.Add(parquetData?.DataRateList?.ToArray());
+parquetArray?.Add(parquetData?.RegionList?.ToArray());
+parquetArray?.Add(parquetData?.GatewayList?.ToArray());
+parquetArray?.Add(parquetData?.PayloadHashList?.ToArray());
+parquetArray?.Add(parquetData?.PayloadSizeList?.ToArray());
+parquetArray?.Add(parquetData?.FreeList?.ToArray());
+await WriteParquet(parquetArray, schema, parquetFile);
 
 Console.WriteLine("--------------------------------------");
 Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
@@ -207,8 +159,33 @@ Console.WriteLine($"Elapsed time is {stopWatch.Elapsed}");
 Console.WriteLine("--------------------------------------");
 Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {theSummary.MessageCount} byteTotal= {theSummary.TotalBytes} dcCount= {theSummary.DCCount} fc= {theSummary.FileCount} rawTotal= {(float)theSummary.RawSize / (1024 * 1024)} gzTotal= {(float)theSummary.GzipSize / (1024 * 1024)}");
 Console.WriteLine("--------------------------------------");
-
 return;
+
+static async Task WriteParquet(List<Array> arrayList, ParquetSchema schema, string parquetFile)
+{
+    using (Stream fileStream = System.IO.File.OpenWrite(parquetFile))
+    {
+        using (ParquetWriter parquetWriter = await ParquetWriter.CreateAsync(schema, fileStream))
+        {
+            parquetWriter.CompressionMethod = CompressionMethod.Zstd;
+            parquetWriter.CompressionLevel = System.IO.Compression.CompressionLevel.Optimal;
+            // create a new row group in the file
+            using (ParquetRowGroupWriter groupWriter = parquetWriter.CreateRowGroup())
+            {
+                int fieldNumber = 0;
+                foreach(var array in arrayList)
+                {
+                    var dataColumn = new DataColumn(
+                        schema?.DataFields[fieldNumber],
+                         array);
+                    await groupWriter.WriteColumnAsync(dataColumn);
+                    fieldNumber++;
+                }
+            }
+        }
+    }
+    return;
+}
 
 static List<Task<ReportSummary>> LoopFiles(
     object reportLock,
