@@ -1,13 +1,11 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
-using Helium.PacketRouter;
 using Parquet;
 using Parquet.Data;
 using Parquet.Schema;
 using System.CommandLine;
 using System.Diagnostics;
 using System.IO.Compression;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 uint minutes = 60; // 24 * 60;
@@ -64,22 +62,7 @@ Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
 
-// create file schema
-var schema = new ParquetSchema(
-    new DataField<ulong>("gateway_timestamp_ms"),
-    new DataField<ulong>("oui"),
-    new DataField<uint>("net_id"),
-    new DataField<int>("rssi"),
-    new DataField<uint>("frequency"),
-    new DataField<float>("snr"),
-    new DataField<ushort>("data_rate"),
-    new DataField<ushort>("region"),
-    new DataField<Byte[]>("gateway"),
-    new DataField<Byte[]>("payload_hash"),
-    new DataField<uint>("payload_size"),
-    new DataField<bool>("free"));
-
-ParquetData parquetData = new ParquetData();
+IngestParser parser = new IngestParser();
 
 // Create an S3 client object.
 var s3Client = new AmazonS3Client();
@@ -110,7 +93,7 @@ foreach (var item in sortedList)
     itemList.Add(item);
     if (itemList.Count >= 8 || item == last)
     {
-        var taskList = LoopFiles(reportLock, s3Client, parquetData, ingestBucket, itemList);
+        var taskList = LoopFiles(reportLock, s3Client, parser, ingestBucket, itemList);
         while (taskList.Any())
         {
             Task<ReportSummary> finishedTask = await Task<ReportSummary>.WhenAny(taskList);
@@ -135,21 +118,11 @@ stopWatch.Stop();
 
 Console.WriteLine($"Duration is {minutes} minutes");
 
-List<Array> parquetArray = new List<Array>();
+// create file schema
+var parquetArray = parser.GetArray();
+var parquetSchema = parser.GetSchema();
 
-parquetArray?.Add(parquetData?.GatewayTimestampMSList?.ToArray());
-parquetArray?.Add(parquetData?.OUIList?.ToArray());
-parquetArray?.Add(parquetData?.NetIDList?.ToArray());
-parquetArray?.Add(parquetData?.RSSIList?.ToArray());
-parquetArray?.Add(parquetData?.FrequencyList?.ToArray());
-parquetArray?.Add(parquetData?.SNRList?.ToArray());
-parquetArray?.Add(parquetData?.DataRateList?.ToArray());
-parquetArray?.Add(parquetData?.RegionList?.ToArray());
-parquetArray?.Add(parquetData?.GatewayList?.ToArray());
-parquetArray?.Add(parquetData?.PayloadHashList?.ToArray());
-parquetArray?.Add(parquetData?.PayloadSizeList?.ToArray());
-parquetArray?.Add(parquetData?.FreeList?.ToArray());
-await WriteParquet(parquetArray, schema, parquetFile);
+await WriteParquet(parquetArray, parquetSchema, parquetFile);
 
 Console.WriteLine("--------------------------------------");
 Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
@@ -190,14 +163,14 @@ static async Task WriteParquet(List<Array> arrayList, ParquetSchema schema, stri
 static List<Task<ReportSummary>> LoopFiles(
     object reportLock,
     AmazonS3Client s3Client,
-    ParquetData parquetData,
+    IngestParser parser,
     string ingestBucket,
     List<string> files)
 {
     List<Task<ReportSummary>> taskList = new List<Task<ReportSummary>>();
     foreach (var file in files)
     {
-        var summary = GetPacketReportsAsync(reportLock, s3Client, parquetData, ingestBucket, file);
+        var summary = GetPacketReportsAsync(reportLock, s3Client, parser, ingestBucket, file);
         taskList.Add(summary);
     }
     return taskList;
@@ -206,7 +179,7 @@ static List<Task<ReportSummary>> LoopFiles(
 static async Task<ReportSummary> GetPacketReportsAsync(
     object reportLock,
     AmazonS3Client s3Client,
-    ParquetData parquetData,
+    IngestParser parser,
     string bucketName,
     string report)
 {
@@ -219,21 +192,8 @@ static async Task<ReportSummary> GetPacketReportsAsync(
     var messageList = ExtractMessageList(rawBytes);
     foreach (var message in messageList)
     {
-        var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
-        parquetData?.GatewayTimestampMSList?.Add(mData.GatewayTimestampMs);
-        parquetData?.OUIList?.Add(mData.Oui);
-        parquetData?.NetIDList?.Add(mData.NetId);
-        parquetData?.RSSIList?.Add(mData.Rssi);
-        parquetData?.FrequencyList?.Add(mData.Frequency);
-        parquetData?.SNRList?.Add(mData.Snr);
-        parquetData?.DataRateList?.Add((ushort)mData.Datarate);
-        parquetData?.RegionList?.Add((ushort)mData.Region);
-        parquetData?.GatewayList?.Add(mData.Gateway.ToByteArray());
-        parquetData?.PayloadHashList?.Add(mData.PayloadHash.ToByteArray());
-        parquetData?.PayloadSizeList?.Add(mData.PayloadSize);
-        parquetData?.FreeList?.Add(mData.Free);
+        parser.ParseMessagePacketReport(message);
         messageCount++;
-        totalBytes += mData.PayloadSize;
     }
 
     var summary = new ReportSummary()
@@ -405,3 +365,4 @@ static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, stri
     }
     while (response.IsTruncated);
 }
+

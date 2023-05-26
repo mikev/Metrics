@@ -1,6 +1,8 @@
 ﻿
 using Google.Protobuf;
 using Helium;
+using Helium.PacketRouter;
+using Parquet.Schema;
 using System;
 using System.Numerics;
 
@@ -46,6 +48,94 @@ public static class XX
         return BitConverter.ToInt32(ob.ToByteArray(), 0);
     }
 };
+
+public class ParserBase
+{
+    public List<Array> GetArray()
+    {
+        return new List<Array>();
+    }
+
+    public ParquetSchema GetSchema()
+    {
+        return new ParquetSchema();
+    }
+
+    public void ParseMessagePacketReport(byte[] message)
+    {
+    }
+}
+
+public class IngestParser : ParserBase
+{
+    public ParquetData ParquetData { get; set; }
+
+    public IngestParser()
+    {
+        ParquetData = new ParquetData();
+    }
+
+    public List<Array> GetArray()
+    {
+        List<Array> parquetArray = new List<Array>();
+        if (ParquetData is null)
+            return parquetArray;
+
+        var parquetData = ParquetData;
+        parquetArray?.Add(parquetData.GatewayTimestampMSList.ToArray());
+        parquetArray?.Add(parquetData?.OUIList?.ToArray());
+        parquetArray?.Add(parquetData?.NetIDList?.ToArray());
+        parquetArray?.Add(parquetData?.RSSIList?.ToArray());
+        parquetArray?.Add(parquetData?.FrequencyList?.ToArray());
+        parquetArray?.Add(parquetData?.SNRList?.ToArray());
+        parquetArray?.Add(parquetData?.DataRateList?.ToArray());
+        parquetArray?.Add(parquetData?.RegionList?.ToArray());
+        parquetArray?.Add(parquetData?.GatewayList?.ToArray());
+        parquetArray?.Add(parquetData?.PayloadHashList?.ToArray());
+        parquetArray?.Add(parquetData?.PayloadSizeList?.ToArray());
+        parquetArray?.Add(parquetData?.FreeList?.ToArray());
+        return parquetArray;
+    }
+
+    public ParquetSchema GetSchema()
+    {
+        var schema = new ParquetSchema(
+            new DataField<ulong>("gateway_timestamp_ms"),
+            new DataField<ulong>("oui"),
+            new DataField<uint>("net_id"),
+            new DataField<int>("rssi"),
+            new DataField<uint>("frequency"),
+            new DataField<float>("snr"),
+            new DataField<ushort>("data_rate"),
+            new DataField<ushort>("region"),
+            new DataField<Byte[]>("gateway"),
+            new DataField<Byte[]>("payload_hash"),
+            new DataField<uint>("payload_size"),
+            new DataField<bool>("free")
+        );
+        return schema;
+    }
+
+    public void ParseMessagePacketReport(byte[] message)
+    {
+        var parquetData = ParquetData;
+        var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
+        parquetData?.GatewayTimestampMSList?.Add(mData.GatewayTimestampMs);
+        parquetData?.OUIList?.Add(mData.Oui);
+        parquetData?.NetIDList?.Add(mData.NetId);
+        parquetData?.RSSIList?.Add(mData.Rssi);
+        parquetData?.FrequencyList?.Add(mData.Frequency);
+        parquetData?.SNRList?.Add(mData.Snr);
+        parquetData?.DataRateList?.Add((ushort)mData.Datarate);
+        parquetData?.RegionList?.Add((ushort)mData.Region);
+        parquetData?.GatewayList?.Add(mData.Gateway.ToByteArray());
+        parquetData?.PayloadHashList?.Add(mData.PayloadHash.ToByteArray());
+        parquetData?.PayloadSizeList?.Add(mData.PayloadSize);
+        parquetData?.FreeList?.Add(mData.Free);
+    }
+}
+
+
 
 public class ParquetData
 {
@@ -102,19 +192,6 @@ public class PacketSummary
     {
         var hashCode = Time.GetHashCode();
         return hashCode;
-        //unchecked // Allow arithmetic overflow, numbers will just "wrap around"
-        //{
-        //    int hashcode = 1430287;
-        //    hashcode = hashcode * 7302013 ^ Time.GetHashCode();
-        //    hashcode = hashcode * 7302013 ^ DCCount.GetHashCode();
-        //    hashcode = hashcode * 7302013 ^ PacketCount.GetHashCode();
-        //    hashcode = hashcode * 7302013 ^ DupeCount.GetHashCode();
-        //    hashcode = hashcode * 7302013 ^ PacketBytes.GetHashCode();
-        //    hashcode = hashcode * 7302013 ^ Files.GetHashCode();
-        //    hashcode = hashcode * 7302013 ^ RawBytes.GetHashCode();
-        //    hashcode = hashcode * 7302013 ^ GzipBytes.GetHashCode();
-        //    return hashcode;
-        //}
     }
 }
 
