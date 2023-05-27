@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="packet_verifier.proto" />
     <None Remove="poc_lora.proto" />
   </ItemGroup>
 
@@ -22,6 +23,7 @@
     <PackageReference Include="Parquet.Net" Version="4.12.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
 	<Protobuf Include="data_rate.proto" />
+	<Protobuf Include="packet_verifier.proto" />
 	<Protobuf Include="poc_lora.proto" />
 	<Protobuf Include="region.proto" />
 	<Protobuf Include="packet_router.proto" />

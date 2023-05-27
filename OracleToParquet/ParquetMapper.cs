@@ -2,11 +2,12 @@
 using Google.Protobuf;
 using Helium;
 using Helium.PacketRouter;
+using Helium.PacketVerifier;
 using Parquet.Schema;
 using System;
 using System.Numerics;
 
-struct ParquetReport
+struct ParquetMapper
 {
     //[MapToColumn("GatewayTimestamp")]
     public ulong GatewayTimestamp { get; set; }
@@ -51,31 +52,31 @@ public static class XX
 
 public class ParserBase
 {
-    public List<Array> GetArray()
+    public virtual List<Array> GetArray()
     {
         return new List<Array>();
     }
 
-    public ParquetSchema GetSchema()
+    public virtual ParquetSchema GetSchema()
     {
         return new ParquetSchema();
     }
 
-    public void ParseMessagePacketReport(byte[] message)
+    public virtual void ParseMessagePacketReport(byte[] message)
     {
     }
 }
 
-public class IngestParser : ParserBase
+public class IoTPacketIngestParser : ParserBase
 {
-    public ParquetData ParquetData { get; set; }
+    public IoTPacketIngestData ParquetData { get; set; }
 
-    public IngestParser()
+    public IoTPacketIngestParser()
     {
-        ParquetData = new ParquetData();
+        ParquetData = new IoTPacketIngestData();
     }
 
-    public List<Array> GetArray()
+    public override List<Array> GetArray()
     {
         List<Array> parquetArray = new List<Array>();
         if (ParquetData is null)
@@ -97,7 +98,7 @@ public class IngestParser : ParserBase
         return parquetArray;
     }
 
-    public ParquetSchema GetSchema()
+    public override ParquetSchema GetSchema()
     {
         var schema = new ParquetSchema(
             new DataField<ulong>("gateway_timestamp_ms"),
@@ -116,7 +117,7 @@ public class IngestParser : ParserBase
         return schema;
     }
 
-    public void ParseMessagePacketReport(byte[] message)
+    public override void ParseMessagePacketReport(byte[] message)
     {
         var parquetData = ParquetData;
         var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
@@ -135,9 +136,55 @@ public class IngestParser : ParserBase
     }
 }
 
+public class IoTPacketVerifierParser : ParserBase
+{
+    public IoTPacketVerifierData ParquetData { get; set; }
 
+    public IoTPacketVerifierParser()
+    {
+        ParquetData = new IoTPacketVerifierData();
+    }
 
-public class ParquetData
+    public override ParquetSchema GetSchema()
+    {
+        var schema = new ParquetSchema(
+            new DataField<uint>("payload_size"),
+            new DataField<Byte[]>("gateway"),
+            new DataField<Byte[]>("payload_hash"),
+            new DataField<uint>("num_dcs"),
+            new DataField<ulong>("packet_timestamp")
+        );
+        return schema;
+    }
+
+    public override List<Array> GetArray()
+    {
+        List<Array> parquetArray = new List<Array>();
+        if (ParquetData is null)
+            return parquetArray;
+
+        var parquetData = ParquetData;
+        parquetArray?.Add(parquetData?.PayloadSizeList?.ToArray());
+        parquetArray?.Add(parquetData?.GatewayList?.ToArray());
+        parquetArray?.Add(parquetData?.PayloadHashList?.ToArray());
+        parquetArray?.Add(parquetData?.NumDCSList?.ToArray());
+        parquetArray?.Add(parquetData.PacketTimestampList.ToArray());
+        return parquetArray;
+    }
+
+    public override void ParseMessagePacketReport(byte[] message)
+    {
+        var parquetData = ParquetData;
+        var mData = valid_packet.Parser.ParseFrom(message);
+        parquetData?.GatewayList?.Add(mData.Gateway.ToByteArray());
+        parquetData?.PayloadHashList?.Add(mData.PayloadHash.ToByteArray());
+        parquetData?.PayloadSizeList?.Add(mData.PayloadSize);
+        parquetData?.NumDCSList?.Add(mData.NumDcs);
+        parquetData?.PacketTimestampList?.Add(mData.PacketTimestamp);
+    }
+}
+
+public class IoTPacketIngestData
 {
     public List<ulong>? GatewayTimestampMSList { get; set; }
     public List<ulong>? OUIList { get; set; }
@@ -149,14 +196,13 @@ public class ParquetData
     public List<float>? SNRList { get; set; }
     public List<ushort>? DataRateList { get; set; }
     public List<ushort>? RegionList { get; set; }
-    
     public List<Byte[]>? GatewayList { get; set; }
     // Hash of `payload` within `message packet`
     public List<Byte[]>? PayloadHashList { get; set; }
     public List<uint>? PayloadSizeList { get; set; }
     public List<bool>? FreeList { get; set; }
 
-    public ParquetData()
+    public IoTPacketIngestData()
     {
         GatewayTimestampMSList = new List<UInt64>();
         OUIList = new List<ulong>();
@@ -170,6 +216,25 @@ public class ParquetData
         PayloadHashList = new List<Byte[]>();
         PayloadSizeList = new List<uint>();
         FreeList = new List<bool>();
+    }
+}
+
+public class IoTPacketVerifierData
+{
+    public List<uint>? PayloadSizeList { get; set; }
+    public List<Byte[]>? GatewayList { get; set; }
+    // Hash of `payload` within `message packet`
+    public List<Byte[]>? PayloadHashList { get; set; }
+    public List<uint>? NumDCSList { get; set; }
+    public List<ulong>? PacketTimestampList { get; set; }
+
+    public IoTPacketVerifierData()
+    {
+        PayloadSizeList = new List<uint>();
+        GatewayList = new List<Byte[]>();
+        PayloadHashList = new List<Byte[]>();
+        NumDCSList = new List<uint>();
+        PacketTimestampList = new List<UInt64>();
     }
 }
 

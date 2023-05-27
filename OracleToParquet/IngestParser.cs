@@ -10,8 +10,8 @@ using System.Text.RegularExpressions;
 
 uint minutes = 60; // 24 * 60;
 var startString = ToUnixEpochTime("2023-5-8Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
-string ingestBucket = "foundation-iot-packet-ingest";
-var parquetFile = @"c:\temp\test.parquet";
+string ingestBucket = "foundation-iot-packet-verifier";
+var folder = @"C:\temp";
 
 if (args.Length > 0)
 {
@@ -28,22 +28,31 @@ if (args.Length > 0)
     );
 
     var outputOption = new Option<string?>(
-        name: "--output",
-        description: "Output parquet file",
-        getDefaultValue: () => "test.parquet"
+        name: "--folder",
+        description: "Output directory",
+        getDefaultValue: () => @"C:\temp"
+    );
+
+    var bucketOption = new Option<string?>(
+        name: "--bucket",
+        description: "S3 Bucket name",
+        getDefaultValue: () => "foundation-iot-packet-ingest"
     );
 
     var rootCommand = new RootCommand("Sample app for System.CommandLine");
     rootCommand.AddOption(startOption);
     rootCommand.AddOption(durationOption);
     rootCommand.AddOption(outputOption);
+    rootCommand.AddOption(bucketOption);
 
-    rootCommand.SetHandler((inStartTime, inMinutes, output) =>
+    rootCommand.SetHandler((inStartTime, inMinutes, output, bucketName) =>
     {
-        startString = ToUnixEpochTime(inStartTime);
+        var inStartTime2 = inStartTime?.TrimEnd('Z') + 'Z';
+        startString = ToUnixEpochTime(inStartTime2);
         minutes = inMinutes.GetValueOrDefault(10);
-        parquetFile = output;
-    }, startOption, durationOption, outputOption);
+        folder = output;
+        ingestBucket = bucketName;
+    }, startOption, durationOption, outputOption, bucketOption);
 
     await rootCommand.InvokeAsync(args);
 }
@@ -52,9 +61,28 @@ else
     Console.WriteLine("No arguments");
 }
 
+ParserBase parser = null;
+string bucketKeyPrefix = "";
+switch (ingestBucket)
+{
+    case "foundation-iot-packet-ingest":
+        bucketKeyPrefix = "packetreport";
+        parser = new IoTPacketIngestParser();
+        break;
+    case "foundation-iot-packet-verifier":
+        bucketKeyPrefix = "iot_valid_packet";
+        parser = new IoTPacketVerifierParser();
+        break;
+    default:
+        parser = new IoTPacketIngestParser();
+        break;
+}
+
 var stopWatch = Stopwatch.StartNew();
 ulong startUnix = ulong.Parse(startString);
-string startAfter = $"packetreport.{startString}";
+string startAfter = $"{bucketKeyPrefix}.{startString}";
+var baseDir = folder.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+string parquetFile = $"{baseDir}{startAfter}.parquet";
 
 var dateTime = UnixTimeMillisecondsToDateTime(double.Parse(startString) * 1000);
 
@@ -62,7 +90,7 @@ Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
 
-IngestParser parser = new IngestParser();
+
 
 // Create an S3 client object.
 var s3Client = new AmazonS3Client();
@@ -78,7 +106,7 @@ object reportLock = new();
 ReportSummary theSummary = new ReportSummary();
 List<string> itemList = new List<string>();
 
-var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes).ToBlockingEnumerable();
+var list = ListBucketKeysAsync(s3Client, ingestBucket, bucketKeyPrefix, startUnix, minutes).ToBlockingEnumerable();
 var sortedList = list.OrderBy(s => s).ToList();
 var last = sortedList.Last();
 var listCount = sortedList.Count();
@@ -163,7 +191,7 @@ static async Task WriteParquet(List<Array> arrayList, ParquetSchema schema, stri
 static List<Task<ReportSummary>> LoopFiles(
     object reportLock,
     AmazonS3Client s3Client,
-    IngestParser parser,
+    ParserBase parser,
     string ingestBucket,
     List<string> files)
 {
@@ -179,7 +207,7 @@ static List<Task<ReportSummary>> LoopFiles(
 static async Task<ReportSummary> GetPacketReportsAsync(
     object reportLock,
     AmazonS3Client s3Client,
-    IngestParser parser,
+    ParserBase parser,
     string bucketName,
     string report)
 {
@@ -322,12 +350,12 @@ static async IAsyncEnumerable<string> ListBucketsAsync(IAmazonS3 s3Client)
     }
 }
 
-static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, string bucketName, UInt64 unixTime, uint minutes)
+static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, string bucketName, string keyPrefix, UInt64 unixTime, uint minutes)
 {
     if (unixTime < 10_000_000_000)
         unixTime = unixTime * 1000;
 
-    string startAfter = $"packetreport.{unixTime}";
+    string startAfter = $"{keyPrefix}.{unixTime}";
 
     var request = new ListObjectsV2Request
     {
