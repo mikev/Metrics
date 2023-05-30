@@ -142,6 +142,7 @@ foreach (var item in sortedList)
     }
 }
 
+
 stopWatch.Stop();
 
 Console.WriteLine($"Duration is {minutes} minutes");
