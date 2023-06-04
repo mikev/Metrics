@@ -9,8 +9,8 @@ using System.IO.Compression;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-uint minutes = 60; // 24 * 60;
-var startString = ToUnixEpochTime("2023-5-8Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
+uint minutes = 24 * 60; // 24 * 60;
+var startString = ToUnixEpochTime("2023-6-1Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 string ingestBucket = "foundation-iot-packet-ingest";
 var metricsFile = @"c:\temp\lorawan_metrics.json";
 int hashSizeMaximum = 25000;
@@ -329,6 +329,10 @@ static async Task<ReportSummary> GetPacketReportsAsync(
         var dataRate = mData.Datarate;
 
         var uniqueHash = mData.PayloadHash.ToIntHash();
+        //if (mData.Region == Helium.region.Au915Sb1)
+        //{
+        //    Console.WriteLine($"AS923_1C message");
+        //}
         if (mData.Region == Helium.region.Eu868 && mData.Datarate == Helium.data_rate.Sf12Bw125)
         {
             int freqCount = 0;
