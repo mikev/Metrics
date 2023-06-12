@@ -1,0 +1,7597 @@
+{
+  "LastUpdate": "2023-06-09T00:00:00Z",
+  "VerifyByDay": [],
+  "IngestByDay": [
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 29241269,
+      "PacketCount": 8415366,
+      "DupeCount": 16566413,
+      "PacketBytes": 632799925,
+      "Files": 5731,
+      "RawBytes": 2538592663,
+      "GzipBytes": 1207496181
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 25606831,
+      "PacketCount": 7671542,
+      "DupeCount": 18496066,
+      "PacketBytes": 552217677,
+      "Files": 5713,
+      "RawBytes": 2659700750,
+      "GzipBytes": 1234975327
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 24608698,
+      "PacketCount": 7557460,
+      "DupeCount": 19177787,
+      "PacketBytes": 529490109,
+      "Files": 5752,
+      "RawBytes": 2716568848,
+      "GzipBytes": 1256119375
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 25352547,
+      "PacketCount": 7675535,
+      "DupeCount": 18221578,
+      "PacketBytes": 546290878,
+      "Files": 5642,
+      "RawBytes": 2630805820,
+      "GzipBytes": 1216860988
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 25273590,
+      "PacketCount": 7948623,
+      "DupeCount": 17194468,
+      "PacketBytes": 542060874,
+      "Files": 5517,
+      "RawBytes": 2555332097,
+      "GzipBytes": 1188332539
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 22888423,
+      "PacketCount": 7550185,
+      "DupeCount": 18659533,
+      "PacketBytes": 488584969,
+      "Files": 5638,
+      "RawBytes": 2664015919,
+      "GzipBytes": 1226879873
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 23440305,
+      "PacketCount": 7559437,
+      "DupeCount": 17876433,
+      "PacketBytes": 500663521,
+      "Files": 5711,
+      "RawBytes": 2586166645,
+      "GzipBytes": 1208505105
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 22318017,
+      "PacketCount": 7936263,
+      "DupeCount": 17856095,
+      "PacketBytes": 474545103,
+      "Files": 5739,
+      "RawBytes": 2624067124,
+      "GzipBytes": 1240990410
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 21191172,
+      "PacketCount": 7587822,
+      "DupeCount": 18898211,
+      "PacketBytes": 451505699,
+      "Files": 5708,
+      "RawBytes": 2694763881,
+      "GzipBytes": 1243899229
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 21980109,
+      "PacketCount": 7694122,
+      "DupeCount": 18807222,
+      "PacketBytes": 467106913,
+      "Files": 5719,
+      "RawBytes": 2694723800,
+      "GzipBytes": 1236648390
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 21228642,
+      "PacketCount": 7956101,
+      "DupeCount": 18807672,
+      "PacketBytes": 449823047,
+      "Files": 5753,
+      "RawBytes": 2722208324,
+      "GzipBytes": 1261542609
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 15234281,
+      "PacketCount": 6243718,
+      "DupeCount": 19488328,
+      "PacketBytes": 316583653,
+      "Files": 5211,
+      "RawBytes": 2615062248,
+      "GzipBytes": 1173822592
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 17357360,
+      "PacketCount": 8028155,
+      "DupeCount": 18706143,
+      "PacketBytes": 361609832,
+      "Files": 5731,
+      "RawBytes": 2721188611,
+      "GzipBytes": 1261086490
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 15430297,
+      "PacketCount": 6204347,
+      "DupeCount": 19184733,
+      "PacketBytes": 319204887,
+      "Files": 5151,
+      "RawBytes": 2582095243,
+      "GzipBytes": 1159981298
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 7130935,
+      "PacketCount": 4087852,
+      "DupeCount": 12967638,
+      "PacketBytes": 142744588,
+      "Files": 4295,
+      "RawBytes": 1736107861,
+      "GzipBytes": 813441982
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 9078965,
+      "PacketCount": 4910570,
+      "DupeCount": 14830562,
+      "PacketBytes": 182366584,
+      "Files": 4673,
+      "RawBytes": 2008304904,
+      "GzipBytes": 931783038
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 13589709,
+      "PacketCount": 5934468,
+      "DupeCount": 17416438,
+      "PacketBytes": 277859663,
+      "Files": 5170,
+      "RawBytes": 2373512622,
+      "GzipBytes": 1087522933
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 6695230,
+      "PacketCount": 3868967,
+      "DupeCount": 10969692,
+      "PacketBytes": 130341133,
+      "Files": 3621,
+      "RawBytes": 1504565137,
+      "GzipBytes": 678267626
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 8725750,
+      "PacketCount": 5241537,
+      "DupeCount": 16425458,
+      "PacketBytes": 169004854,
+      "Files": 5179,
+      "RawBytes": 2200373986,
+      "GzipBytes": 1024408221
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 9821619,
+      "PacketCount": 5151814,
+      "DupeCount": 16636381,
+      "PacketBytes": 195590195,
+      "Files": 5179,
+      "RawBytes": 2212935907,
+      "GzipBytes": 1026498694
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 5480943,
+      "PacketCount": 3121536,
+      "DupeCount": 8138852,
+      "PacketBytes": 108794789,
+      "Files": 2854,
+      "RawBytes": 1139060140,
+      "GzipBytes": 490604013
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 5943124,
+      "PacketCount": 3516966,
+      "DupeCount": 7180150,
+      "PacketBytes": 114869546,
+      "Files": 2672,
+      "RawBytes": 1085862400,
+      "GzipBytes": 480064793
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 6522544,
+      "PacketCount": 3735487,
+      "DupeCount": 8429214,
+      "PacketBytes": 126651192,
+      "Files": 3091,
+      "RawBytes": 1232761697,
+      "GzipBytes": 544487148
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 32021375,
+      "PacketCount": 8923937,
+      "DupeCount": 13340297,
+      "PacketBytes": 696144421,
+      "Files": 5745,
+      "RawBytes": 2261801069,
+      "GzipBytes": 1099452723
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 33881349,
+      "PacketCount": 9153301,
+      "DupeCount": 13746585,
+      "PacketBytes": 737972932,
+      "Files": 5756,
+      "RawBytes": 2325995249,
+      "GzipBytes": 1126608267
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 34376381,
+      "PacketCount": 9122129,
+      "DupeCount": 13778167,
+      "PacketBytes": 748935102,
+      "Files": 5755,
+      "RawBytes": 2326505292,
+      "GzipBytes": 1124797381
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 37500029,
+      "PacketCount": 9205279,
+      "DupeCount": 16854260,
+      "PacketBytes": 820700863,
+      "Files": 5760,
+      "RawBytes": 2647847680,
+      "GzipBytes": 1266353586
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 37500019,
+      "PacketCount": 9141941,
+      "DupeCount": 12042941,
+      "PacketBytes": 821010708,
+      "Files": 5740,
+      "RawBytes": 2152087931,
+      "GzipBytes": 1051825994
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 34429478,
+      "PacketCount": 8619899,
+      "DupeCount": 14635950,
+      "PacketBytes": 751543023,
+      "Files": 5563,
+      "RawBytes": 2362873835,
+      "GzipBytes": 1126696315
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 44040116,
+      "PacketCount": 10499415,
+      "DupeCount": 13352339,
+      "PacketBytes": 964688994,
+      "Files": 5760,
+      "RawBytes": 2422708180,
+      "GzipBytes": 1166599516
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 39462461,
+      "PacketCount": 9904926,
+      "DupeCount": 17338656,
+      "PacketBytes": 864368405,
+      "Files": 5760,
+      "RawBytes": 2769325127,
+      "GzipBytes": 1328366567
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 36492326,
+      "PacketCount": 8906892,
+      "DupeCount": 11352192,
+      "PacketBytes": 798630063,
+      "Files": 5570,
+      "RawBytes": 2058815948,
+      "GzipBytes": 998534318
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 38839982,
+      "PacketCount": 8860620,
+      "DupeCount": 11006879,
+      "PacketBytes": 856263269,
+      "Files": 5513,
+      "RawBytes": 2021364687,
+      "GzipBytes": 983428994
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 43813798,
+      "PacketCount": 9602035,
+      "DupeCount": 12254980,
+      "PacketBytes": 968764273,
+      "Files": 5639,
+      "RawBytes": 2224510956,
+      "GzipBytes": 1045454931
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 28323939,
+      "PacketCount": 7270817,
+      "DupeCount": 9903750,
+      "PacketBytes": 622303977,
+      "Files": 5250,
+      "RawBytes": 1750386139,
+      "GzipBytes": 845797982
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 31706853,
+      "PacketCount": 7970589,
+      "DupeCount": 10857423,
+      "PacketBytes": 696863041,
+      "Files": 5528,
+      "RawBytes": 1918120214,
+      "GzipBytes": 922984266
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 29329022,
+      "PacketCount": 7482431,
+      "DupeCount": 9671868,
+      "PacketBytes": 642169073,
+      "Files": 5332,
+      "RawBytes": 1747398999,
+      "GzipBytes": 868321860
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 26919884,
+      "PacketCount": 7299904,
+      "DupeCount": 9721944,
+      "PacketBytes": 588417383,
+      "Files": 5287,
+      "RawBytes": 1734204504,
+      "GzipBytes": 860515245
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 23663104,
+      "PacketCount": 6479616,
+      "DupeCount": 8755744,
+      "PacketBytes": 517348209,
+      "Files": 5556,
+      "RawBytes": 1551503053,
+      "GzipBytes": 776621704
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 25971722,
+      "PacketCount": 6789735,
+      "DupeCount": 9017659,
+      "PacketBytes": 570809988,
+      "Files": 4909,
+      "RawBytes": 1610720558,
+      "GzipBytes": 774687454
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 25649248,
+      "PacketCount": 7387170,
+      "DupeCount": 9165029,
+      "PacketBytes": 560301948,
+      "Files": 5508,
+      "RawBytes": 1685665491,
+      "GzipBytes": 833617546
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 26796257,
+      "PacketCount": 7582398,
+      "DupeCount": 9859352,
+      "PacketBytes": 585444358,
+      "Files": 5398,
+      "RawBytes": 1776739988,
+      "GzipBytes": 879520415
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 41662904,
+      "PacketCount": 8154363,
+      "DupeCount": 10203670,
+      "PacketBytes": 931587095,
+      "Files": 5749,
+      "RawBytes": 1867032234,
+      "GzipBytes": 941952273
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 45696567,
+      "PacketCount": 9056885,
+      "DupeCount": 10501714,
+      "PacketBytes": 1023913538,
+      "Files": 5737,
+      "RawBytes": 1989219845,
+      "GzipBytes": 990703194
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 53469721,
+      "PacketCount": 10874165,
+      "DupeCount": 11650778,
+      "PacketBytes": 1196605611,
+      "Files": 5758,
+      "RawBytes": 2465194055,
+      "GzipBytes": 1195697378
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 51931776,
+      "PacketCount": 10506409,
+      "DupeCount": 11588537,
+      "PacketBytes": 1163252008,
+      "Files": 5727,
+      "RawBytes": 2280621289,
+      "GzipBytes": 1114254495
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 70180774,
+      "PacketCount": 12465317,
+      "DupeCount": 12206719,
+      "PacketBytes": 1572944128,
+      "Files": 5744,
+      "RawBytes": 2716890162,
+      "GzipBytes": 1294788299
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 76459002,
+      "PacketCount": 12967651,
+      "DupeCount": 11606477,
+      "PacketBytes": 1714048002,
+      "Files": 5759,
+      "RawBytes": 2708330827,
+      "GzipBytes": 1290976224
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 84375060,
+      "PacketCount": 13858198,
+      "DupeCount": 11744637,
+      "PacketBytes": 1897075298,
+      "Files": 5746,
+      "RawBytes": 2822427773,
+      "GzipBytes": 1343607730
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 81390605,
+      "PacketCount": 14345869,
+      "DupeCount": 11691869,
+      "PacketBytes": 1830014371,
+      "Files": 5752,
+      "RawBytes": 2870939749,
+      "GzipBytes": 1377541621
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 84196686,
+      "PacketCount": 14433909,
+      "DupeCount": 11804480,
+      "PacketBytes": 1897067666,
+      "Files": 5734,
+      "RawBytes": 2895293498,
+      "GzipBytes": 1378337112
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 86767357,
+      "PacketCount": 15180314,
+      "DupeCount": 12994795,
+      "PacketBytes": 1958098657,
+      "Files": 5746,
+      "RawBytes": 3105755153,
+      "GzipBytes": 1467782577
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 83163333,
+      "PacketCount": 15184909,
+      "DupeCount": 11931331,
+      "PacketBytes": 1872411510,
+      "Files": 5760,
+      "RawBytes": 2991546753,
+      "GzipBytes": 1416678648
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 100274697,
+      "PacketCount": 17531706,
+      "DupeCount": 14122170,
+      "PacketBytes": 2265781583,
+      "Files": 5760,
+      "RawBytes": 3485472673,
+      "GzipBytes": 1593964091
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Duration": 1440,
+      "DCCount": 96668296,
+      "PacketCount": 18114620,
+      "DupeCount": 14042284,
+      "PacketBytes": 2184621813,
+      "Files": 5752,
+      "RawBytes": 3543553147,
+      "GzipBytes": 1650337452
+    }
+  ],
+  "OUIByDay": [
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 18459203,
+      "Percent": 63.127235
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 5473485,
+      "Percent": 18.718357
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2902779,
+      "Percent": 9.926994
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1045124,
+      "Percent": 3.5741405
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 615442,
+      "Percent": 2.1047034
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 458445,
+      "Percent": 1.5678014
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 122452,
+      "Percent": 0.41876432
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 107545,
+      "Percent": 0.367785
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 28225,
+      "Percent": 0.096524544
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 20176,
+      "Percent": 0.068998374
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 17083293,
+      "Percent": 66.713806
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 3679054,
+      "Percent": 14.367471
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2749622,
+      "Percent": 10.737845
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 879546,
+      "Percent": 3.43481
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 604453,
+      "Percent": 2.3605146
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 355937,
+      "Percent": 1.390008
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 102674,
+      "Percent": 0.4009633
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 94587,
+      "Percent": 0.3693819
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 26142,
+      "Percent": 0.10208994
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 21766,
+      "Percent": 0.08500075
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 16573187,
+      "Percent": 67.34686
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 3190677,
+      "Percent": 12.965648
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2762210,
+      "Percent": 11.224526
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 861213,
+      "Percent": 3.4996283
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 583926,
+      "Percent": 2.372844
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 345886,
+      "Percent": 1.4055437
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 115027,
+      "Percent": 0.46742415
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 112876,
+      "Percent": 0.45868334
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 24470,
+      "Percent": 0.09943639
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 21858,
+      "Percent": 0.08882225
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 17597081,
+      "Percent": 69.409515
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 2883221,
+      "Percent": 11.37251
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2772866,
+      "Percent": 10.937228
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 863907,
+      "Percent": 3.407575
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 603378,
+      "Percent": 2.37995
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 342904,
+      "Percent": 1.3525425
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 110116,
+      "Percent": 0.434339
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 105524,
+      "Percent": 0.41622642
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 25162,
+      "Percent": 0.09924841
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 23320,
+      "Percent": 0.091982864
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 17445052,
+      "Percent": 69.024826
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2850251,
+      "Percent": 11.277586
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 2730957,
+      "Percent": 10.805576
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 900113,
+      "Percent": 3.5614765
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 633500,
+      "Percent": 2.5065691
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 364853,
+      "Percent": 1.4436136
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 162242,
+      "Percent": 0.64194286
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 104820,
+      "Percent": 0.41474125
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 27297,
+      "Percent": 0.10800602
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 25362,
+      "Percent": 0.10034981
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 15741928,
+      "Percent": 68.77681
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2755818,
+      "Percent": 12.040226
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 2207454,
+      "Percent": 9.644413
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 918481,
+      "Percent": 4.012862
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 585804,
+      "Percent": 2.5593898
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 362235,
+      "Percent": 1.5826123
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 157643,
+      "Percent": 0.68874556
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 77982,
+      "Percent": 0.34070498
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 29618,
+      "Percent": 0.12940165
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 23171,
+      "Percent": 0.10123458
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 17022629,
+      "Percent": 72.62119
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2847220,
+      "Percent": 12.146685
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 1515980,
+      "Percent": 6.4674077
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 896155,
+      "Percent": 3.8231375
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 588880,
+      "Percent": 2.512254
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 362123,
+      "Percent": 1.5448734
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 124680,
+      "Percent": 0.53190434
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 30389,
+      "Percent": 0.12964423
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 22204,
+      "Percent": 0.094725735
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 21526,
+      "Percent": 0.09183328
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 15303202,
+      "Percent": 68.56883
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2878130,
+      "Percent": 12.895993
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1641384,
+      "Percent": 7.3545246
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 1412283,
+      "Percent": 6.3279953
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 607872,
+      "Percent": 2.7236829
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 268053,
+      "Percent": 1.201061
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 93754,
+      "Percent": 0.42008215
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 52043,
+      "Percent": 0.23318829
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 36018,
+      "Percent": 0.16138531
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 20471,
+      "Percent": 0.091724105
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 14774132,
+      "Percent": 69.71834
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2678709,
+      "Percent": 12.640683
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1692254,
+      "Percent": 7.985656
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 1106890,
+      "Percent": 5.2233543
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 605317,
+      "Percent": 2.8564584
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 168284,
+      "Percent": 0.7941231
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 58040,
+      "Percent": 0.27388763
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 50121,
+      "Percent": 0.23651831
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 31646,
+      "Percent": 0.14933577
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 18539,
+      "Percent": 0.087484546
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 15827162,
+      "Percent": 72.00675
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2887661,
+      "Percent": 13.137611
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1405645,
+      "Percent": 6.3950777
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 833811,
+      "Percent": 3.7934802
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 667679,
+      "Percent": 3.037651
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 170662,
+      "Percent": 0.7764384
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 67649,
+      "Percent": 0.30777374
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 52552,
+      "Percent": 0.23908891
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 36772,
+      "Percent": 0.16729672
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 20676,
+      "Percent": 0.09406687
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 14965556,
+      "Percent": 70.497
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2895857,
+      "Percent": 13.641273
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1705202,
+      "Percent": 8.032553
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 683312,
+      "Percent": 3.218821
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 619894,
+      "Percent": 2.920083
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 170971,
+      "Percent": 0.80537885
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 71295,
+      "Percent": 0.33584344
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 45082,
+      "Percent": 0.21236403
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 39978,
+      "Percent": 0.18832104
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 20030,
+      "Percent": 0.09435365
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 11101186,
+      "Percent": 72.869774
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2586766,
+      "Percent": 16.979902
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 628208,
+      "Percent": 4.123647
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 472307,
+      "Percent": 3.1002908
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 231173,
+      "Percent": 1.5174526
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 66156,
+      "Percent": 0.43425745
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 36609,
+      "Percent": 0.24030672
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 32607,
+      "Percent": 0.21403702
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 26799,
+      "Percent": 0.17591247
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 20067,
+      "Percent": 0.13172266
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 10730049,
+      "Percent": 61.81844
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2760865,
+      "Percent": 15.906019
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 2166780,
+      "Percent": 12.48335
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 718261,
+      "Percent": 4.1380773
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 622502,
+      "Percent": 3.5863864
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 172823,
+      "Percent": 0.9956756
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 71567,
+      "Percent": 0.412315
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 39409,
+      "Percent": 0.2270449
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 36375,
+      "Percent": 0.20956528
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 20033,
+      "Percent": 0.115415014
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 11235289,
+      "Percent": 72.81318
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2655734,
+      "Percent": 17.211166
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 684316,
+      "Percent": 4.4348855
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 660107,
+      "Percent": 4.2779927
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 67050,
+      "Percent": 0.43453473
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 37030,
+      "Percent": 0.23998243
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 31732,
+      "Percent": 0.20564736
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 28844,
+      "Percent": 0.18693094
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 21815,
+      "Percent": 0.1413777
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "OUI": 38,
+      "DCCount": 5090,
+      "Percent": 0.03298705
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 4796009,
+      "Percent": 67.256386
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 1572054,
+      "Percent": 22.045553
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 505738,
+      "Percent": 7.09217
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 117884,
+      "Percent": 1.6531353
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 43658,
+      "Percent": 0.6122339
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 32616,
+      "Percent": 0.45738742
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 27960,
+      "Percent": 0.39209443
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 17909,
+      "Percent": 0.25114518
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 17107,
+      "Percent": 0.23989841
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 6198602,
+      "Percent": 68.27433
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 1991955,
+      "Percent": 21.940332
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 538683,
+      "Percent": 5.9333086
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 184184,
+      "Percent": 2.0286894
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 50787,
+      "Percent": 0.559392
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 46878,
+      "Percent": 0.5163364
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 30762,
+      "Percent": 0.33882716
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 18838,
+      "Percent": 0.20749061
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 18179,
+      "Percent": 0.20023207
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "OUI": 65,
+      "DCCount": 97,
+      "Percent": 0.0010684037
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 9406516,
+      "Percent": 69.21793
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2645672,
+      "Percent": 19.468203
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 748685,
+      "Percent": 5.5092053
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 588530,
+      "Percent": 4.3307033
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 65964,
+      "Percent": 0.4853967
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 55012,
+      "Percent": 0.40480632
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 32208,
+      "Percent": 0.23700286
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 23132,
+      "Percent": 0.17021704
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 21569,
+      "Percent": 0.15871568
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "OUI": 38,
+      "DCCount": 1449,
+      "Percent": 0.01066248
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 4395643,
+      "Percent": 65.65335
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2015274,
+      "Percent": 30.100145
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 120344,
+      "Percent": 1.7974588
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 104494,
+      "Percent": 1.5607231
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 37811,
+      "Percent": 0.56474537
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 21664,
+      "Percent": 0.32357365
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 5398951,
+      "Percent": 61.873775
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2532626,
+      "Percent": 29.024736
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 550634,
+      "Percent": 6.310449
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 125513,
+      "Percent": 1.4384208
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 57102,
+      "Percent": 0.6544079
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 32453,
+      "Percent": 0.3719222
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 15438,
+      "Percent": 0.17692462
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 9902,
+      "Percent": 0.11348022
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 3131,
+      "Percent": 0.0358823
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 6622239,
+      "Percent": 67.425125
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2382658,
+      "Percent": 24.25932
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 536385,
+      "Percent": 5.4612684
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 117263,
+      "Percent": 1.1939274
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 64100,
+      "Percent": 0.6526419
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 29791,
+      "Percent": 0.30332068
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 27624,
+      "Percent": 0.2812571
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 22823,
+      "Percent": 0.23237513
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 18736,
+      "Percent": 0.19076285
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 3762991,
+      "Percent": 68.65591
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 1535587,
+      "Percent": 28.01684
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 117980,
+      "Percent": 2.1525493
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 26655,
+      "Percent": 0.48632142
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 18681,
+      "Percent": 0.3408355
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 10665,
+      "Percent": 0.19458331
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 6208,
+      "Percent": 0.11326518
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 1760,
+      "Percent": 0.03211126
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "OUI": 60,
+      "DCCount": 199,
+      "Percent": 0.003630762
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "OUI": 27,
+      "DCCount": 114,
+      "Percent": 0.002079934
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 3637940,
+      "Percent": 61.212585
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 1569411,
+      "Percent": 26.407173
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 388528,
+      "Percent": 6.5374374
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 160787,
+      "Percent": 2.705429
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 105778,
+      "Percent": 1.7798383
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 36720,
+      "Percent": 0.61785686
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 12438,
+      "Percent": 0.20928387
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 12415,
+      "Percent": 0.20889688
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "OUI": 63,
+      "DCCount": 9261,
+      "Percent": 0.15582713
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 6059,
+      "Percent": 0.10194975
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 4000623,
+      "Percent": 61.335316
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 1889417,
+      "Percent": 28.967485
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 326511,
+      "Percent": 5.005884
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 122147,
+      "Percent": 1.8726896
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 59895,
+      "Percent": 0.91827667
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "OUI": 63,
+      "DCCount": 52557,
+      "Percent": 0.80577457
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 36266,
+      "Percent": 0.55601007
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 12633,
+      "Percent": 0.1936821
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 12318,
+      "Percent": 0.1888527
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 4462,
+      "Percent": 0.06840889
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 20270592,
+      "Percent": 63.303314
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 6053704,
+      "Percent": 18.905195
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3007851,
+      "Percent": 9.393259
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1268525,
+      "Percent": 3.9614942
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 572169,
+      "Percent": 1.7868345
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 570488,
+      "Percent": 1.7815849
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 121803,
+      "Percent": 0.38038027
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 99149,
+      "Percent": 0.3096338
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 30481,
+      "Percent": 0.09518954
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 13419,
+      "Percent": 0.041906383
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 20738826,
+      "Percent": 61.210155
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 7272125,
+      "Percent": 21.463505
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3051649,
+      "Percent": 9.00687
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1364346,
+      "Percent": 4.026835
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 573382,
+      "Percent": 1.6923234
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 565132,
+      "Percent": 1.6679738
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 155422,
+      "Percent": 0.45872438
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 97721,
+      "Percent": 0.2884212
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 28818,
+      "Percent": 0.08505565
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 15097,
+      "Percent": 0.04455844
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 20277537,
+      "Percent": 58.986828
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 8366536,
+      "Percent": 24.338036
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3084266,
+      "Percent": 8.97205
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1236110,
+      "Percent": 3.595812
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 575143,
+      "Percent": 1.6730762
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 561695,
+      "Percent": 1.6339562
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 108773,
+      "Percent": 0.31641784
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 102520,
+      "Percent": 0.29822803
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 28293,
+      "Percent": 0.082303606
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 16350,
+      "Percent": 0.047561727
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 20236838,
+      "Percent": 53.964863
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 11530860,
+      "Percent": 30.748936
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3026986,
+      "Percent": 8.071957
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1268971,
+      "Percent": 3.3839202
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 598309,
+      "Percent": 1.5954895
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 565024,
+      "Percent": 1.5067295
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 108828,
+      "Percent": 0.29020777
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 101578,
+      "Percent": 0.27087447
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 28085,
+      "Percent": 0.07489328
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 19528,
+      "Percent": 0.052074626
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 18133793,
+      "Percent": 48.356754
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 13287478,
+      "Percent": 35.433254
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3013806,
+      "Percent": 8.036812
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1795108,
+      "Percent": 4.786952
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 572576,
+      "Percent": 1.5268685
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 371902,
+      "Percent": 0.99173814
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 131279,
+      "Percent": 0.35007715
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 118846,
+      "Percent": 0.3169225
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 26390,
+      "Percent": 0.0703733
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 24725,
+      "Percent": 0.065933295
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 15566973,
+      "Percent": 45.21408
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 12655195,
+      "Percent": 36.75686
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3003147,
+      "Percent": 8.722603
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1786827,
+      "Percent": 5.189817
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 563462,
+      "Percent": 1.6365684
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 552048,
+      "Percent": 1.6034166
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 120101,
+      "Percent": 0.34883186
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 103155,
+      "Percent": 0.29961243
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 28035,
+      "Percent": 0.08142731
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 26229,
+      "Percent": 0.07618181
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 22074481,
+      "Percent": 50.123573
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 15410277,
+      "Percent": 34.991455
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3274068,
+      "Percent": 7.434285
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1878325,
+      "Percent": 4.265032
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 578211,
+      "Percent": 1.3129189
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 438273,
+      "Percent": 0.9951677
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 149497,
+      "Percent": 0.3394564
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 143609,
+      "Percent": 0.3260868
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 28551,
+      "Percent": 0.06482953
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 26941,
+      "Percent": 0.06117377
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 20672578,
+      "Percent": 52.38543
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 12117923,
+      "Percent": 30.707468
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3191653,
+      "Percent": 8.087821
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1752066,
+      "Percent": 4.4398293
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 893527,
+      "Percent": 2.2642457
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 561387,
+      "Percent": 1.4225849
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 105222,
+      "Percent": 0.26663822
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 100048,
+      "Percent": 0.25352702
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 27524,
+      "Percent": 0.0697473
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "OUI": 37,
+      "DCCount": 22283,
+      "Percent": 0.056466322
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 20807158,
+      "Percent": 57.017895
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 9322152,
+      "Percent": 25.545511
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2983798,
+      "Percent": 8.176508
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1907406,
+      "Percent": 5.2268686
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 643712,
+      "Percent": 1.7639652
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 491515,
+      "Percent": 1.3468995
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 127042,
+      "Percent": 0.34813344
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 120337,
+      "Percent": 0.32975972
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 34526,
+      "Percent": 0.09461167
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 24154,
+      "Percent": 0.06618925
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 22696190,
+      "Percent": 58.435116
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 10183476,
+      "Percent": 26.219053
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2857155,
+      "Percent": 7.3562207
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1699097,
+      "Percent": 4.3746076
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 723923,
+      "Percent": 1.8638602
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 369781,
+      "Percent": 0.9520627
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 112947,
+      "Percent": 0.29080084
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 112824,
+      "Percent": 0.29048416
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 32571,
+      "Percent": 0.08385946
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 22902,
+      "Percent": 0.05896501
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 24184618,
+      "Percent": 55.198627
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 13687118,
+      "Percent": 31.239286
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2928739,
+      "Percent": 6.684512
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1643699,
+      "Percent": 3.7515554
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 725288,
+      "Percent": 1.6553872
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 334675,
+      "Percent": 0.7638575
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 120180,
+      "Percent": 0.27429715
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 109469,
+      "Percent": 0.2498505
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 28240,
+      "Percent": 0.06445458
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 26730,
+      "Percent": 0.061008174
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 20285648,
+      "Percent": 71.62015
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2599371,
+      "Percent": 9.177293
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 2522318,
+      "Percent": 8.9052515
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1650800,
+      "Percent": 5.828285
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 721520,
+      "Percent": 2.5473857
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 293600,
+      "Percent": 1.0365789
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 100430,
+      "Percent": 0.35457638
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 84637,
+      "Percent": 0.2988179
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 21368,
+      "Percent": 0.07544148
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 20572,
+      "Percent": 0.072631136
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 20896394,
+      "Percent": 65.904976
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 5179731,
+      "Percent": 16.336313
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2715003,
+      "Percent": 8.562827
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1632908,
+      "Percent": 5.1500163
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 716304,
+      "Percent": 2.2591457
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 289343,
+      "Percent": 0.9125567
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 103513,
+      "Percent": 0.32646886
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 97293,
+      "Percent": 0.30685166
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 28048,
+      "Percent": 0.08846037
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 23989,
+      "Percent": 0.07565872
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 21448199,
+      "Percent": 73.12961
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2666664,
+      "Percent": 9.0922365
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 2180125,
+      "Percent": 7.4333367
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1689059,
+      "Percent": 5.759002
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 714652,
+      "Percent": 2.4366717
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 333265,
+      "Percent": 1.1362977
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 122633,
+      "Percent": 0.4181285
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 84926,
+      "Percent": 0.289563
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 30202,
+      "Percent": 0.1029765
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 27411,
+      "Percent": 0.09346033
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 21051146,
+      "Percent": 78.19925
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2591052,
+      "Percent": 9.625049
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1732475,
+      "Percent": 6.4356704
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 709628,
+      "Percent": 2.6360738
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 354360,
+      "Percent": 1.3163503
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 222425,
+      "Percent": 0.826248
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 84978,
+      "Percent": 0.31567
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 81964,
+      "Percent": 0.30447382
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 31810,
+      "Percent": 0.11816544
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 27425,
+      "Percent": 0.10187637
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 18298873,
+      "Percent": 77.33082
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2506381,
+      "Percent": 10.591936
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1642680,
+      "Percent": 6.9419465
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 731619,
+      "Percent": 3.0918136
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 284601,
+      "Percent": 1.2027205
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 76176,
+      "Percent": 0.32191887
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 42606,
+      "Percent": 0.18005246
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 29649,
+      "Percent": 0.12529632
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 21163,
+      "Percent": 0.08943459
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "OUI": 34,
+      "DCCount": 15463,
+      "Percent": 0.06534646
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 19217069,
+      "Percent": 73.99227
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2452235,
+      "Percent": 9.441942
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1653270,
+      "Percent": 6.3656545
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 1459008,
+      "Percent": 5.617679
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 674613,
+      "Percent": 2.5974903
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 259812,
+      "Percent": 1.0003649
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 110432,
+      "Percent": 0.4252009
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 81777,
+      "Percent": 0.31486937
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 19564,
+      "Percent": 0.07532808
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 18628,
+      "Percent": 0.07172416
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 19823132,
+      "Percent": 77.28543
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2793584,
+      "Percent": 10.891485
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1654528,
+      "Percent": 6.4505906
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 797208,
+      "Percent": 3.1081145
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 353826,
+      "Percent": 1.379479
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 89878,
+      "Percent": 0.35041183
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 48697,
+      "Percent": 0.18985742
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 32461,
+      "Percent": 0.12655732
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 25398,
+      "Percent": 0.099020444
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "OUI": 34,
+      "DCCount": 16030,
+      "Percent": 0.06249696
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 20979848,
+      "Percent": 78.29395
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2767768,
+      "Percent": 10.328936
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1654301,
+      "Percent": 6.1736274
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 724300,
+      "Percent": 2.7029896
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 419287,
+      "Percent": 1.5647223
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 91442,
+      "Percent": 0.34124917
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 68363,
+      "Percent": 0.25512147
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 32234,
+      "Percent": 0.120292924
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 25518,
+      "Percent": 0.09522972
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "OUI": 34,
+      "DCCount": 17155,
+      "Percent": 0.064020135
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 36132447,
+      "Percent": 86.72571
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2624019,
+      "Percent": 6.2982144
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1664632,
+      "Percent": 3.9954777
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 722837,
+      "Percent": 1.7349653
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 302579,
+      "Percent": 0.7262552
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 78542,
+      "Percent": 0.18851782
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 51263,
+      "Percent": 0.12304231
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 30870,
+      "Percent": 0.07409469
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 20571,
+      "Percent": 0.04937486
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "OUI": 34,
+      "DCCount": 18472,
+      "Percent": 0.044336803
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 39975835,
+      "Percent": 87.48105
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 2768140,
+      "Percent": 6.0576544
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1646550,
+      "Percent": 3.6032248
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 745173,
+      "Percent": 1.6306978
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 323993,
+      "Percent": 0.70900947
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 87487,
+      "Percent": 0.19145201
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 54949,
+      "Percent": 0.12024754
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 30443,
+      "Percent": 0.06661988
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 26483,
+      "Percent": 0.057954025
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "OUI": 34,
+      "DCCount": 18889,
+      "Percent": 0.04133571
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 45903378,
+      "Percent": 85.84929
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3232361,
+      "Percent": 6.0452175
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1719733,
+      "Percent": 3.2162745
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 1225018,
+      "Percent": 2.29105
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 778689,
+      "Percent": 1.4563177
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 317435,
+      "Percent": 0.59367245
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 124780,
+      "Percent": 0.23336573
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 44402,
+      "Percent": 0.08304139
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "OUI": 44,
+      "DCCount": 33226,
+      "Percent": 0.062139843
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 28967,
+      "Percent": 0.054174587
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 45777153,
+      "Percent": 88.148636
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3155243,
+      "Percent": 6.075746
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1640855,
+      "Percent": 3.159636
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 752892,
+      "Percent": 1.4497713
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 320905,
+      "Percent": 0.6179357
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 137542,
+      "Percent": 0.26485133
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 49646,
+      "Percent": 0.095598504
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 30492,
+      "Percent": 0.058715496
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 28546,
+      "Percent": 0.05496827
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "OUI": 34,
+      "DCCount": 19098,
+      "Percent": 0.03677517
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 44586395,
+      "Percent": 63.530777
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 19035370,
+      "Percent": 27.123339
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3494561,
+      "Percent": 4.9793706
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1670445,
+      "Percent": 2.380203
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 771837,
+      "Percent": 1.099784
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 291484,
+      "Percent": 0.41533312
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 144815,
+      "Percent": 0.20634568
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 66321,
+      "Percent": 0.094500236
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "OUI": 44,
+      "DCCount": 34827,
+      "Percent": 0.0496247
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 24527,
+      "Percent": 0.034948315
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 40423751,
+      "Percent": 52.869843
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 29204353,
+      "Percent": 38.196095
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3808964,
+      "Percent": 4.9817076
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1637772,
+      "Percent": 2.1420264
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 783429,
+      "Percent": 1.0246392
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 281362,
+      "Percent": 0.3679907
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 155696,
+      "Percent": 0.20363332
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 68904,
+      "Percent": 0.090118885
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 25419,
+      "Percent": 0.03324527
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 23616,
+      "Percent": 0.030887142
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 46288621,
+      "Percent": 54.86055
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 31198541,
+      "Percent": 36.976025
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3916486,
+      "Percent": 4.641758
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1628445,
+      "Percent": 1.9300076
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 758355,
+      "Percent": 0.89879054
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 266117,
+      "Percent": 0.3153977
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 159722,
+      "Percent": 0.18930002
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 71593,
+      "Percent": 0.08485091
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 24220,
+      "Percent": 0.028705167
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 24155,
+      "Percent": 0.02862813
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 47967509,
+      "Percent": 58.934944
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 26412004,
+      "Percent": 32.450924
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3946581,
+      "Percent": 4.8489394
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1654781,
+      "Percent": 2.033135
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 798948,
+      "Percent": 0.98162186
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 281856,
+      "Percent": 0.3463004
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 161670,
+      "Percent": 0.19863471
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 67906,
+      "Percent": 0.08343223
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 24238,
+      "Percent": 0.02977985
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 24152,
+      "Percent": 0.029674185
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 47267114,
+      "Percent": 56.138924
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 30054135,
+      "Percent": 35.695152
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3830963,
+      "Percent": 4.550016
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1650275,
+      "Percent": 1.9600236
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 782032,
+      "Percent": 0.9288156
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 278509,
+      "Percent": 0.33078378
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 155883,
+      "Percent": 0.18514149
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 78970,
+      "Percent": 0.09379229
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 25405,
+      "Percent": 0.030173397
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 22833,
+      "Percent": 0.027118644
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 48377087,
+      "Percent": 55.75494
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 31323434,
+      "Percent": 36.10048
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 3908380,
+      "Percent": 4.504436
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1736006,
+      "Percent": 2.0007594
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 780107,
+      "Percent": 0.8990789
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 356244,
+      "Percent": 0.41057375
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 126596,
+      "Percent": 0.1459028
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 78084,
+      "Percent": 0.08999237
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 23664,
+      "Percent": 0.027272929
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "OUI": 34,
+      "DCCount": 19068,
+      "Percent": 0.021976005
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 44228606,
+      "Percent": 53.18282
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 31803249,
+      "Percent": 38.24191
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 4024744,
+      "Percent": 4.8395653
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1556907,
+      "Percent": 1.8721075
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 784299,
+      "Percent": 0.9430827
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 446225,
+      "Percent": 0.5365646
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 147896,
+      "Percent": 0.17783798
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 76933,
+      "Percent": 0.092508316
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 25215,
+      "Percent": 0.03031985
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "OUI": 30,
+      "DCCount": 19900,
+      "Percent": 0.023928814
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 60408966,
+      "Percent": 60.243484
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 32301345,
+      "Percent": 32.212856
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 4493368,
+      "Percent": 4.4810586
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1668989,
+      "Percent": 1.6644169
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 805647,
+      "Percent": 0.80344003
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 273349,
+      "Percent": 0.27260017
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 153794,
+      "Percent": 0.15337269
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 73812,
+      "Percent": 0.0736098
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 36703,
+      "Percent": 0.036602456
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "OUI": 34,
+      "DCCount": 23253,
+      "Percent": 0.0231893
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "OUI": 1,
+      "DCCount": 56895497,
+      "Percent": 58.85642
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "OUI": 4,
+      "DCCount": 32433652,
+      "Percent": 33.551487
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "OUI": 12,
+      "DCCount": 4253075,
+      "Percent": 4.3996587
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "OUI": 9,
+      "DCCount": 1683655,
+      "Percent": 1.7416828
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "OUI": 16,
+      "DCCount": 795315,
+      "Percent": 0.82272583
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "OUI": 6,
+      "DCCount": 306008,
+      "Percent": 0.31655467
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "OUI": 19,
+      "DCCount": 140576,
+      "Percent": 0.145421
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "OUI": 2,
+      "DCCount": 71715,
+      "Percent": 0.07418668
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "OUI": 24,
+      "DCCount": 29627,
+      "Percent": 0.030648105
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "OUI": 34,
+      "DCCount": 21099,
+      "Percent": 0.021826183
+    }
+  ],
+  "RegionByDay": [
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "Region": 0,
+      "DCCount": 16364386,
+      "Percent": 55.96333
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "Region": 1,
+      "DCCount": 11084133,
+      "Percent": 37.90579
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "Region": 8,
+      "DCCount": 794652,
+      "Percent": 2.7175703
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "Region": 6,
+      "DCCount": 777295,
+      "Percent": 2.6582124
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "Region": 5,
+      "DCCount": 180786,
+      "Percent": 0.6182564
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "Region": 3,
+      "DCCount": 17086,
+      "Percent": 0.05843112
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "Region": 7,
+      "DCCount": 11999,
+      "Percent": 0.04103447
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5252,
+      "Percent": 0.017960917
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "Region": 10,
+      "DCCount": 2859,
+      "Percent": 0.009777278
+    },
+    {
+      "Time": "2023-05-09T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2272,
+      "Percent": 0.007769841
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "Region": 0,
+      "DCCount": 14834658,
+      "Percent": 57.932423
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "Region": 1,
+      "DCCount": 8875661,
+      "Percent": 34.6613
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "Region": 6,
+      "DCCount": 993616,
+      "Percent": 3.880277
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "Region": 8,
+      "DCCount": 674659,
+      "Percent": 2.6346838
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "Region": 5,
+      "DCCount": 191307,
+      "Percent": 0.7470936
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "Region": 3,
+      "DCCount": 21001,
+      "Percent": 0.08201327
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "Region": 7,
+      "DCCount": 9917,
+      "Percent": 0.038727947
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "Region": 10,
+      "DCCount": 2143,
+      "Percent": 0.00836886
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "Region": 11,
+      "DCCount": 2127,
+      "Percent": 0.008306377
+    },
+    {
+      "Time": "2023-05-08T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1321,
+      "Percent": 0.0051587797
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "Region": 0,
+      "DCCount": 14149204,
+      "Percent": 57.49676
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "Region": 1,
+      "DCCount": 8426058,
+      "Percent": 34.24016
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "Region": 6,
+      "DCCount": 1054180,
+      "Percent": 4.28377
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "Region": 8,
+      "DCCount": 748308,
+      "Percent": 3.0408273
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "Region": 5,
+      "DCCount": 186460,
+      "Percent": 0.75769955
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "Region": 3,
+      "DCCount": 25777,
+      "Percent": 0.10474752
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "Region": 7,
+      "DCCount": 11265,
+      "Percent": 0.045776498
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "Region": 10,
+      "DCCount": 3216,
+      "Percent": 0.01306855
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "Region": 11,
+      "DCCount": 2322,
+      "Percent": 0.009435688
+    },
+    {
+      "Time": "2023-05-07T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1589,
+      "Percent": 0.0064570666
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "Region": 0,
+      "DCCount": 15228825,
+      "Percent": 60.068226
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "Region": 1,
+      "DCCount": 8126675,
+      "Percent": 32.05467
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "Region": 6,
+      "DCCount": 1006730,
+      "Percent": 3.9709225
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "Region": 8,
+      "DCCount": 736489,
+      "Percent": 2.90499
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "Region": 5,
+      "DCCount": 217669,
+      "Percent": 0.85856855
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "Region": 3,
+      "DCCount": 17199,
+      "Percent": 0.06783933
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "Region": 7,
+      "DCCount": 9448,
+      "Percent": 0.03726647
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "Region": 10,
+      "DCCount": 4126,
+      "Percent": 0.016274499
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3434,
+      "Percent": 0.01354499
+    },
+    {
+      "Time": "2023-05-06T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1638,
+      "Percent": 0.0064608892
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "Region": 0,
+      "DCCount": 14931669,
+      "Percent": 59.080124
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "Region": 1,
+      "DCCount": 8250158,
+      "Percent": 32.643394
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "Region": 6,
+      "DCCount": 977367,
+      "Percent": 3.8671477
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "Region": 8,
+      "DCCount": 754651,
+      "Percent": 2.9859273
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "Region": 5,
+      "DCCount": 324385,
+      "Percent": 1.283494
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "Region": 3,
+      "DCCount": 16105,
+      "Percent": 0.06372265
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "Region": 7,
+      "DCCount": 9836,
+      "Percent": 0.038918097
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "Region": 10,
+      "DCCount": 4199,
+      "Percent": 0.016614182
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "Region": 11,
+      "DCCount": 2977,
+      "Percent": 0.011779094
+    },
+    {
+      "Time": "2023-05-05T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1837,
+      "Percent": 0.0072684567
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "Region": 0,
+      "DCCount": 13568244,
+      "Percent": 59.27994
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "Region": 1,
+      "DCCount": 7296720,
+      "Percent": 31.87952
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "Region": 6,
+      "DCCount": 836946,
+      "Percent": 3.6566346
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "Region": 8,
+      "DCCount": 775022,
+      "Percent": 3.3860872
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "Region": 5,
+      "DCCount": 377705,
+      "Percent": 1.650201
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "Region": 3,
+      "DCCount": 15098,
+      "Percent": 0.06596348
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "Region": 7,
+      "DCCount": 10772,
+      "Percent": 0.047063094
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3347,
+      "Percent": 0.014623113
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "Region": 10,
+      "DCCount": 2780,
+      "Percent": 0.012145878
+    },
+    {
+      "Time": "2023-05-04T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1496,
+      "Percent": 0.006536055
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "Region": 0,
+      "DCCount": 15003178,
+      "Percent": 64.005905
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "Region": 1,
+      "DCCount": 6631470,
+      "Percent": 28.290888
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "Region": 6,
+      "DCCount": 787443,
+      "Percent": 3.359355
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "Region": 8,
+      "DCCount": 683808,
+      "Percent": 2.9172318
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "Region": 5,
+      "DCCount": 308481,
+      "Percent": 1.3160281
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "Region": 3,
+      "DCCount": 16004,
+      "Percent": 0.06827556
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "Region": 7,
+      "DCCount": 7642,
+      "Percent": 0.032601967
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1116,
+      "Percent": 0.0047610304
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "Region": 11,
+      "DCCount": 595,
+      "Percent": 0.002538363
+    },
+    {
+      "Time": "2023-05-03T00:00:00Z",
+      "Region": 12,
+      "DCCount": 566,
+      "Percent": 0.0024146445
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "Region": 0,
+      "DCCount": 13413062,
+      "Percent": 60.09971
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "Region": 1,
+      "DCCount": 7104658,
+      "Percent": 31.833735
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "Region": 6,
+      "DCCount": 772519,
+      "Percent": 3.4614146
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "Region": 8,
+      "DCCount": 579749,
+      "Percent": 2.5976727
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "Region": 5,
+      "DCCount": 425760,
+      "Percent": 1.9076965
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "Region": 3,
+      "DCCount": 11544,
+      "Percent": 0.051725026
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "Region": 7,
+      "DCCount": 7895,
+      "Percent": 0.035375006
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1041,
+      "Percent": 0.004664393
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "Region": 12,
+      "DCCount": 891,
+      "Percent": 0.0039922902
+    },
+    {
+      "Time": "2023-05-02T00:00:00Z",
+      "Region": 11,
+      "DCCount": 854,
+      "Percent": 0.003826505
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "Region": 0,
+      "DCCount": 12888682,
+      "Percent": 60.821
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "Region": 1,
+      "DCCount": 6656411,
+      "Percent": 31.411245
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "Region": 6,
+      "DCCount": 721332,
+      "Percent": 3.4039268
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "Region": 8,
+      "DCCount": 556652,
+      "Percent": 2.6268108
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "Region": 5,
+      "DCCount": 343955,
+      "Percent": 1.6231052
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "Region": 3,
+      "DCCount": 9923,
+      "Percent": 0.0468261
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "Region": 7,
+      "DCCount": 8441,
+      "Percent": 0.039832626
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "Region": 11,
+      "DCCount": 1949,
+      "Percent": 0.009197226
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "Region": 10,
+      "DCCount": 1765,
+      "Percent": 0.00832894
+    },
+    {
+      "Time": "2023-05-01T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1120,
+      "Percent": 0.0052852198
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "Region": 0,
+      "DCCount": 13734969,
+      "Percent": 62.488182
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "Region": 1,
+      "DCCount": 6446462,
+      "Percent": 29.328619
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "Region": 6,
+      "DCCount": 759739,
+      "Percent": 3.4564846
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "Region": 8,
+      "DCCount": 679125,
+      "Percent": 3.0897253
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "Region": 5,
+      "DCCount": 330534,
+      "Percent": 1.5037869
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "Region": 3,
+      "DCCount": 9886,
+      "Percent": 0.04497703
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "Region": 7,
+      "DCCount": 9203,
+      "Percent": 0.041869678
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "Region": 10,
+      "DCCount": 4093,
+      "Percent": 0.018621383
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3460,
+      "Percent": 0.015741507
+    },
+    {
+      "Time": "2023-04-30T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1397,
+      "Percent": 0.0063557466
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "Region": 0,
+      "DCCount": 12748274,
+      "Percent": 60.052235
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "Region": 1,
+      "DCCount": 6579788,
+      "Percent": 30.994862
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "Region": 6,
+      "DCCount": 802398,
+      "Percent": 3.7797897
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "Region": 8,
+      "DCCount": 765635,
+      "Percent": 3.6066134
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "Region": 5,
+      "DCCount": 295175,
+      "Percent": 1.3904563
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "Region": 3,
+      "DCCount": 11892,
+      "Percent": 0.056018658
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "Region": 7,
+      "DCCount": 8755,
+      "Percent": 0.041241452
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "Region": 12,
+      "DCCount": 7121,
+      "Percent": 0.033544302
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "Region": 11,
+      "DCCount": 4426,
+      "Percent": 0.02084919
+    },
+    {
+      "Time": "2023-04-29T00:00:00Z",
+      "Region": 10,
+      "DCCount": 3761,
+      "Percent": 0.01771663
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "Region": 0,
+      "DCCount": 8821461,
+      "Percent": 57.905334
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "Region": 1,
+      "DCCount": 4883700,
+      "Percent": 32.057304
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "Region": 8,
+      "DCCount": 770751,
+      "Percent": 5.05932
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "Region": 6,
+      "DCCount": 476614,
+      "Percent": 3.1285625
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "Region": 5,
+      "DCCount": 254648,
+      "Percent": 1.6715459
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "Region": 7,
+      "DCCount": 10380,
+      "Percent": 0.068135805
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "Region": 3,
+      "DCCount": 8041,
+      "Percent": 0.052782275
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3415,
+      "Percent": 0.022416549
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "Region": 10,
+      "DCCount": 3301,
+      "Percent": 0.021668237
+    },
+    {
+      "Time": "2023-04-27T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1509,
+      "Percent": 0.009905292
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "Region": 0,
+      "DCCount": 8649856,
+      "Percent": 49.83394
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "Region": 1,
+      "DCCount": 6938973,
+      "Percent": 39.97712
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "Region": 8,
+      "DCCount": 812344,
+      "Percent": 4.680113
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "Region": 6,
+      "DCCount": 727239,
+      "Percent": 4.189802
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "Region": 5,
+      "DCCount": 203618,
+      "Percent": 1.1730932
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "Region": 3,
+      "DCCount": 8947,
+      "Percent": 0.05154586
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "Region": 7,
+      "DCCount": 8443,
+      "Percent": 0.04864219
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3074,
+      "Percent": 0.017710067
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "Region": 12,
+      "DCCount": 1864,
+      "Percent": 0.0107389605
+    },
+    {
+      "Time": "2023-04-28T00:00:00Z",
+      "Region": 10,
+      "DCCount": 1605,
+      "Percent": 0.009246798
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "Region": 0,
+      "DCCount": 8719139,
+      "Percent": 56.50662
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "Region": 1,
+      "DCCount": 5075127,
+      "Percent": 32.890663
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "Region": 8,
+      "DCCount": 797690,
+      "Percent": 5.169635
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "Region": 6,
+      "DCCount": 494256,
+      "Percent": 3.203153
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "Region": 5,
+      "DCCount": 321802,
+      "Percent": 2.0855205
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "Region": 7,
+      "DCCount": 9060,
+      "Percent": 0.058715656
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "Region": 3,
+      "DCCount": 7982,
+      "Percent": 0.0517294
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "Region": 11,
+      "DCCount": 1792,
+      "Percent": 0.011613516
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "Region": 10,
+      "DCCount": 1766,
+      "Percent": 0.011445017
+    },
+    {
+      "Time": "2023-04-26T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1182,
+      "Percent": 0.0076602544
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "Region": 1,
+      "DCCount": 3724546,
+      "Percent": 52.23082
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "Region": 0,
+      "DCCount": 1769679,
+      "Percent": 24.816929
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "Region": 8,
+      "DCCount": 814929,
+      "Percent": 11.42808
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "Region": 6,
+      "DCCount": 464474,
+      "Percent": 6.513508
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "Region": 5,
+      "DCCount": 338773,
+      "Percent": 4.7507515
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "Region": 3,
+      "DCCount": 7128,
+      "Percent": 0.099958844
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "Region": 7,
+      "DCCount": 6421,
+      "Percent": 0.09004429
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "Region": 10,
+      "DCCount": 1841,
+      "Percent": 0.02581709
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "Region": 11,
+      "DCCount": 1466,
+      "Percent": 0.020558314
+    },
+    {
+      "Time": "2023-04-23T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1011,
+      "Percent": 0.014177664
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "Region": 1,
+      "DCCount": 4230822,
+      "Percent": 46.60027
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "Region": 0,
+      "DCCount": 3223141,
+      "Percent": 35.501194
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "Region": 8,
+      "DCCount": 858146,
+      "Percent": 9.452024
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "Region": 6,
+      "DCCount": 477391,
+      "Percent": 5.2582097
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "Region": 5,
+      "DCCount": 262806,
+      "Percent": 2.894669
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "Region": 3,
+      "DCCount": 10010,
+      "Percent": 0.11025486
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "Region": 7,
+      "DCCount": 7823,
+      "Percent": 0.08616621
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3785,
+      "Percent": 0.041689776
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "Region": 10,
+      "DCCount": 3560,
+      "Percent": 0.03921152
+    },
+    {
+      "Time": "2023-04-24T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1013,
+      "Percent": 0.01115766
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "Region": 0,
+      "DCCount": 6999415,
+      "Percent": 51.50526
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "Region": 1,
+      "DCCount": 4975640,
+      "Percent": 36.613293
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "Region": 8,
+      "DCCount": 862134,
+      "Percent": 6.344021
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "Region": 6,
+      "DCCount": 498847,
+      "Percent": 3.6707702
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "Region": 5,
+      "DCCount": 226292,
+      "Percent": 1.6651717
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "Region": 3,
+      "DCCount": 10270,
+      "Percent": 0.07557189
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "Region": 7,
+      "DCCount": 8076,
+      "Percent": 0.05942732
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "Region": 11,
+      "DCCount": 4135,
+      "Percent": 0.030427435
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "Region": 10,
+      "DCCount": 3059,
+      "Percent": 0.02250968
+    },
+    {
+      "Time": "2023-04-25T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1363,
+      "Percent": 0.010029648
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "Region": 0,
+      "DCCount": 2909836,
+      "Percent": 43.461334
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "Region": 1,
+      "DCCount": 2364191,
+      "Percent": 35.311573
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "Region": 8,
+      "DCCount": 743744,
+      "Percent": 11.108565
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "Region": 6,
+      "DCCount": 473460,
+      "Percent": 7.071602
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "Region": 5,
+      "DCCount": 184377,
+      "Percent": 2.7538562
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "Region": 7,
+      "DCCount": 9750,
+      "Percent": 0.14562607
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "Region": 3,
+      "DCCount": 7325,
+      "Percent": 0.10940625
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "Region": 9,
+      "DCCount": 967,
+      "Percent": 0.014443118
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "Region": 10,
+      "DCCount": 595,
+      "Percent": 0.008886924
+    },
+    {
+      "Time": "2023-04-20T00:00:00Z",
+      "Region": 15,
+      "DCCount": 532,
+      "Percent": 0.007945956
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "Region": 1,
+      "DCCount": 4102501,
+      "Percent": 47.01603
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "Region": 0,
+      "DCCount": 3023198,
+      "Percent": 34.64686
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "Region": 8,
+      "DCCount": 881470,
+      "Percent": 10.101939
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "Region": 6,
+      "DCCount": 477256,
+      "Percent": 5.4695125
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "Region": 5,
+      "DCCount": 221785,
+      "Percent": 2.54173
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "Region": 3,
+      "DCCount": 10072,
+      "Percent": 0.11542847
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "Region": 7,
+      "DCCount": 6506,
+      "Percent": 0.074560925
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1317,
+      "Percent": 0.015093259
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "Region": 10,
+      "DCCount": 669,
+      "Percent": 0.0076669627
+    },
+    {
+      "Time": "2023-04-21T00:00:00Z",
+      "Region": 15,
+      "DCCount": 536,
+      "Percent": 0.0061427383
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "Region": 0,
+      "DCCount": 4273451,
+      "Percent": 43.510654
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "Region": 1,
+      "DCCount": 3995870,
+      "Percent": 40.684433
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "Region": 8,
+      "DCCount": 826769,
+      "Percent": 8.417848
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "Region": 6,
+      "DCCount": 469973,
+      "Percent": 4.7850866
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "Region": 5,
+      "DCCount": 237211,
+      "Percent": 2.4151924
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "Region": 3,
+      "DCCount": 10248,
+      "Percent": 0.104341246
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "Region": 7,
+      "DCCount": 5996,
+      "Percent": 0.061049
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "Region": 9,
+      "DCCount": 918,
+      "Percent": 0.009346728
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "Region": 10,
+      "DCCount": 624,
+      "Percent": 0.0063533313
+    },
+    {
+      "Time": "2023-04-22T00:00:00Z",
+      "Region": 12,
+      "DCCount": 559,
+      "Percent": 0.005691526
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "Region": 0,
+      "DCCount": 2854315,
+      "Percent": 52.077076
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "Region": 1,
+      "DCCount": 1127996,
+      "Percent": 20.580328
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "Region": 8,
+      "DCCount": 789892,
+      "Percent": 14.411608
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "Region": 6,
+      "DCCount": 529120,
+      "Percent": 9.653813
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "Region": 5,
+      "DCCount": 168131,
+      "Percent": 3.0675561
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "Region": 7,
+      "DCCount": 7632,
+      "Percent": 0.1392461
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1041,
+      "Percent": 0.018993082
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "Region": 11,
+      "DCCount": 883,
+      "Percent": 0.016110366
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "Region": 10,
+      "DCCount": 544,
+      "Percent": 0.009925299
+    },
+    {
+      "Time": "2023-04-19T00:00:00Z",
+      "Region": 3,
+      "DCCount": 509,
+      "Percent": 0.009286723
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "Region": 1,
+      "DCCount": 2655103,
+      "Percent": 44.67521
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "Region": 0,
+      "DCCount": 1874308,
+      "Percent": 31.53742
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "Region": 8,
+      "DCCount": 780720,
+      "Percent": 13.136525
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "Region": 6,
+      "DCCount": 558390,
+      "Percent": 9.395564
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "Region": 5,
+      "DCCount": 59480,
+      "Percent": 1.0008204
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "Region": 7,
+      "DCCount": 5987,
+      "Percent": 0.100738265
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "Region": 3,
+      "DCCount": 2528,
+      "Percent": 0.042536553
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "Region": 11,
+      "DCCount": 2365,
+      "Percent": 0.039793886
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "Region": 10,
+      "DCCount": 1875,
+      "Percent": 0.031549063
+    },
+    {
+      "Time": "2023-04-17T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1448,
+      "Percent": 0.02436429
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "Region": 0,
+      "DCCount": 2725358,
+      "Percent": 41.78367
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "Region": 1,
+      "DCCount": 2456874,
+      "Percent": 37.66742
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "Region": 8,
+      "DCCount": 712180,
+      "Percent": 10.918746
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "Region": 6,
+      "DCCount": 512500,
+      "Percent": 7.8573637
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "Region": 5,
+      "DCCount": 98764,
+      "Percent": 1.5141945
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "Region": 7,
+      "DCCount": 7703,
+      "Percent": 0.118098095
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "Region": 11,
+      "DCCount": 4925,
+      "Percent": 0.07550735
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1832,
+      "Percent": 0.0280872
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "Region": 10,
+      "DCCount": 1156,
+      "Percent": 0.017723147
+    },
+    {
+      "Time": "2023-04-18T00:00:00Z",
+      "Region": 12,
+      "DCCount": 811,
+      "Percent": 0.012433799
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "Region": 0,
+      "DCCount": 18323688,
+      "Percent": 57.223297
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "Region": 1,
+      "DCCount": 11907105,
+      "Percent": 37.184864
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "Region": 6,
+      "DCCount": 769427,
+      "Percent": 2.4028544
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "Region": 8,
+      "DCCount": 751750,
+      "Percent": 2.3476505
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "Region": 5,
+      "DCCount": 233421,
+      "Percent": 0.72895366
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "Region": 3,
+      "DCCount": 13862,
+      "Percent": 0.043289833
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "Region": 7,
+      "DCCount": 11942,
+      "Percent": 0.037293836
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "Region": 11,
+      "DCCount": 4096,
+      "Percent": 0.012791456
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "Region": 10,
+      "DCCount": 2719,
+      "Percent": 0.008491203
+    },
+    {
+      "Time": "2023-05-10T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2258,
+      "Percent": 0.0070515396
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "Region": 0,
+      "DCCount": 18969079,
+      "Percent": 55.986794
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "Region": 1,
+      "DCCount": 13014189,
+      "Percent": 38.41107
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "Region": 8,
+      "DCCount": 781749,
+      "Percent": 2.3073137
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "Region": 6,
+      "DCCount": 779742,
+      "Percent": 2.3013902
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "Region": 5,
+      "DCCount": 304178,
+      "Percent": 0.8977742
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "Region": 3,
+      "DCCount": 11773,
+      "Percent": 0.03474773
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "Region": 7,
+      "DCCount": 10778,
+      "Percent": 0.031811014
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3390,
+      "Percent": 0.010005505
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "Region": 10,
+      "DCCount": 3081,
+      "Percent": 0.009093499
+    },
+    {
+      "Time": "2023-05-11T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2539,
+      "Percent": 0.0074937986
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "Region": 0,
+      "DCCount": 18282025,
+      "Percent": 53.181934
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "Region": 1,
+      "DCCount": 14162991,
+      "Percent": 41.199776
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "Region": 8,
+      "DCCount": 767461,
+      "Percent": 2.2325242
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "Region": 6,
+      "DCCount": 754851,
+      "Percent": 2.195842
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "Region": 5,
+      "DCCount": 373553,
+      "Percent": 1.086656
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "Region": 3,
+      "DCCount": 16211,
+      "Percent": 0.04715738
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "Region": 7,
+      "DCCount": 8571,
+      "Percent": 0.024932817
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3966,
+      "Percent": 0.011536991
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "Region": 10,
+      "DCCount": 3723,
+      "Percent": 0.010830111
+    },
+    {
+      "Time": "2023-05-12T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2508,
+      "Percent": 0.0072957072
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "Region": 0,
+      "DCCount": 18394934,
+      "Percent": 49.05312
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "Region": 1,
+      "DCCount": 17200303,
+      "Percent": 45.867443
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "Region": 8,
+      "DCCount": 756904,
+      "Percent": 2.0184093
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "Region": 6,
+      "DCCount": 734194,
+      "Percent": 1.9578493
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "Region": 5,
+      "DCCount": 380756,
+      "Percent": 1.0153486
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "Region": 3,
+      "DCCount": 13594,
+      "Percent": 0.03625064
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "Region": 7,
+      "DCCount": 9307,
+      "Percent": 0.024818648
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "Region": 10,
+      "DCCount": 3650,
+      "Percent": 0.009733326
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3344,
+      "Percent": 0.008917327
+    },
+    {
+      "Time": "2023-05-13T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2478,
+      "Percent": 0.006607995
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "Region": 1,
+      "DCCount": 19110443,
+      "Percent": 50.961155
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "Region": 0,
+      "DCCount": 16475803,
+      "Percent": 43.93545
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "Region": 8,
+      "DCCount": 778290,
+      "Percent": 2.075439
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "Region": 6,
+      "DCCount": 775055,
+      "Percent": 2.0668123
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "Region": 5,
+      "DCCount": 325530,
+      "Percent": 0.86807954
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "Region": 7,
+      "DCCount": 11309,
+      "Percent": 0.030157316
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "Region": 3,
+      "DCCount": 10423,
+      "Percent": 0.027794652
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "Region": 11,
+      "DCCount": 6113,
+      "Percent": 0.016301325
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "Region": 10,
+      "DCCount": 4062,
+      "Percent": 0.010831994
+    },
+    {
+      "Time": "2023-05-16T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2225,
+      "Percent": 0.0059333304
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "Region": 1,
+      "DCCount": 18414638,
+      "Percent": 53.48509
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "Region": 0,
+      "DCCount": 14268594,
+      "Percent": 41.442955
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "Region": 8,
+      "DCCount": 733466,
+      "Percent": 2.130343
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "Region": 6,
+      "DCCount": 628616,
+      "Percent": 1.8258075
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "Region": 5,
+      "DCCount": 355239,
+      "Percent": 1.0317873
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "Region": 3,
+      "DCCount": 9225,
+      "Percent": 0.026793899
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "Region": 7,
+      "DCCount": 8723,
+      "Percent": 0.025335846
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5345,
+      "Percent": 0.015524487
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "Region": 10,
+      "DCCount": 3528,
+      "Percent": 0.010247032
+    },
+    {
+      "Time": "2023-05-15T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1457,
+      "Percent": 0.0042318385
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "Region": 1,
+      "DCCount": 21902806,
+      "Percent": 49.733765
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "Region": 0,
+      "DCCount": 20079699,
+      "Percent": 45.594112
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "Region": 8,
+      "DCCount": 876000,
+      "Percent": 1.9890956
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "Region": 6,
+      "DCCount": 788113,
+      "Percent": 1.7895342
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "Region": 5,
+      "DCCount": 353579,
+      "Percent": 0.8028566
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "Region": 3,
+      "DCCount": 15784,
+      "Percent": 0.03584005
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "Region": 7,
+      "DCCount": 9806,
+      "Percent": 0.022266064
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5723,
+      "Percent": 0.01299497
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "Region": 10,
+      "DCCount": 4394,
+      "Percent": 0.009977267
+    },
+    {
+      "Time": "2023-05-17T00:00:00Z",
+      "Region": 9,
+      "DCCount": 3558,
+      "Percent": 0.008078998
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "Region": 0,
+      "DCCount": 18744014,
+      "Percent": 47.49834
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "Region": 1,
+      "DCCount": 18678202,
+      "Percent": 47.33157
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "Region": 8,
+      "DCCount": 806663,
+      "Percent": 2.0441277
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "Region": 6,
+      "DCCount": 773643,
+      "Percent": 1.9604532
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "Region": 5,
+      "DCCount": 427143,
+      "Percent": 1.0824034
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "Region": 3,
+      "DCCount": 14966,
+      "Percent": 0.03792465
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "Region": 7,
+      "DCCount": 9027,
+      "Percent": 0.022874905
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3117,
+      "Percent": 0.007898646
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "Region": 10,
+      "DCCount": 2559,
+      "Percent": 0.006484644
+    },
+    {
+      "Time": "2023-05-14T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2462,
+      "Percent": 0.0062388405
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Region": 0,
+      "DCCount": 19753071,
+      "Percent": 54.129383
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Region": 1,
+      "DCCount": 15560976,
+      "Percent": 42.641773
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Region": 6,
+      "DCCount": 410109,
+      "Percent": 1.1238226
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Region": 8,
+      "DCCount": 401212,
+      "Percent": 1.099442
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Region": 5,
+      "DCCount": 341536,
+      "Percent": 0.9359118
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Region": 3,
+      "DCCount": 12437,
+      "Percent": 0.034081135
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Region": 7,
+      "DCCount": 4434,
+      "Percent": 0.012150499
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Region": 11,
+      "DCCount": 4277,
+      "Percent": 0.011720272
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2001,
+      "Percent": 0.005483344
+    },
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Region": 10,
+      "DCCount": 1884,
+      "Percent": 0.005162729
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Region": 0,
+      "DCCount": 20394842,
+      "Percent": 52.50991
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Region": 1,
+      "DCCount": 16139700,
+      "Percent": 41.554344
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Region": 5,
+      "DCCount": 1381921,
+      "Percent": 3.5579853
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Region": 8,
+      "DCCount": 553285,
+      "Percent": 1.4245243
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Region": 6,
+      "DCCount": 351890,
+      "Percent": 0.90599936
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Region": 3,
+      "DCCount": 5854,
+      "Percent": 0.015072097
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Region": 11,
+      "DCCount": 4328,
+      "Percent": 0.011143156
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Region": 7,
+      "DCCount": 4292,
+      "Percent": 0.011050468
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Region": 10,
+      "DCCount": 1835,
+      "Percent": 0.004724513
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1777,
+      "Percent": 0.004575182
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Region": 0,
+      "DCCount": 21650498,
+      "Percent": 49.41479
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Region": 1,
+      "DCCount": 19707423,
+      "Percent": 44.979946
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Region": 5,
+      "DCCount": 920828,
+      "Percent": 2.1016848
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Region": 6,
+      "DCCount": 844142,
+      "Percent": 1.9266578
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Region": 8,
+      "DCCount": 664242,
+      "Percent": 1.5160565
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Region": 3,
+      "DCCount": 8305,
+      "Percent": 0.018955216
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Region": 7,
+      "DCCount": 7162,
+      "Percent": 0.016346447
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5186,
+      "Percent": 0.011836453
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2875,
+      "Percent": 0.0065618595
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Region": 10,
+      "DCCount": 2717,
+      "Percent": 0.0062012426
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Region": 0,
+      "DCCount": 19736013,
+      "Percent": 69.67961
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Region": 1,
+      "DCCount": 7640458,
+      "Percent": 26.975266
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Region": 8,
+      "DCCount": 481135,
+      "Percent": 1.6986867
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Region": 6,
+      "DCCount": 259240,
+      "Percent": 0.9152681
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Region": 5,
+      "DCCount": 189487,
+      "Percent": 0.66899943
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Region": 3,
+      "DCCount": 7265,
+      "Percent": 0.02564968
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Region": 7,
+      "DCCount": 3945,
+      "Percent": 0.013928147
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3350,
+      "Percent": 0.01182745
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2032,
+      "Percent": 0.007174143
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Region": 10,
+      "DCCount": 662,
+      "Percent": 0.0023372455
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Region": 0,
+      "DCCount": 19765441,
+      "Percent": 62.33807
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Region": 1,
+      "DCCount": 10889030,
+      "Percent": 34.34283
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Region": 8,
+      "DCCount": 496718,
+      "Percent": 1.5665951
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Region": 6,
+      "DCCount": 343691,
+      "Percent": 1.0839645
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Region": 5,
+      "DCCount": 195800,
+      "Percent": 0.61753213
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Region": 3,
+      "DCCount": 4955,
+      "Percent": 0.015627537
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Region": 7,
+      "DCCount": 4912,
+      "Percent": 0.01549192
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3282,
+      "Percent": 0.010351075
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2313,
+      "Percent": 0.0072949533
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Region": 10,
+      "DCCount": 351,
+      "Percent": 0.0011070162
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Region": 0,
+      "DCCount": 21002585,
+      "Percent": 71.610245
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Region": 1,
+      "DCCount": 7759904,
+      "Percent": 26.458107
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Region": 5,
+      "DCCount": 245185,
+      "Percent": 0.83598083
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Region": 8,
+      "DCCount": 188779,
+      "Percent": 0.64365935
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Region": 6,
+      "DCCount": 122158,
+      "Percent": 0.41650894
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Region": 3,
+      "DCCount": 4278,
+      "Percent": 0.014586234
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Region": 11,
+      "DCCount": 2517,
+      "Percent": 0.008581943
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Region": 7,
+      "DCCount": 2119,
+      "Percent": 0.0072249253
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1047,
+      "Percent": 0.0035698428
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Region": 12,
+      "DCCount": 261,
+      "Percent": 0.0008899035
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Region": 0,
+      "DCCount": 20378622,
+      "Percent": 75.701
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Region": 1,
+      "DCCount": 5766604,
+      "Percent": 21.421356
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Region": 8,
+      "DCCount": 336482,
+      "Percent": 1.2499385
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Region": 5,
+      "DCCount": 237956,
+      "Percent": 0.8839414
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Region": 6,
+      "DCCount": 190571,
+      "Percent": 0.7079191
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Region": 3,
+      "DCCount": 3058,
+      "Percent": 0.011359633
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Region": 11,
+      "DCCount": 2616,
+      "Percent": 0.009717724
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Region": 7,
+      "DCCount": 2339,
+      "Percent": 0.008688745
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1134,
+      "Percent": 0.0042124996
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Region": 12,
+      "DCCount": 372,
+      "Percent": 0.0013818782
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Region": 0,
+      "DCCount": 17813553,
+      "Percent": 75.27986
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Region": 1,
+      "DCCount": 5299721,
+      "Percent": 22.396559
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Region": 5,
+      "DCCount": 214522,
+      "Percent": 0.90656745
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Region": 6,
+      "DCCount": 197121,
+      "Percent": 0.83303106
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Region": 8,
+      "DCCount": 125140,
+      "Percent": 0.5288402
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Region": 3,
+      "DCCount": 3845,
+      "Percent": 0.016248925
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3654,
+      "Percent": 0.015441761
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Region": 7,
+      "DCCount": 3140,
+      "Percent": 0.013269603
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1358,
+      "Percent": 0.005738892
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Region": 12,
+      "DCCount": 615,
+      "Percent": 0.0025989828
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Region": 0,
+      "DCCount": 18865125,
+      "Percent": 72.63717
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Region": 1,
+      "DCCount": 6255764,
+      "Percent": 24.086828
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Region": 8,
+      "DCCount": 413157,
+      "Percent": 1.5907955
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Region": 6,
+      "DCCount": 237317,
+      "Percent": 0.9137515
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Region": 5,
+      "DCCount": 184727,
+      "Percent": 0.71126205
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Region": 3,
+      "DCCount": 6675,
+      "Percent": 0.02570103
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Region": 7,
+      "DCCount": 4102,
+      "Percent": 0.0157941
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Region": 11,
+      "DCCount": 2681,
+      "Percent": 0.010322765
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1583,
+      "Percent": 0.006095091
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Region": 12,
+      "DCCount": 331,
+      "Percent": 0.001274463
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Region": 0,
+      "DCCount": 18962374,
+      "Percent": 73.92955
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Region": 1,
+      "DCCount": 5577921,
+      "Percent": 21.74692
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Region": 8,
+      "DCCount": 547991,
+      "Percent": 2.1364799
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Region": 6,
+      "DCCount": 310201,
+      "Percent": 1.2093961
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Region": 5,
+      "DCCount": 230113,
+      "Percent": 0.897153
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Region": 3,
+      "DCCount": 8210,
+      "Percent": 0.032008737
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Region": 7,
+      "DCCount": 4987,
+      "Percent": 0.019443065
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Region": 11,
+      "DCCount": 3290,
+      "Percent": 0.012826887
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2628,
+      "Percent": 0.010245915
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Region": 10,
+      "DCCount": 1058,
+      "Percent": 0.004124877
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Region": 0,
+      "DCCount": 20035762,
+      "Percent": 74.77075
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Region": 1,
+      "DCCount": 5775581,
+      "Percent": 21.553686
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Region": 8,
+      "DCCount": 484485,
+      "Percent": 1.8080324
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Region": 6,
+      "DCCount": 281910,
+      "Percent": 1.05205
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Region": 5,
+      "DCCount": 201707,
+      "Percent": 0.75274324
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Region": 3,
+      "DCCount": 6250,
+      "Percent": 0.023324154
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Region": 7,
+      "DCCount": 4682,
+      "Percent": 0.01747259
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Region": 11,
+      "DCCount": 2841,
+      "Percent": 0.010602227
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2218,
+      "Percent": 0.008277276
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Region": 12,
+      "DCCount": 426,
+      "Percent": 0.0015897744
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Region": 0,
+      "DCCount": 35372733,
+      "Percent": 84.90222
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Region": 1,
+      "DCCount": 5648724,
+      "Percent": 13.558162
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Region": 5,
+      "DCCount": 596087,
+      "Percent": 1.430738
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Region": 6,
+      "DCCount": 33458,
+      "Percent": 0.080306455
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Region": 8,
+      "DCCount": 6800,
+      "Percent": 0.016321475
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Region": 11,
+      "DCCount": 4461,
+      "Percent": 0.010707367
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Region": 12,
+      "DCCount": 366,
+      "Percent": 0.00087847933
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Region": 7,
+      "DCCount": 151,
+      "Percent": 0.00036243274
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Region": 9,
+      "DCCount": 67,
+      "Percent": 0.00016081452
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Region": 3,
+      "DCCount": 37,
+      "Percent": 8.880802E-05
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Region": 0,
+      "DCCount": 38549672,
+      "Percent": 84.36011
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Region": 1,
+      "DCCount": 5951985,
+      "Percent": 13.025016
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Region": 5,
+      "DCCount": 679261,
+      "Percent": 1.4864595
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Region": 8,
+      "DCCount": 369190,
+      "Percent": 0.8079162
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Region": 6,
+      "DCCount": 131621,
+      "Percent": 0.28803256
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Region": 3,
+      "DCCount": 5984,
+      "Percent": 0.013095075
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Region": 11,
+      "DCCount": 4875,
+      "Percent": 0.010668198
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Region": 7,
+      "DCCount": 2119,
+      "Percent": 0.0046371096
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Region": 9,
+      "DCCount": 1480,
+      "Percent": 0.0032387553
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Region": 12,
+      "DCCount": 353,
+      "Percent": 0.0007724869
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Region": 0,
+      "DCCount": 43004473,
+      "Percent": 80.42771
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Region": 1,
+      "DCCount": 7872431,
+      "Percent": 14.723157
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Region": 6,
+      "DCCount": 855745,
+      "Percent": 1.600429
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Region": 8,
+      "DCCount": 797634,
+      "Percent": 1.4917489
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Region": 5,
+      "DCCount": 711803,
+      "Percent": 1.3312265
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Region": 21,
+      "DCCount": 163922,
+      "Percent": 0.30656978
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Region": 24,
+      "DCCount": 23501,
+      "Percent": 0.043951977
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Region": 7,
+      "DCCount": 16929,
+      "Percent": 0.03166091
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Region": 3,
+      "DCCount": 13381,
+      "Percent": 0.025025379
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5662,
+      "Percent": 0.010589171
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Region": 0,
+      "DCCount": 43307895,
+      "Percent": 83.39382
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Region": 1,
+      "DCCount": 6568348,
+      "Percent": 12.648033
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Region": 8,
+      "DCCount": 806368,
+      "Percent": 1.5527449
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Region": 5,
+      "DCCount": 615395,
+      "Percent": 1.1850066
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Region": 6,
+      "DCCount": 588007,
+      "Percent": 1.1322682
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Region": 3,
+      "DCCount": 17623,
+      "Percent": 0.033934906
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Region": 7,
+      "DCCount": 13555,
+      "Percent": 0.026101554
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Region": 9,
+      "DCCount": 5416,
+      "Percent": 0.010429068
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5384,
+      "Percent": 0.010367448
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Region": 21,
+      "DCCount": 2975,
+      "Percent": 0.00572867
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Region": 0,
+      "DCCount": 42119985,
+      "Percent": 60.016415
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Region": 1,
+      "DCCount": 25239225,
+      "Percent": 35.963158
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Region": 6,
+      "DCCount": 976401,
+      "Percent": 1.3912655
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Region": 5,
+      "DCCount": 876286,
+      "Percent": 1.2486126
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Region": 8,
+      "DCCount": 836874,
+      "Percent": 1.1924547
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Region": 21,
+      "DCCount": 85502,
+      "Percent": 0.12183108
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Region": 7,
+      "DCCount": 16574,
+      "Percent": 0.023616154
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Region": 24,
+      "DCCount": 10752,
+      "Percent": 0.015320435
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Region": 3,
+      "DCCount": 9292,
+      "Percent": 0.013240093
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5536,
+      "Percent": 0.0078882
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Region": 0,
+      "DCCount": 38168666,
+      "Percent": 49.920433
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Region": 1,
+      "DCCount": 35506834,
+      "Percent": 46.43905
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Region": 5,
+      "DCCount": 1078295,
+      "Percent": 1.4102918
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Region": 8,
+      "DCCount": 833975,
+      "Percent": 1.0907481
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Region": 6,
+      "DCCount": 820523,
+      "Percent": 1.0731543
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Region": 7,
+      "DCCount": 15694,
+      "Percent": 0.020526033
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Region": 24,
+      "DCCount": 12933,
+      "Percent": 0.016914947
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Region": 3,
+      "DCCount": 11697,
+      "Percent": 0.015298395
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5638,
+      "Percent": 0.0073738866
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Region": 9,
+      "DCCount": 3883,
+      "Percent": 0.005078539
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Region": 0,
+      "DCCount": 43753690,
+      "Percent": 51.856186
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Region": 1,
+      "DCCount": 37607245,
+      "Percent": 44.571518
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Region": 6,
+      "DCCount": 1115145,
+      "Percent": 1.3216524
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Region": 5,
+      "DCCount": 1006969,
+      "Percent": 1.1934439
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Region": 8,
+      "DCCount": 840206,
+      "Percent": 0.99579906
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Region": 7,
+      "DCCount": 16507,
+      "Percent": 0.019563839
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Region": 3,
+      "DCCount": 14083,
+      "Percent": 0.016690953
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Region": 24,
+      "DCCount": 11463,
+      "Percent": 0.013585769
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5658,
+      "Percent": 0.0067057735
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Region": 9,
+      "DCCount": 3542,
+      "Percent": 0.004197923
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Region": 0,
+      "DCCount": 45069460,
+      "Percent": 55.374275
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Region": 1,
+      "DCCount": 32906231,
+      "Percent": 40.43001
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Region": 6,
+      "DCCount": 1573860,
+      "Percent": 1.933712
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Region": 8,
+      "DCCount": 898004,
+      "Percent": 1.1033263
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Region": 5,
+      "DCCount": 886373,
+      "Percent": 1.0890359
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Region": 3,
+      "DCCount": 18729,
+      "Percent": 0.023011254
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Region": 7,
+      "DCCount": 16240,
+      "Percent": 0.019953161
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Region": 24,
+      "DCCount": 11454,
+      "Percent": 0.014072876
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5733,
+      "Percent": 0.00704381
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Region": 9,
+      "DCCount": 3866,
+      "Percent": 0.0047499337
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Region": 0,
+      "DCCount": 44685339,
+      "Percent": 53.07256
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Region": 1,
+      "DCCount": 36454985,
+      "Percent": 43.29741
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Region": 6,
+      "DCCount": 1364777,
+      "Percent": 1.620939
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Region": 8,
+      "DCCount": 926011,
+      "Percent": 1.0998188
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Region": 5,
+      "DCCount": 698475,
+      "Percent": 0.8295754
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Region": 3,
+      "DCCount": 28716,
+      "Percent": 0.034105856
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Region": 7,
+      "DCCount": 16121,
+      "Percent": 0.019146834
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Region": 24,
+      "DCCount": 11314,
+      "Percent": 0.013437583
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5883,
+      "Percent": 0.006987211
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Region": 9,
+      "DCCount": 4318,
+      "Percent": 0.005128468
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Region": 0,
+      "DCCount": 45761810,
+      "Percent": 52.74081
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Region": 1,
+      "DCCount": 37641540,
+      "Percent": 43.382145
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Region": 6,
+      "DCCount": 1507552,
+      "Percent": 1.7374644
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Region": 8,
+      "DCCount": 966187,
+      "Percent": 1.1135374
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Region": 5,
+      "DCCount": 814042,
+      "Percent": 0.9381892
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Region": 3,
+      "DCCount": 31124,
+      "Percent": 0.03587063
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Region": 7,
+      "DCCount": 17542,
+      "Percent": 0.020217279
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Region": 24,
+      "DCCount": 15002,
+      "Percent": 0.017289912
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Region": 9,
+      "DCCount": 6317,
+      "Percent": 0.0072803875
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5699,
+      "Percent": 0.006568138
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Region": 0,
+      "DCCount": 41257075,
+      "Percent": 49.60969
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Region": 1,
+      "DCCount": 38180248,
+      "Percent": 45.90995
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Region": 6,
+      "DCCount": 1878899,
+      "Percent": 2.2592878
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Region": 8,
+      "DCCount": 988312,
+      "Percent": 1.1883987
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Region": 5,
+      "DCCount": 788486,
+      "Percent": 0.9481173
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Region": 3,
+      "DCCount": 31030,
+      "Percent": 0.037312116
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Region": 7,
+      "DCCount": 16914,
+      "Percent": 0.02033829
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Region": 24,
+      "DCCount": 12695,
+      "Percent": 0.015265141
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5744,
+      "Percent": 0.00690689
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Region": 9,
+      "DCCount": 3372,
+      "Percent": 0.0040546716
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Region": 0,
+      "DCCount": 57137348,
+      "Percent": 56.980824
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Region": 1,
+      "DCCount": 39498278,
+      "Percent": 39.39008
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Region": 6,
+      "DCCount": 1619150,
+      "Percent": 1.6147145
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Region": 8,
+      "DCCount": 985385,
+      "Percent": 0.98268557
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Region": 5,
+      "DCCount": 967406,
+      "Percent": 0.96475583
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Region": 3,
+      "DCCount": 29239,
+      "Percent": 0.029158901
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Region": 7,
+      "DCCount": 15310,
+      "Percent": 0.015268059
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Region": 24,
+      "DCCount": 13480,
+      "Percent": 0.013443072
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Region": 11,
+      "DCCount": 6486,
+      "Percent": 0.0064682323
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2079,
+      "Percent": 0.0020733047
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Region": 0,
+      "DCCount": 53467907,
+      "Percent": 55.3107
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Region": 1,
+      "DCCount": 39249763,
+      "Percent": 40.60252
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Region": 6,
+      "DCCount": 1930548,
+      "Percent": 1.997085
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Region": 8,
+      "DCCount": 1001175,
+      "Percent": 1.0356809
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Region": 5,
+      "DCCount": 948356,
+      "Percent": 0.9810414
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Region": 3,
+      "DCCount": 32559,
+      "Percent": 0.033681158
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Region": 7,
+      "DCCount": 15628,
+      "Percent": 0.016166624
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Region": 24,
+      "DCCount": 13228,
+      "Percent": 0.013683908
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Region": 11,
+      "DCCount": 5851,
+      "Percent": 0.0060526566
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Region": 9,
+      "DCCount": 2338,
+      "Percent": 0.00241858
+    }
+  ],
+  "NetIDByDay": [
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "NetID": 36,
+      "DCCount": 81764379,
+      "Percent": 97.11116
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "NetID": 9,
+      "DCCount": 1580749,
+      "Percent": 1.877448
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "NetID": 14680096,
+      "DCCount": 629983,
+      "Percent": 0.7482278
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "NetID": 12582938,
+      "DCCount": 131348,
+      "Percent": 0.15600139
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "NetID": 6291493,
+      "DCCount": 69171,
+      "Percent": 0.082154065
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "NetID": 14680208,
+      "DCCount": 20499,
+      "Percent": 0.024346564
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "NetID": 6291530,
+      "DCCount": 328,
+      "Percent": 0.00038956403
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "NetID": 14680099,
+      "DCCount": 162,
+      "Percent": 0.00019240662
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "NetID": 14680097,
+      "DCCount": 20,
+      "Percent": 2.3753904E-05
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "NetID": 55,
+      "DCCount": 14,
+      "Percent": 1.6627733E-05
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "NetID": 36,
+      "DCCount": 84251244,
+      "Percent": 97.10017
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "NetID": 9,
+      "DCCount": 1668018,
+      "Percent": 1.9224025
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "NetID": 14680096,
+      "DCCount": 617851,
+      "Percent": 0.7120777
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "NetID": 12582938,
+      "DCCount": 137064,
+      "Percent": 0.15796724
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "NetID": 6291493,
+      "DCCount": 56585,
+      "Percent": 0.06521461
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "NetID": 14680208,
+      "DCCount": 23766,
+      "Percent": 0.027390484
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "NetID": 6291530,
+      "DCCount": 11379,
+      "Percent": 0.013114379
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "NetID": 6291475,
+      "DCCount": 1197,
+      "Percent": 0.001379551
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "NetID": 14680099,
+      "DCCount": 160,
+      "Percent": 0.00018440114
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "NetID": 6291458,
+      "DCCount": 42,
+      "Percent": 4.8405298E-05
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "NetID": 36,
+      "DCCount": 80822127,
+      "Percent": 97.18481
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "NetID": 9,
+      "DCCount": 1497977,
+      "Percent": 1.8012469
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "NetID": 14680096,
+      "DCCount": 621078,
+      "Percent": 0.7468171
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "NetID": 12582938,
+      "DCCount": 140756,
+      "Percent": 0.16925247
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "NetID": 6291530,
+      "DCCount": 32603,
+      "Percent": 0.039203573
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "NetID": 6291493,
+      "DCCount": 26294,
+      "Percent": 0.0316173
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "NetID": 14680208,
+      "DCCount": 21806,
+      "Percent": 0.026220689
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "NetID": 6291475,
+      "DCCount": 444,
+      "Percent": 0.0005338891
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "NetID": 14680099,
+      "DCCount": 165,
+      "Percent": 0.00019840474
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "NetID": 14680098,
+      "DCCount": 29,
+      "Percent": 3.4871136E-05
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "NetID": 36,
+      "DCCount": 97800060,
+      "Percent": 97.53215
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "NetID": 9,
+      "DCCount": 1604153,
+      "Percent": 1.5997585
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "NetID": 14680096,
+      "DCCount": 635988,
+      "Percent": 0.63424575
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "NetID": 12582938,
+      "DCCount": 144205,
+      "Percent": 0.14380996
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "NetID": 6291530,
+      "DCCount": 45390,
+      "Percent": 0.045265656
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "NetID": 14680208,
+      "DCCount": 24355,
+      "Percent": 0.024288282
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "NetID": 6291493,
+      "DCCount": 19433,
+      "Percent": 0.019379765
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "NetID": 6291475,
+      "DCCount": 866,
+      "Percent": 0.00086362765
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "NetID": 14680099,
+      "DCCount": 174,
+      "Percent": 0.00017352334
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "NetID": 6291458,
+      "DCCount": 30,
+      "Percent": 2.9917817E-05
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "NetID": 36,
+      "DCCount": 94189326,
+      "Percent": 97.4356
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "NetID": 9,
+      "DCCount": 1607033,
+      "Percent": 1.6624199
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "NetID": 14680096,
+      "DCCount": 632306,
+      "Percent": 0.65409863
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "NetID": 12582938,
+      "DCCount": 138763,
+      "Percent": 0.14354551
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "NetID": 6291493,
+      "DCCount": 42019,
+      "Percent": 0.043467198
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "NetID": 6291530,
+      "DCCount": 34584,
+      "Percent": 0.03577595
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "NetID": 14680208,
+      "DCCount": 23163,
+      "Percent": 0.02396132
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "NetID": 6291475,
+      "DCCount": 847,
+      "Percent": 0.0008761921
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "NetID": 14680099,
+      "DCCount": 164,
+      "Percent": 0.00016965231
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "NetID": 6291458,
+      "DCCount": 55,
+      "Percent": 5.689559E-05
+    }
+  ],
+  "RedundantByDay": [
+    {
+      "Time": "2023-05-18T00:00:00Z",
+      "Percent": 0.31669,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-19T00:00:00Z",
+      "Percent": 0.31526,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-20T00:00:00Z",
+      "Percent": 0.32876,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-22T00:00:00Z",
+      "Percent": 0.40527278,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-21T00:00:00Z",
+      "Percent": 0.39467913,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-24T00:00:00Z",
+      "Percent": 0.43667126,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-25T00:00:00Z",
+      "Percent": 0.4886976,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-28T00:00:00Z",
+      "Percent": 0.4249816,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-23T00:00:00Z",
+      "Percent": 0.41343772,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-27T00:00:00Z",
+      "Percent": 0.4412418,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-26T00:00:00Z",
+      "Percent": 0.49106628,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-29T00:00:00Z",
+      "Percent": 0.43076712,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-30T00:00:00Z",
+      "Percent": 0.44786835,
+      "Region": 1
+    },
+    {
+      "Time": "2023-06-01T00:00:00Z",
+      "Percent": 0.4759323,
+      "Region": 1
+    },
+    {
+      "Time": "2023-05-31T00:00:00Z",
+      "Percent": 0.50116396,
+      "Region": 1
+    },
+    {
+      "Time": "2023-06-02T00:00:00Z",
+      "Percent": 0.28042793,
+      "Region": 1
+    },
+    {
+      "Time": "2023-06-03T00:00:00Z",
+      "Percent": 0.29035223,
+      "Region": 1
+    },
+    {
+      "Time": "2023-06-04T00:00:00Z",
+      "Percent": 0.3159451,
+      "Region": 1
+    },
+    {
+      "Time": "2023-06-05T00:00:00Z",
+      "Percent": 0.34170145,
+      "Region": 1
+    },
+    {
+      "Time": "2023-06-06T00:00:00Z",
+      "Percent": 0.30964416,
+      "Region": 1
+    },
+    {
+      "Time": "2023-06-08T00:00:00Z",
+      "Percent": 0.29269397,
+      "Region": 1
+    },
+    {
+      "Time": "2023-06-07T00:00:00Z",
+      "Percent": 0.28843367,
+      "Region": 1
+    },
+    {
+      "Time": "2023-06-10T00:00:00Z",
+      "Percent": 0.28192407,
+      "Region": 1
+    },
+    {
+      "Time": "2023-06-09T00:00:00Z",
+      "Percent": 0.28210425,
+      "Region": 1
+    }
+  ]
+}
