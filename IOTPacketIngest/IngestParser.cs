@@ -10,7 +10,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 
 uint minutes = 24 * 60; // 24 * 60;
-var startString = ToUnixEpochTime("2023-6-1Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
+var startString = ToUnixEpochTime("2023-6-12Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 string ingestBucket = "foundation-iot-packet-ingest";
 var metricsFile = @"c:\temp\lorawan_metrics.json";
 int hashSizeMaximum = 25000;
@@ -81,6 +81,7 @@ ConcurrentDictionary<int, int> freqSet = new ConcurrentDictionary<int, int>();
 
 ConcurrentDictionary<ulong, ulong> ouiCounter = new ConcurrentDictionary<ulong, ulong>();
 ConcurrentDictionary<ulong, ulong> regionCounter = new ConcurrentDictionary<ulong, ulong>();
+ConcurrentDictionary<ulong, ulong> netIDCounter = new ConcurrentDictionary<ulong, ulong>();
 object reportLock = new();
 
 ReportSummary theSummary = new ReportSummary();
@@ -105,7 +106,7 @@ foreach (var item in sortedList)
     itemList.Add(item);
     if (itemList.Count >= 8 || item == last)
     {
-        var taskList = LoopFiles(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, ingestBucket, itemList);
+        var taskList = LoopFiles(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, netIDCounter, ingestBucket, itemList);
         while (taskList.Any())
         {
             Task<ReportSummary> finishedTask = await Task<ReportSummary>.WhenAny(taskList);
@@ -206,6 +207,21 @@ foreach (var vp in vpList2)
     Console.WriteLine($"Region= {vp.Item1} DC={vp.Item2} Percentage= {vp.Item3} %");
 };
 
+List<NetIDSummary>? netIDList = metrics?.NetIDByDay;
+var vpList3 = ComputeValuePercent(theSummary.DCCount, netIDCounter);
+foreach (var vp in vpList3)
+{
+    var netIDItem = new NetIDSummary()
+    {
+        Time = dateTime.ToUniversalTime(),
+        NetID = (uint)vp.Item1,
+        DCCount = vp.Item2,
+        Percent = vp.Item3
+    };
+    netIDList?.Add(netIDItem);
+    Console.WriteLine($"NetID= {vp.Item1} DC={vp.Item2} Percentage= {vp.Item3} %");
+};
+
 metrics.LastUpdate = dateTime.ToUniversalTime();
 WriteToMetricsFile(metricsFile, metrics, theSummary, dateTime, minutes);
 return;
@@ -220,6 +236,7 @@ static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
             VerifyByDay = new List<PacketSummary>(),
             OUIByDay = new List<OUISummary>(),
             RegionByDay = new List<RegionSummary>(),
+            NetIDByDay = new List<NetIDSummary>(),
             RedundantByDay = new List<RedundantSummary>()
         };
 
@@ -254,11 +271,18 @@ static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
             items3?.Remove(s);
         }
 
-        var items4 = metrics?.RedundantByDay;
+        var items4 = metrics?.NetIDByDay;
         var toRemove4 = items4?.Where(item => item.Time == dateTime.ToUniversalTime()).ToList();
         foreach (var s in toRemove4)
         {
             items4?.Remove(s);
+        }
+
+        var items5 = metrics?.RedundantByDay;
+        var toRemove5 = items5?.Where(item => item.Time == dateTime.ToUniversalTime()).ToList();
+        foreach (var s in toRemove5)
+        {
+            items5?.Remove(s);
         }
 
         return metrics;
@@ -294,13 +318,14 @@ static List<Task<ReportSummary>> LoopFiles(
     ConcurrentDictionary<int, int> freqSet,
     ConcurrentDictionary<ulong, ulong> ouiCounter,
     ConcurrentDictionary<ulong, ulong> regionCounter,
+    ConcurrentDictionary<ulong, ulong> netIDCounter,
     string ingestBucket,
     List<string> files)
 {
     List<Task<ReportSummary>> taskList = new List<Task<ReportSummary>>();
     foreach (var file in files)
     {
-        var summary = GetPacketReportsAsync(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, ingestBucket, file);
+        var summary = GetPacketReportsAsync(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, netIDCounter, ingestBucket, file);
         taskList.Add(summary);
     }
     return taskList;
@@ -313,6 +338,7 @@ static async Task<ReportSummary> GetPacketReportsAsync(
     ConcurrentDictionary<int, int> freqSet,
     ConcurrentDictionary<ulong, ulong> ouiCounter,
     ConcurrentDictionary<ulong, ulong> regionCounter,
+    ConcurrentDictionary<ulong, ulong> netIDCounter,
     string bucketName,
     string report)
 {
@@ -329,6 +355,27 @@ static async Task<ReportSummary> GetPacketReportsAsync(
         var dataRate = mData.Datarate;
 
         var uniqueHash = mData.PayloadHash.ToIntHash();
+        //if (mData.NetId == 0x3c)
+        //{
+        //    Console.WriteLine($"0x3c message");
+        //}
+        //switch (mData.NetId)
+        //{
+        //    case 36:
+        //    case 9:
+        //    case 6291493:
+        //    case 12582938:
+        //    case 14680096:
+        //    case 14680208:
+        //    case 6291475:
+        //    case 14680099:
+        //    case 6291458:
+        //    case 12582995:
+        //        break;
+        //    default:
+        //        Console.WriteLine($"NetID={mData.NetId}");
+        //        break;
+        //}
         //if (mData.Region == Helium.region.Au915Sb1)
         //{
         //    Console.WriteLine($"AS923_1C message");
@@ -365,6 +412,8 @@ static async Task<ReportSummary> GetPacketReportsAsync(
         {
             ulong oui = mData.Oui;
             ulong region = (ulong)mData.Region;
+            ulong netID = (ulong)mData.NetId;
+
             var mapValue = ouiCounter.GetOrAdd(oui, 0);
             mapValue += u24;
             ouiCounter[oui] = mapValue;
@@ -372,6 +421,10 @@ static async Task<ReportSummary> GetPacketReportsAsync(
             mapValue = regionCounter.GetOrAdd(region, 0);
             mapValue += u24;
             regionCounter[region] = mapValue;
+
+            mapValue = netIDCounter.GetOrAdd(netID, 0);
+            mapValue += u24;
+            netIDCounter[netID] = mapValue;
         }
     }
 
