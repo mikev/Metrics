@@ -94,11 +94,13 @@ ConcurrentDictionary<int, int> freqSet = new ConcurrentDictionary<int, int>();
 ConcurrentDictionary<ulong, ulong> ouiCounter = new ConcurrentDictionary<ulong, ulong>();
 ConcurrentDictionary<ulong, ulong> regionCounter = new ConcurrentDictionary<ulong, ulong>();
 ConcurrentDictionary<ulong, ulong> netIDCounter = new ConcurrentDictionary<ulong, ulong>();
+
+ConcurrentDictionary<ulong, ulong> locationCounter = new ConcurrentDictionary<ulong, ulong>();
+ConcurrentDictionary<int, ulong> locationMap = new ConcurrentDictionary<int, ulong>();
 object reportLock = new();
 
 ReportSummary theSummary = new ReportSummary();
 List<string> itemList = new List<string>();
-ConcurrentDictionary<int, BigInteger> locationMap = new ConcurrentDictionary<int, BigInteger>();
 
 using (var reader = new StreamReader(@"C:/temp/iot_metadata.csv"))
 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
@@ -138,7 +140,7 @@ foreach (var item in sortedList)
     itemList.Add(item);
     if (itemList.Count >= 8 || item == last)
     {
-        var taskList = LoopFiles(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, netIDCounter, locationMap, ingestBucket, itemList);
+        var taskList = LoopFiles(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, netIDCounter, locationMap, locationCounter, ingestBucket, itemList);
         while (taskList.Any())
         {
             Task<ReportSummary> finishedTask = await Task<ReportSummary>.WhenAny(taskList);
@@ -351,14 +353,15 @@ static List<Task<ReportSummary>> LoopFiles(
     ConcurrentDictionary<ulong, ulong> ouiCounter,
     ConcurrentDictionary<ulong, ulong> regionCounter,
     ConcurrentDictionary<ulong, ulong> netIDCounter,
-    ConcurrentDictionary<int, BigInteger> locationMap,
+    ConcurrentDictionary<int, ulong> locationMap,
+    ConcurrentDictionary<ulong, ulong> locationCounter,
     string ingestBucket,
     List<string> files)
 {
     List<Task<ReportSummary>> taskList = new List<Task<ReportSummary>>();
     foreach (var file in files)
     {
-        var summary = GetPacketReportsAsync(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, netIDCounter, locationMap, ingestBucket, file);
+        var summary = GetPacketReportsAsync(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, netIDCounter, locationMap, locationCounter, ingestBucket, file);
         taskList.Add(summary);
     }
     return taskList;
@@ -372,7 +375,8 @@ static async Task<ReportSummary> GetPacketReportsAsync(
     ConcurrentDictionary<ulong, ulong> ouiCounter,
     ConcurrentDictionary<ulong, ulong> regionCounter,
     ConcurrentDictionary<ulong, ulong> netIDCounter,
-    ConcurrentDictionary<int, BigInteger> locationMap,
+    ConcurrentDictionary<int, ulong> locationMap,
+    ConcurrentDictionary<ulong, ulong> locationCounter,
     string bucketName,
     string report)
 {

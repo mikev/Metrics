@@ -44,7 +44,7 @@ public class IOTMetadata
     public string HotspotKey { get; set; }
 
     [Index(1)]
-    public BigInteger? Location { get; set; }
+    public ulong? Location { get; set; }
 
     [Index(2)]
     public int Elevation { get; set; }
