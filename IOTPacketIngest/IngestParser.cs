@@ -1,15 +1,27 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
+using CsvHelper;
 using Google.Protobuf;
 using Helium.PacketRouter;
+using Merkator.BitCoin;
 using System.Collections.Concurrent;
 using System.CommandLine;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO.Compression;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-uint minutes = 24 * 60; // 24 * 60;
+var b58 = "11zKxAVNKnN2UUKbSyFyxvKevjysJDnq1YR1Z9cQCUry5vUWtUo";
+var binary0 = Base58Encoding.DecodeWithCheckSum(b58);
+var hash0 = Base58Encoding.EncodeWithCheckSum(binary0);
+
+var binary1 = PublicKey.B58ToRawBinary(b58);
+var hash1 = PublicKey.PubKeyToB58(binary1);
+
+uint minutes = 60; // 24 * 60;
 var startString = ToUnixEpochTime("2023-6-12Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 string ingestBucket = "foundation-iot-packet-ingest";
 var metricsFile = @"c:\temp\lorawan_metrics.json";
@@ -86,6 +98,26 @@ object reportLock = new();
 
 ReportSummary theSummary = new ReportSummary();
 List<string> itemList = new List<string>();
+ConcurrentDictionary<int, BigInteger> locationMap = new ConcurrentDictionary<int, BigInteger>();
+
+using (var reader = new StreamReader(@"C:/temp/iot_metadata.csv"))
+using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+{
+    while (csv.Read())
+    {
+        try
+        {
+            var record = csv.GetRecord<IOTMetadata>();
+            var intHash0 = PublicKey.B58ToRawBinary(record.HotspotKey);
+            var intHash1 = BitConverter.ToInt32(intHash0, 0);
+            locationMap.TryAdd(intHash1, record.Location.GetValueOrDefault(0));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception {ex}");
+        }
+    }
+}
 
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes).ToBlockingEnumerable();
 var sortedList = list.OrderBy(s => s).ToList();
@@ -106,7 +138,7 @@ foreach (var item in sortedList)
     itemList.Add(item);
     if (itemList.Count >= 8 || item == last)
     {
-        var taskList = LoopFiles(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, netIDCounter, ingestBucket, itemList);
+        var taskList = LoopFiles(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, netIDCounter, locationMap, ingestBucket, itemList);
         while (taskList.Any())
         {
             Task<ReportSummary> finishedTask = await Task<ReportSummary>.WhenAny(taskList);
@@ -319,13 +351,14 @@ static List<Task<ReportSummary>> LoopFiles(
     ConcurrentDictionary<ulong, ulong> ouiCounter,
     ConcurrentDictionary<ulong, ulong> regionCounter,
     ConcurrentDictionary<ulong, ulong> netIDCounter,
+    ConcurrentDictionary<int, BigInteger> locationMap,
     string ingestBucket,
     List<string> files)
 {
     List<Task<ReportSummary>> taskList = new List<Task<ReportSummary>>();
     foreach (var file in files)
     {
-        var summary = GetPacketReportsAsync(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, netIDCounter, ingestBucket, file);
+        var summary = GetPacketReportsAsync(reportLock, s3Client, uniqueSet, freqSet, ouiCounter, regionCounter, netIDCounter, locationMap, ingestBucket, file);
         taskList.Add(summary);
     }
     return taskList;
@@ -339,6 +372,7 @@ static async Task<ReportSummary> GetPacketReportsAsync(
     ConcurrentDictionary<ulong, ulong> ouiCounter,
     ConcurrentDictionary<ulong, ulong> regionCounter,
     ConcurrentDictionary<ulong, ulong> netIDCounter,
+    ConcurrentDictionary<int, BigInteger> locationMap,
     string bucketName,
     string report)
 {
@@ -353,6 +387,28 @@ static async Task<ReportSummary> GetPacketReportsAsync(
     {
         var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
         var dataRate = mData.Datarate;
+        var gatewayArray = mData.Gateway.ToByteArray();
+        var gwArray2 = new byte[] { gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3] };
+
+        var gatewayHash0 = BitConverter.ToInt32(gatewayArray, 0);
+        var gatewayHash1 = BitConverter.ToInt32(gwArray2, 0);
+        var gatewayKey0 = mData.Gateway;
+        var gatewayKey1 = gatewayKey0.ToStringUtf8();
+        var gatewayKey2 = gatewayKey0.ToBase64();
+        var gatewayKey3 = Base58Encoding.Encode(gatewayArray);
+        var gatewayKey4 = Base58Encoding.EncodeWithCheckSum(gatewayArray);
+
+        if (locationMap.TryGetValue(gatewayHash0, out var value))
+        {
+            Console.WriteLine($"Success! value={value}");
+        }
+        else
+        {
+            if (locationMap.TryGetValue(gatewayHash1, out var value2))
+            {
+                Console.WriteLine($"Success! value={value2}");
+            }
+        }
 
         var uniqueHash = mData.PayloadHash.ToIntHash();
         //if (mData.NetId == 0x3c)

@@ -1,5 +1,7 @@
 ﻿
+using CsvHelper.Configuration.Attributes;
 using Google.Protobuf;
+using System.Numerics;
 
 struct ParquetReport
 {
@@ -35,6 +37,30 @@ struct ParquetReport
     //[MapToColumn("PayloadSize")]
     public uint PayloadSize { get; set; }
 };
+
+public class IOTMetadata
+{
+    [Index(0)]
+    public string HotspotKey { get; set; }
+
+    [Index(1)]
+    public BigInteger? Location { get; set; }
+
+    [Index(2)]
+    public int Elevation { get; set; }
+
+    [Index(3)]
+    public uint Gain { get; set; }
+
+    [Index(4)]
+    public char IsFullHotspot { get; set; }
+
+    [Index(5)]
+    public string Created { get; set; }
+
+    [Index(6)]
+    public string Updated { get; set; }
+}
 
 public static class XX
 {

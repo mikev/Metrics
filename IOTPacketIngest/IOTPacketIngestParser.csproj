@@ -8,17 +8,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Base58EncodingTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="poc_lora.proto" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.4" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.103.20" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.51.0" />
     <PackageReference Include="Grpc.Tools" Version="2.51.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="NBitcoin" Version="7.0.26" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.96" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
 	<Protobuf Include="data_rate.proto" />
