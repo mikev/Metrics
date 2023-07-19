@@ -1,7 +1,13 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.Runtime;
+using Amazon.S3;
 using Amazon.S3.Model;
+using Amazon.SecurityToken;
+using Amazon.SecurityToken.Model;
 using CsvHelper;
 using Google.Protobuf;
+using H3;
+using H3.Extensions;
 using Helium.PacketRouter;
 using Merkator.BitCoin;
 using System.Collections.Concurrent;
@@ -9,6 +15,7 @@ using System.CommandLine;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO.Compression;
+using System.Net;
 using System.Numerics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -21,8 +28,8 @@ var hash0 = Base58Encoding.EncodeWithCheckSum(binary0);
 var binary1 = PublicKey.B58ToRawBinary(b58);
 var hash1 = PublicKey.PubKeyToB58(binary1);
 
-uint minutes = 60; // 24 * 60;
-var startString = ToUnixEpochTime("2023-6-12Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
+uint minutes = 24 * 60; // 24 * 60;
+var startString = ToUnixEpochTime("2023-6-15Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 string ingestBucket = "foundation-iot-packet-ingest";
 var metricsFile = @"c:\temp\lorawan_metrics.json";
 int hashSizeMaximum = 25000;
@@ -79,8 +86,10 @@ Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
 
-// Create an S3 client object.
-var s3Client = new AmazonS3Client();
+// Create an S3 client
+var ic = FetchCredentials();
+//SessionAWSCredentials tempCredentials = GetTemporaryCredentialsAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+var s3Client = new AmazonS3Client(ic.AccessKey, ic.SecretKey, ic.Token, RegionEndpoint.USWest2);
 
 var bucketList = ListBucketsAsync(s3Client);
 if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains(ingestBucket))
@@ -256,9 +265,70 @@ foreach (var vp in vpList3)
     Console.WriteLine($"NetID= {vp.Item1} DC={vp.Item2} Percentage= {vp.Item3} %");
 };
 
+List<LocationSummary>? locationList = metrics?.LocationByDay;
+var vpList4 = ComputeValuePercent(theSummary.DCCount, locationCounter);
+foreach (var vp in vpList4)
+{
+    var h3Location = new H3Index(vp.Item1);
+    var h3Long = (ulong)h3Location;
+    var h3LatLon = h3Location.ToLatLng();
+    var locItem = new LocationSummary()
+    {
+        Time = dateTime.ToUniversalTime(),
+        Location = h3Location,
+        DCCount = vp.Item2,
+        Percent = vp.Item3
+    };
+    locationList?.Add(locItem);
+    Console.WriteLine($"Location= {h3Long} {h3Location.Resolution} {h3LatLon.ToPoint().ToString()} {h3Location.ToString()} DC={vp.Item2} Percentage= {vp.Item3} %");
+};
+
 metrics.LastUpdate = dateTime.ToUniversalTime();
 WriteToMetricsFile(metricsFile, metrics, theSummary, dateTime, minutes);
 return;
+
+// Taken from: https://docs.aws.amazon.com/AmazonS3/latest/dev/AuthUsingTempSessionTokenDotNet.html
+static async Task<SessionAWSCredentials> GetTemporaryCredentialsAsync()
+{
+    using (var stsClient = new AmazonSecurityTokenServiceClient())
+    {
+        var getSessionTokenRequest = new GetSessionTokenRequest
+        {
+            DurationSeconds = 7200 // seconds (2 hours)
+        };
+
+        GetSessionTokenResponse sessionTokenResponse =
+            await stsClient.GetSessionTokenAsync(getSessionTokenRequest);
+
+        Credentials credentials = sessionTokenResponse.Credentials;
+
+        var sessionCredentials =
+            new SessionAWSCredentials(credentials.AccessKeyId,
+                credentials.SecretAccessKey,
+                credentials.SessionToken);
+        return sessionCredentials;
+    }
+}
+
+static ImmutableCredentials FetchCredentials()
+{
+    string accessKeyId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY");
+    string secretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+
+    Console.WriteLine($"AWS_ACCESS_KEY = {accessKeyId}");
+    Console.WriteLine($"AWS_SECRET_ACCESS_KEY = {secretKey}");
+
+    if (string.IsNullOrEmpty(accessKeyId) || string.IsNullOrEmpty(secretKey))
+    {
+        Console.WriteLine("The environment variables were not set with AWS credentials.");
+    }
+
+    string sessionToken = Environment.GetEnvironmentVariable("AWS_SESSION_TOKEN");
+
+    Console.WriteLine("Credentials found using environment variables.");
+
+    return new ImmutableCredentials(accessKeyId, secretKey, sessionToken);
+}
 
 static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
 {
@@ -271,6 +341,7 @@ static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
             OUIByDay = new List<OUISummary>(),
             RegionByDay = new List<RegionSummary>(),
             NetIDByDay = new List<NetIDSummary>(),
+            LocationByDay = new List<LocationSummary>(),
             RedundantByDay = new List<RedundantSummary>()
         };
 
@@ -312,11 +383,18 @@ static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
             items4?.Remove(s);
         }
 
-        var items5 = metrics?.RedundantByDay;
+        var items5 = metrics?.LocationByDay;
         var toRemove5 = items5?.Where(item => item.Time == dateTime.ToUniversalTime()).ToList();
         foreach (var s in toRemove5)
         {
             items5?.Remove(s);
+        }
+
+        var items6 = metrics?.RedundantByDay;
+        var toRemove6 = items6?.Where(item => item.Time == dateTime.ToUniversalTime()).ToList();
+        foreach (var s in toRemove6)
+        {
+            items6?.Remove(s);
         }
 
         return metrics;
@@ -391,28 +469,16 @@ static async Task<ReportSummary> GetPacketReportsAsync(
     {
         var mData = packet_router_packet_report_v1.Parser.ParseFrom(message);
         var dataRate = mData.Datarate;
-        var gatewayArray = mData.Gateway.ToByteArray();
-        var gwArray2 = new byte[] { gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3] };
+        //var gatewayArray = mData.Gateway.ToByteArray();
+        //var gwArray2 = new byte[] { gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3] };
 
-        var gatewayHash0 = BitConverter.ToInt32(gatewayArray, 0);
-        var gatewayHash1 = BitConverter.ToInt32(gwArray2, 0);
-        var gatewayKey0 = mData.Gateway;
-        var gatewayKey1 = gatewayKey0.ToStringUtf8();
-        var gatewayKey2 = gatewayKey0.ToBase64();
-        var gatewayKey3 = Base58Encoding.Encode(gatewayArray);
-        var gatewayKey4 = Base58Encoding.EncodeWithCheckSum(gatewayArray);
-
-        if (locationMap.TryGetValue(gatewayHash0, out var value))
-        {
-            Console.WriteLine($"Success! value={value}");
-        }
-        else
-        {
-            if (locationMap.TryGetValue(gatewayHash1, out var value2))
-            {
-                Console.WriteLine($"Success! value={value2}");
-            }
-        }
+        //var gatewayHash0 = BitConverter.ToInt32(gatewayArray, 0);
+        //var gatewayHash1 = BitConverter.ToInt32(gwArray2, 0);
+        //var gatewayKey0 = mData.Gateway;
+        //var gatewayKey1 = gatewayKey0.ToStringUtf8();
+        //var gatewayKey2 = gatewayKey0.ToBase64();
+        //var gatewayKey3 = Base58Encoding.Encode(gatewayArray);
+        //var gatewayKey4 = Base58Encoding.EncodeWithCheckSum(gatewayArray);
 
         var uniqueHash = mData.PayloadHash.ToIntHash();
         //if (mData.NetId == 0x3c)
@@ -485,6 +551,44 @@ static async Task<ReportSummary> GetPacketReportsAsync(
             mapValue = netIDCounter.GetOrAdd(netID, 0);
             mapValue += u24;
             netIDCounter[netID] = mapValue;
+
+            var gatewayArray = mData.Gateway.ToByteArray();
+            var gatewayHash0 = BitConverter.ToInt32(gatewayArray, 0);
+            if (locationMap.TryGetValue(gatewayHash0, out var value))
+            {
+                H3Index h3 = new H3Index(value);
+                var res = h3.Resolution;
+                var r1 = h3.GetParentForResolution(1);
+                var r2 = h3.GetParentForResolution(2);
+                var r3 = h3.GetParentForResolution(3);
+                var r4 = h3.GetParentForResolution(4);
+                var r5 = h3.GetParentForResolution(5);
+                var r6 = h3.GetParentForResolution(6);
+                var r7 = h3.GetParentForResolution(7);
+                var r8 = h3.GetParentForResolution(8);
+                var r9 = h3.GetParentForResolution(9);
+                var r10 = h3.GetParentForResolution(10);
+                var value2 = value >> 32;
+
+                var o1 = (ulong)r1;
+                var o2 = (ulong)r2;
+                var o3 = (ulong)r3;
+                var o4 = (ulong)r4;
+                var o5 = (ulong)r5;
+                var o6 = (ulong)r6;
+                var o7 = (ulong)r7;
+                var o8 = (ulong)r8;
+                var o9 = (ulong)r9;
+                var o10 = (ulong)r10;
+
+                var h3Long = (ulong)h3;
+
+                mapValue = locationCounter.GetOrAdd(o10, 0);
+                mapValue += u24;
+                locationCounter[o10] = mapValue;
+                //Console.WriteLine($"Success! value={value}");
+            }
+
         }
     }
 

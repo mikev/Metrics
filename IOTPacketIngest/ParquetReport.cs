@@ -155,6 +155,20 @@ public class NetIDSummary
     }
 }
 
+public class LocationSummary
+{
+    public DateTime Time { get; set; }
+    public ulong Location { get; set; }
+    public ulong DCCount { get; set; }
+    public float Percent { get; set; }
+
+    public override int GetHashCode()
+    {
+        var hashCode = Time.GetHashCode();
+        return hashCode;
+    }
+}
+
 public class LoRaWANMetrics
 {
     public DateTime LastUpdate { get; set; }
@@ -163,6 +177,7 @@ public class LoRaWANMetrics
     public List<OUISummary>? OUIByDay { get; set; }
     public List<RegionSummary>? RegionByDay { get; set; }
     public List<NetIDSummary>? NetIDByDay { get; set; }
+    public List<LocationSummary>? LocationByDay { get; set; }
     public List<RedundantSummary>? RedundantByDay { get; set; }
 };
 
