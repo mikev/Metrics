@@ -8,14 +8,16 @@ using System.Collections.Concurrent;
 using System.CommandLine;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
 uint minutes = 24 * 60; // 24 * 60;
 var startString = ToUnixEpochTime("2023-6-12Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 string ingestBucket = "foundation-iot-packet-ingest";
-var metricsFile = @"c:\temp\lorawan_metrics.json";
+string? metricsFile = @"c:\temp\lorawan_metrics.json";
 int hashSizeMaximum = 25000;
+bool s3Metrics = true;
 
 if (args.Length > 0)
 {
@@ -80,6 +82,16 @@ if (string.IsNullOrEmpty(ic.AccessKey) || string.IsNullOrEmpty(ic.SecretKey))
 else
 {
     s3Client = new AmazonS3Client(ic.AccessKey, ic.SecretKey, ic.Token, RegionEndpoint.USWest2);
+}
+
+if (s3Metrics)
+{
+    var metricsResponse = await DownloadS3Object(s3Client, "foundation-iot-metrics", "iot-metrics.json", false);
+    var metricsData = metricsResponse.Item4;
+    metricsFile = Encoding.UTF8.GetString(metricsData, 0, metricsData.Length);
+    Console.WriteLine($"{metricsFile}");
+    await UploadToS3Async(s3Client, "foundation-iot-metrics", "iot-metrics.json", metricsFile);
+    return;
 }
 
 var bucketList = ListBucketsAsync(s3Client);
@@ -162,7 +174,7 @@ Console.WriteLine("--------------------------------------");
 Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {theSummary.MessageCount} dupes= {theSummary.DupeCount} byteTotal= {theSummary.TotalBytes} dcCount= {theSummary.DCCount} fc= {theSummary.FileCount} rawTotal= {(float)theSummary.RawSize / (1024 * 1024)} gzTotal= {(float)theSummary.GzipSize / (1024 * 1024)} fees= {burnedDCFees.ToString("########.##")}");
 Console.WriteLine("--------------------------------------");
 
-var metrics = InitMetricsFile(metricsFile, dateTime);
+var metrics = InitMetricsFile(metricsFile, dateTime, false);
 
 int frTotal = 0;
 for (int i = 0; i < frMax; i++)
@@ -258,9 +270,9 @@ static ImmutableCredentials FetchEnvironmentCredentials()
     return new ImmutableCredentials(accessKeyId, secretKey, sessionToken);
 }
 
-static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
+static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime, bool s3Metrics)
 {
-    if (!File.Exists(metricsFile))
+    if (!File.Exists(metricsFile) && !s3Metrics)
     {
         LoRaWANMetrics metrics = new LoRaWANMetrics()
         {
@@ -278,7 +290,15 @@ static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
     }
     else
     {
-        var jsonMetrics = File.ReadAllText(metricsFile);
+        string? jsonMetrics = String.Empty;
+        if (s3Metrics)
+        {
+            jsonMetrics = metricsFile;
+        }
+        else
+        {
+            File.ReadAllText(metricsFile);
+        }
 
         LoRaWANMetrics? metrics = JsonSerializer.Deserialize<LoRaWANMetrics>(jsonMetrics);
 
@@ -584,7 +604,33 @@ static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
     return false;
 }
 
-static async Task<(DateTime, ulong, ulong, byte[])> DownloadS3Object(AmazonS3Client s3Client, string bucketName, string keyName)
+static async Task<bool> UploadToS3Async(
+    IAmazonS3 client,
+    string bucketName,
+    string objectName,
+    string objectContent)
+{
+    var request = new PutObjectRequest
+    {
+        BucketName = bucketName,
+        Key = objectName,
+        ContentBody = objectContent,
+    };
+
+    var response = await client.PutObjectAsync(request);
+    if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
+    {
+        Console.WriteLine($"Successfully uploaded {objectName} to {bucketName}.");
+        return true;
+    }
+    else
+    {
+        Console.WriteLine($"Could not upload {objectName} to {bucketName}.");
+        return false;
+    }
+}
+
+static async Task<(DateTime, ulong, ulong, byte[])> DownloadS3Object(AmazonS3Client s3Client, string bucketName, string keyName, bool gzip = true)
 {
     var getObjectResult = await s3Client.GetObjectAsync(bucketName, keyName);
     var modTime = getObjectResult.LastModified.ToUniversalTime();
@@ -598,7 +644,15 @@ static async Task<(DateTime, ulong, ulong, byte[])> DownloadS3Object(AmazonS3Cli
     memoryStream.Position = 0;
     memoryStream.Seek(0, SeekOrigin.Begin);
 
-    var unzip = DecompressSteam(memoryStream);
+    byte[]? unzip = null;
+    if (!gzip)
+    {
+        unzip = memoryStream.ToArray();
+    }
+    else
+    {
+        unzip = DecompressSteam(memoryStream);
+    }
     return (modTime, (ulong)gzipSize, (ulong)unzip.LongLength, unzip);
 }
 
