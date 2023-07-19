@@ -1,4 +1,6 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.Runtime;
+using Amazon.S3;
 using Amazon.S3.Model;
 using Google.Protobuf;
 using Helium.PacketRouter;
@@ -68,7 +70,17 @@ Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
 
 // Create an S3 client object.
-var s3Client = new AmazonS3Client();
+AmazonS3Client? s3Client = null;
+var ic = FetchEnvironmentCredentials();
+if (string.IsNullOrEmpty(ic.AccessKey) || string.IsNullOrEmpty(ic.SecretKey))
+{
+    Console.WriteLine("The environment variables were not set with AWS credentials.");
+    s3Client = new AmazonS3Client();
+}
+else
+{
+    s3Client = new AmazonS3Client(ic.AccessKey, ic.SecretKey, ic.Token, RegionEndpoint.USWest2);
+}
 
 var bucketList = ListBucketsAsync(s3Client);
 if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains(ingestBucket))
@@ -225,6 +237,26 @@ foreach (var vp in vpList3)
 metrics.LastUpdate = dateTime.ToUniversalTime();
 WriteToMetricsFile(metricsFile, metrics, theSummary, dateTime, minutes);
 return;
+
+static ImmutableCredentials FetchEnvironmentCredentials()
+{
+    string accessKeyId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY");
+    string secretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+
+    Console.WriteLine($"AWS_ACCESS_KEY = {accessKeyId}");
+    Console.WriteLine($"AWS_SECRET_ACCESS_KEY = {secretKey}");
+
+    if (string.IsNullOrEmpty(accessKeyId) || string.IsNullOrEmpty(secretKey))
+    {
+        Console.WriteLine("The environment variables were not set with AWS credentials.");
+    }
+
+    string sessionToken = Environment.GetEnvironmentVariable("AWS_SESSION_TOKEN");
+
+    Console.WriteLine("Credentials found using environment variables.");
+
+    return new ImmutableCredentials(accessKeyId, secretKey, sessionToken);
+}
 
 static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
 {
