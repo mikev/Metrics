@@ -55,6 +55,7 @@ if (args.Length > 0)
 }
 else
 {
+    s3Metrics = false;
     Console.WriteLine("No arguments");
 }
 
@@ -89,9 +90,7 @@ if (s3Metrics)
     var metricsResponse = await DownloadS3Object(s3Client, "foundation-iot-metrics", "iot-metrics.json", false);
     var metricsData = metricsResponse.Item4;
     metricsFile = Encoding.UTF8.GetString(metricsData, 0, metricsData.Length);
-    Console.WriteLine($"{metricsFile}");
-    await UploadToS3Async(s3Client, "foundation-iot-metrics", "iot-metrics.json", metricsFile);
-    return;
+    // Console.WriteLine($"{metricsFile}");
 }
 
 var bucketList = ListBucketsAsync(s3Client);
@@ -247,7 +246,15 @@ foreach (var vp in vpList3)
 };
 
 metrics.LastUpdate = dateTime.ToUniversalTime();
-WriteToMetricsFile(metricsFile, metrics, theSummary, dateTime, minutes);
+var metricsJson = GenerateMetricsJson(metrics, theSummary, dateTime, minutes);
+if (s3Metrics)
+{
+    await UploadToS3Async(s3Client, "foundation-iot-metrics", "iot-metrics.json", metricsJson);
+}
+else
+{
+    File.WriteAllText(metricsFile, metricsJson);
+}
 return;
 
 static ImmutableCredentials FetchEnvironmentCredentials()
@@ -340,7 +347,7 @@ static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime, bo
         return metrics;
     }
 }
-static void WriteToMetricsFile(string metricsFile, LoRaWANMetrics? metrics, ReportSummary report, DateTime dateTime, uint duration)
+static string? GenerateMetricsJson(LoRaWANMetrics? metrics, ReportSummary report, DateTime dateTime, uint duration)
 {
     var packetSummary = new PacketSummary()
     {
@@ -360,7 +367,7 @@ static void WriteToMetricsFile(string metricsFile, LoRaWANMetrics? metrics, Repo
     JsonSerializerOptions options = new() { WriteIndented = true };
     var jsonMetrics = JsonSerializer.Serialize<LoRaWANMetrics>(metrics, options);
 
-    File.WriteAllText(metricsFile, jsonMetrics);
+    return jsonMetrics;
 }
 
 static List<Task<ReportSummary>> LoopFiles(
