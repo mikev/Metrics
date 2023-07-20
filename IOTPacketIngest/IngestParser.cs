@@ -13,7 +13,8 @@ using System.Text.RegularExpressions;
 
 // Default values
 uint minutes = 24 * 60; // 24 * 60;
-var startString = ToUnixEpochTime("2023-7-1Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
+// var startString = ToUnixEpochTime("2023-7-1Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
+var startString = "yesterday";
 string ingestBucket = "foundation-iot-packet-ingest";
 string metricsBucket = "foundation-iot-metrics";
 string metricsKeyName = "iot-metrics.json";
@@ -26,7 +27,7 @@ if (args.Length > 0)
     var startOption = new Option<string?>(
         name: "--starttime",
         description: "The time to start processing files.",
-        getDefaultValue: () => "2023-7-1Z"
+        getDefaultValue: () => "yesterday"
     );
     startOption.AddAlias("-s");
 
@@ -57,8 +58,7 @@ if (args.Length > 0)
 
     rootCommand.SetHandler((inStartTime, inMinutes, output, s3MetricsFlag) =>
     {
-        var inStartTime2 = inStartTime?.TrimEnd('Z') + 'Z';
-        startString = ToUnixEpochTime(inStartTime2);
+        startString = ParseUnixEpochTime(inStartTime).ToString();
         minutes = inMinutes.GetValueOrDefault(10);
         metricsFile = output;
         s3Metrics = s3MetricsFlag;
@@ -69,6 +69,7 @@ if (args.Length > 0)
 }
 else
 {
+    startString = ParseUnixEpochTime(startString).ToString();
     Console.WriteLine("No arguments");
 }
 
@@ -550,14 +551,31 @@ static DateTime UnixTimeMillisecondsToDateTime(double unixTimeStamp)
     dateTime = dateTime.AddMilliseconds(unixTimeStamp).ToLocalTime();
     return dateTime;
 }
+static string YesterdayUTC()
+{
+    string yesterday = DateTime.Now.AddDays(-1).ToUniversalTime().ToString("MM-dd-yyyyZ");
+    return yesterday;
+}
 
-static string ToUnixEpochTime(string textDateTime)
+static long ParseUnixEpochTime(string textTime)
+{
+    if (textTime.ToLower() == "yesterday")
+    {
+        textTime = YesterdayUTC();
+    }
+
+    var time2 = textTime?.TrimEnd('Z') + 'Z';
+    var timeString = ToUnixEpochTime(time2);
+    return timeString;
+}
+
+static long ToUnixEpochTime(string textDateTime)
 {
     // textString "2023-4-12 2:27:01 PM"
     var dateTime = DateTime.Parse(textDateTime).ToUniversalTime();
 
     DateTimeOffset dto = new DateTimeOffset(dateTime);
-    return dto.ToUnixTimeSeconds().ToString();
+    return dto.ToUnixTimeSeconds();
 }
 
 static List<byte[]> ExtractMessageList(byte[] data)
