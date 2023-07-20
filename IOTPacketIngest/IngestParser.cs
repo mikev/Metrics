@@ -24,7 +24,7 @@ if (args.Length > 0)
     var startOption = new Option<string?>(
         name: "--starttime",
         description: "The time to start processing files.",
-        getDefaultValue: () => "2023-4-1"
+        getDefaultValue: () => "2023-7-1Z"
     );
 
     var durationOption = new Option<uint?>(
