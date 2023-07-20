@@ -51,7 +51,8 @@ if (args.Length > 0)
         metricsFile = output;
     }, startOption, durationOption, outputOption);
 
-    await rootCommand.InvokeAsync(args);
+    var cmd = await rootCommand.InvokeAsync(args);
+    Console.WriteLine($"cmd={cmd}");
 }
 else
 {
@@ -75,7 +76,7 @@ Console.WriteLine($"Duration is {minutes} minutes");
 // Create an S3 client object.
 AmazonS3Client? s3Client = null;
 var ic = FetchEnvironmentCredentials();
-if (string.IsNullOrEmpty(ic.AccessKey) || string.IsNullOrEmpty(ic.SecretKey))
+if (ic is null)
 {
     Console.WriteLine("The environment variables were not set with AWS credentials.");
     s3Client = new AmazonS3Client();
@@ -112,13 +113,18 @@ List<string> itemList = new List<string>();
 
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes).ToBlockingEnumerable();
 var sortedList = list.OrderBy(s => s).ToList();
+if (!sortedList.Any())
+{
+    Console.WriteLine($"No bucket keys found for {ingestBucket} {startUnix}");
+    return;
+}
 var last = sortedList.Last();
 var listCount = sortedList.Count();
-Console.WriteLine($"Starting {ingestBucket} of key size {listCount}");
-foreach (var item in sortedList)
-{
-    Console.WriteLine($"Key {item}");
-}
+Console.WriteLine($"Starting {ingestBucket} of key size {listCount} for {dateTime.ToUniversalTime().ToShortDateString()}");
+//foreach (var item in sortedList)
+//{
+//    Console.WriteLine($"Key {item}");
+//}
 
 int frMax = 100000;
 int[] frArray = new int[frMax];
@@ -173,7 +179,7 @@ Console.WriteLine("--------------------------------------");
 Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {theSummary.MessageCount} dupes= {theSummary.DupeCount} byteTotal= {theSummary.TotalBytes} dcCount= {theSummary.DCCount} fc= {theSummary.FileCount} rawTotal= {(float)theSummary.RawSize / (1024 * 1024)} gzTotal= {(float)theSummary.GzipSize / (1024 * 1024)} fees= {burnedDCFees.ToString("########.##")}");
 Console.WriteLine("--------------------------------------");
 
-var metrics = InitMetricsFile(metricsFile, dateTime, false);
+var metrics = InitMetricsFile(metricsFile, dateTime, s3Metrics);
 
 int frTotal = 0;
 for (int i = 0; i < frMax; i++)
@@ -257,29 +263,28 @@ else
 }
 return;
 
-static ImmutableCredentials FetchEnvironmentCredentials()
+static ImmutableCredentials? FetchEnvironmentCredentials()
 {
     string accessKeyId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY");
     string secretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
-
-    Console.WriteLine($"AWS_ACCESS_KEY = {accessKeyId}");
-    Console.WriteLine($"AWS_SECRET_ACCESS_KEY = {secretKey}");
+    string sessionToken = Environment.GetEnvironmentVariable("AWS_SESSION_TOKEN");
 
     if (string.IsNullOrEmpty(accessKeyId) || string.IsNullOrEmpty(secretKey))
     {
         Console.WriteLine("The environment variables were not set with AWS credentials.");
+        return null;
     }
-
-    string sessionToken = Environment.GetEnvironmentVariable("AWS_SESSION_TOKEN");
-
-    Console.WriteLine("Credentials found using environment variables.");
-
-    return new ImmutableCredentials(accessKeyId, secretKey, sessionToken);
+    else
+    {
+        Console.WriteLine("Credentials found using environment variables.");
+        return new ImmutableCredentials(accessKeyId, secretKey, sessionToken);
+    } 
 }
 
 static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime, bool s3Metrics)
 {
-    if (!File.Exists(metricsFile) && !s3Metrics)
+    //Console.WriteLine($"InitMetricsFile s3Metrics={s3Metrics} name={metricsFile}");
+    if (!s3Metrics && !File.Exists(metricsFile))
     {
         LoRaWANMetrics metrics = new LoRaWANMetrics()
         {
