@@ -565,8 +565,8 @@ static long ParseUnixEpochTime(string textTime)
     }
 
     var time2 = textTime?.TrimEnd('Z') + 'Z';
-    var timeString = ToUnixEpochTime(time2);
-    return timeString;
+    var epochTime = ToUnixEpochTime(time2);
+    return epochTime;
 }
 
 static long ToUnixEpochTime(string textDateTime)
