@@ -15,9 +15,10 @@ using System.Text.RegularExpressions;
 uint minutes = 24 * 60; // 24 * 60;
 var startString = ToUnixEpochTime("2023-6-12Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 string ingestBucket = "foundation-iot-packet-ingest";
+string metricsBucket = "foundation-iot-metrics";
 string? metricsFile = @"c:\temp\lorawan_metrics.json";
 int hashSizeMaximum = 25000;
-bool s3Metrics = true;
+bool s3Metrics = false;
 
 if (args.Length > 0)
 {
@@ -35,28 +36,34 @@ if (args.Length > 0)
 
     var outputOption = new Option<string?>(
         name: "--output",
-        description: "Output json file. For example",
+        description: "Output json file",
         getDefaultValue: () => "metrics.json"
     );
 
-    var rootCommand = new RootCommand("Sample app for System.CommandLine");
+    var s3MetricsOption = new Option<bool>(
+        name: "--s3metrics",
+        description: "Enable s3 metrics output"
+    );
+
+    var rootCommand = new RootCommand("IngestParser");
     rootCommand.AddOption(startOption);
     rootCommand.AddOption(durationOption);
     rootCommand.AddOption(outputOption);
+    rootCommand.AddOption(s3MetricsOption);
 
-    rootCommand.SetHandler((inStartTime, inMinutes, output) =>
+    rootCommand.SetHandler((inStartTime, inMinutes, output, s3MetricsFlag) =>
     {
         startString = ToUnixEpochTime(inStartTime);
         minutes = inMinutes.GetValueOrDefault(10);
         metricsFile = output;
-    }, startOption, durationOption, outputOption);
+        s3Metrics = s3MetricsFlag;
+    }, startOption, durationOption, outputOption, s3MetricsOption);
 
     var cmd = await rootCommand.InvokeAsync(args);
     Console.WriteLine($"cmd={cmd}");
 }
 else
 {
-    s3Metrics = false;
     Console.WriteLine("No arguments");
 }
 
@@ -72,6 +79,7 @@ var dateTime = UnixTimeMillisecondsToDateTime(double.Parse(startString) * 1000);
 Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
+Console.WriteLine($"S3Metrics is {s3Metrics}");
 
 // Create an S3 client object.
 AmazonS3Client? s3Client = null;
@@ -88,7 +96,7 @@ else
 
 if (s3Metrics)
 {
-    var metricsResponse = await DownloadS3Object(s3Client, "foundation-iot-metrics", "iot-metrics.json", false);
+    var metricsResponse = await DownloadS3Object(s3Client, metricsBucket, "iot-metrics.json", false);
     var metricsData = metricsResponse.Item4;
     metricsFile = Encoding.UTF8.GetString(metricsData, 0, metricsData.Length);
     // Console.WriteLine($"{metricsFile}");
