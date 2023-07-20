@@ -2,7 +2,6 @@
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Google.Protobuf;
 using Helium.PacketRouter;
 using System.Collections.Concurrent;
 using System.CommandLine;
@@ -12,10 +11,12 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
+// Default values
 uint minutes = 24 * 60; // 24 * 60;
-var startString = ToUnixEpochTime("2023-6-12Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
+var startString = ToUnixEpochTime("2023-7-1Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 string ingestBucket = "foundation-iot-packet-ingest";
 string metricsBucket = "foundation-iot-metrics";
+string metricsKeyName = "iot-metrics.json";
 string? metricsFile = @"c:\temp\lorawan_metrics.json";
 int hashSizeMaximum = 25000;
 bool s3Metrics = false;
@@ -27,18 +28,21 @@ if (args.Length > 0)
         description: "The time to start processing files.",
         getDefaultValue: () => "2023-7-1Z"
     );
+    startOption.AddAlias("-s");
 
     var durationOption = new Option<uint?>(
         name: "--duration",
         description: "The number of minutes to process, e.g. duration is 60 minutes",
         getDefaultValue: () => 10
     );
+    durationOption.AddAlias("-d");
 
     var outputOption = new Option<string?>(
         name: "--output",
         description: "Output json file",
         getDefaultValue: () => "metrics.json"
     );
+    outputOption.AddAlias("-o");
 
     var s3MetricsOption = new Option<bool>(
         name: "--s3metrics",
@@ -53,7 +57,8 @@ if (args.Length > 0)
 
     rootCommand.SetHandler((inStartTime, inMinutes, output, s3MetricsFlag) =>
     {
-        startString = ToUnixEpochTime(inStartTime);
+        var inStartTime2 = inStartTime?.TrimEnd('Z') + 'Z';
+        startString = ToUnixEpochTime(inStartTime2);
         minutes = inMinutes.GetValueOrDefault(10);
         metricsFile = output;
         s3Metrics = s3MetricsFlag;
@@ -96,10 +101,10 @@ else
 
 if (s3Metrics)
 {
-    var metricsResponse = await DownloadS3Object(s3Client, metricsBucket, "iot-metrics.json", false);
+    var metricsResponse = await DownloadS3Object(s3Client, metricsBucket, metricsKeyName, false);
     var metricsData = metricsResponse.Item4;
     metricsFile = Encoding.UTF8.GetString(metricsData, 0, metricsData.Length);
-    // Console.WriteLine($"{metricsFile}");
+    Console.WriteLine($"S3 metrics bucket={metricsBucket} key={metricsKeyName}");
 }
 
 var bucketList = ListBucketsAsync(s3Client);
@@ -263,7 +268,7 @@ metrics.LastUpdate = dateTime.ToUniversalTime();
 var metricsJson = GenerateMetricsJson(metrics, theSummary, dateTime, minutes);
 if (s3Metrics)
 {
-    await UploadToS3Async(s3Client, "foundation-iot-metrics", "iot-metrics.json", metricsJson);
+    await UploadToS3Async(s3Client, metricsBucket, metricsKeyName, metricsJson);
 }
 else
 {
@@ -284,7 +289,7 @@ static ImmutableCredentials? FetchEnvironmentCredentials()
     }
     else
     {
-        Console.WriteLine("Credentials found using environment variables.");
+        Console.WriteLine("AWS Credentials found using environment variables.");
         return new ImmutableCredentials(accessKeyId, secretKey, sessionToken);
     } 
 }
@@ -427,31 +432,7 @@ static async Task<ReportSummary> GetPacketReportsAsync(
         var dataRate = mData.Datarate;
 
         var uniqueHash = mData.PayloadHash.ToIntHash();
-        //if (mData.NetId == 0x3c)
-        //{
-        //    Console.WriteLine($"0x3c message");
-        //}
-        //switch (mData.NetId)
-        //{
-        //    case 36:
-        //    case 9:
-        //    case 6291493:
-        //    case 12582938:
-        //    case 14680096:
-        //    case 14680208:
-        //    case 6291475:
-        //    case 14680099:
-        //    case 6291458:
-        //    case 12582995:
-        //        break;
-        //    default:
-        //        Console.WriteLine($"NetID={mData.NetId}");
-        //        break;
-        //}
-        //if (mData.Region == Helium.region.Au915Sb1)
-        //{
-        //    Console.WriteLine($"AS923_1C message");
-        //}
+
         if (mData.Region == Helium.region.Eu868 && mData.Datarate == Helium.data_rate.Sf12Bw125)
         {
             int freqCount = 0;
