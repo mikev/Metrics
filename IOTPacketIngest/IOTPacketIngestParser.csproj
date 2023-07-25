@@ -13,15 +13,14 @@
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.7" />
-    <PackageReference Include="AWSSDK.S3" Version="3.7.201.1" />
-    <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.200.3" />
-    <PackageReference Include="Grpc.AspNetCore" Version="2.51.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.51.0">
+    <PackageReference Include="AWSSDK.S3" Version="3.7.201.2" />
+    <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.200.4" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.55.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.56.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="StackExchange.Redis" Version="2.6.96" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-*" />
 	<Protobuf Include="data_rate.proto" />
 	<Protobuf Include="poc_lora.proto" />
 	<Protobuf Include="region.proto" />
