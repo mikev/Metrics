@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 uint minutes = 24 * 60; // 24 * 60;
 // var startString = ToUnixEpochTime("2023-7-1Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
 var startString = "yesterday";
-string ingestBucket = "foundation-iot-packet-ingest";
+string ingestBucket = "foundation-poc-data-requester-pays";
 string metricsBucket = "foundation-iot-metrics";
 string metricsKeyName = "iot-metrics.json";
 string? metricsFile = @"c:\temp\lorawan_metrics.json";
@@ -77,8 +77,8 @@ var stopWatch = Stopwatch.StartNew();
 ulong startUnixExpected = 1680332653569;
 ulong startUnix = ulong.Parse(startString);
 
-string startAfterExpected = $"packetreport.{startUnixExpected}";
-string startAfter = $"packetreport.{startString}";
+string startAfterExpected = $"foundation-iot-packet-ingest/packetreport.{startUnixExpected}";
+string startAfter = $"foundation-iot-packet-ingest/packetreport.{startString}";
 
 var dateTime = UnixTimeMillisecondsToDateTime(double.Parse(startString) * 1000);
 
@@ -106,12 +106,6 @@ if (s3Metrics)
     var metricsData = metricsResponse.Item4;
     metricsFile = Encoding.UTF8.GetString(metricsData, 0, metricsData.Length);
     Console.WriteLine($"S3 metrics bucket={metricsBucket} key={metricsKeyName}");
-}
-
-var bucketList = ListBucketsAsync(s3Client);
-if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains(ingestBucket))
-{
-    throw new Exception($"{ingestBucket} not found");
 }
 
 ConcurrentBag<int> uniqueSet = new ConcurrentBag<int>();
@@ -651,7 +645,13 @@ static async Task<bool> UploadToS3Async(
 
 static async Task<(DateTime, ulong, ulong, byte[])> DownloadS3Object(AmazonS3Client s3Client, string bucketName, string keyName, bool gzip = true)
 {
-    var getObjectResult = await s3Client.GetObjectAsync(bucketName, keyName);
+    var request = new GetObjectRequest()
+    {
+        BucketName = bucketName,
+        Key = keyName,
+        RequestPayer = RequestPayer.Requester
+    };
+    var getObjectResult = await s3Client.GetObjectAsync(request);
     var modTime = getObjectResult.LastModified.ToUniversalTime();
     var gzipSize = getObjectResult.Headers.ContentLength;
     using var goStream = getObjectResult.ResponseStream;
@@ -702,27 +702,19 @@ static byte[] DecompressSteam(Stream gzip)
     }
 }
 
-static async IAsyncEnumerable<string> ListBucketsAsync(IAmazonS3 s3Client)
-{
-    var listResponse = await s3Client.ListBucketsAsync();
-    foreach (var b in listResponse.Buckets)
-    {
-        yield return b.BucketName;
-    }
-}
-
 static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, string bucketName, UInt64 unixTime, uint minutes)
 {
     if (unixTime < 10_000_000_000)
         unixTime = unixTime * 1000;
 
-    string startAfter = $"packetreport.{unixTime}";
+    string startAfter = $"foundation-iot-packet-ingest/packetreport.{unixTime}";
 
     var request = new ListObjectsV2Request
     {
         BucketName = bucketName,
         StartAfter = startAfter,
         MaxKeys = 100,
+        RequestPayer = RequestPayer.Requester
     };
 
     Console.WriteLine("--------------------------------------");

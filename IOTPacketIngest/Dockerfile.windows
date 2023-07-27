@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0.306-jammy-amd64 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /App
 
 # Copy everything
@@ -17,9 +17,8 @@ RUN dotnet add package Grpc.Tools
 RUN dotnet publish -c Release -o out /property:PublishWithAspNetCoreTargetManifest=false
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/sdk:7.0.306-jammy-amd64
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /App
 COPY --from=build-env /App/out .
-RUN mkdir -p /var/run/secrets/eks.amazonaws.com/serviceaccount/
 ENTRYPOINT ["dotnet", "IOTPacketIngestParser.dll"]
 #ENTRYPOINT ["out"]
