@@ -1,15 +1,29 @@
-﻿using Amazon;
+﻿global using Amazon;
+//global using Amazon.IdentityManagement;
+//global using Amazon.IdentityManagement.Model;
+global using Amazon.Runtime.Internal;
+global using Amazon.Runtime.SharedInterfaces;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;
+global using Microsoft.Extensions.Logging.Console;
+global using Microsoft.Extensions.Logging.Debug;
+using Amazon.IdentityManagement;
+using Amazon.IdentityManagement.Model;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Helium.PacketRouter;
 using System.Collections.Concurrent;
 using System.CommandLine;
+using System.Data;
 using System.Diagnostics;
+using System.Formats.Tar;
 using System.IO.Compression;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+
 
 // Default values
 uint minutes = 24 * 60; // 24 * 60;
@@ -92,7 +106,47 @@ AmazonS3Client? s3Client = null;
 var ic = FetchEnvironmentCredentials();
 if (ic is null)
 {
-    Console.WriteLine("The environment variables were not set with AWS credentials.");
+    Console.WriteLine("Begin sequence to call AmazonS3Client");
+
+    string tokenFile = @"/var/run/secrets/eks.amazonaws.com/serviceaccount/token";
+
+    if (File.Exists(tokenFile))
+    {
+        // Open the text file using a stream reader.
+        Console.WriteLine($"Reading token at {tokenFile}");
+        using (var sr = new StreamReader(tokenFile))
+        {
+            // Read the stream as a string, and write the string to the console.
+            Console.WriteLine(sr.ReadToEnd());
+        }
+    }
+    else
+    {
+        Console.WriteLine($"Token does not exist at {tokenFile}");
+    }
+
+    await HelloIAM();
+
+    var iamClient = new AmazonIdentityManagementServiceClient();
+
+    var listPoliciesPaginator = iamClient.Paginators.ListPolicies(new ListPoliciesRequest());
+    var policies = new List<ManagedPolicy>();
+
+    IAmazonIdentityManagementService _IAMService = iamClient;
+    var listRolesPaginator = _IAMService.Paginators.ListRoles(new ListRolesRequest());
+    var roles = new List<Role>();
+
+    await foreach (var response in listRolesPaginator.Responses)
+    {
+        roles.AddRange(response.Roles);
+    }
+
+    foreach(var role in roles)
+    {
+        Console.WriteLine($"Role is {role.Arn}");
+    }
+
+    Console.WriteLine("Calling AmazonS3Client()");
     s3Client = new AmazonS3Client();
 }
 else
@@ -276,6 +330,27 @@ else
     File.WriteAllText(metricsFile, metricsJson);
 }
 return;
+
+static async Task HelloIAM()
+{
+    // Getting started with AWS Identity and Access Management (IAM). List
+    // the policies for the account.
+    var iamClient = new AmazonIdentityManagementServiceClient();
+
+    var listPoliciesPaginator = iamClient.Paginators.ListPolicies(new ListPoliciesRequest());
+    var policies = new List<ManagedPolicy>();
+
+    await foreach (var response in listPoliciesPaginator.Responses)
+    {
+        policies.AddRange(response.Policies);
+    }
+
+    Console.WriteLine("Here are the policies defined for your account:\n");
+    policies.ForEach(policy =>
+    {
+        Console.WriteLine($"Created: {policy.CreateDate}\t{policy.PolicyName}\t{policy.Description}");
+    });
+}
 
 static ImmutableCredentials? FetchEnvironmentCredentials()
 {
