@@ -18,7 +18,7 @@ var startString = "yesterday";
 string ingestBucket = "foundation-poc-data-requester-pays";
 string metricsBucket = "foundation-iot-metrics";
 string metricsKeyName = "iot-metrics.json";
-string? metricsFile = @"c:\temp\lorawan_metrics.json";
+string? metricsFile = @"c:\temp\iot-metrics.json";
 int hashSizeMaximum = 25000;
 bool s3Metrics = false;
 
@@ -100,14 +100,6 @@ else
     s3Client = new AmazonS3Client(ic.AccessKey, ic.SecretKey, ic.Token, RegionEndpoint.USWest2);
 }
 
-if (s3Metrics)
-{
-    var metricsResponse = await DownloadS3Object(s3Client, metricsBucket, metricsKeyName, false);
-    var metricsData = metricsResponse.Item4;
-    metricsFile = Encoding.UTF8.GetString(metricsData, 0, metricsData.Length);
-    Console.WriteLine($"S3 metrics bucket={metricsBucket} key={metricsKeyName}");
-}
-
 ConcurrentBag<int> uniqueSet = new ConcurrentBag<int>();
 ConcurrentDictionary<int, int> freqSet = new ConcurrentDictionary<int, int>();
 
@@ -183,10 +175,22 @@ Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
 Console.WriteLine($"Elapsed time is {stopWatch.Elapsed}");
+Console.WriteLine($"S3Metrics is {s3Metrics}");
 Console.WriteLine("--------------------------------------");
 Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {theSummary.MessageCount} dupes= {theSummary.DupeCount} byteTotal= {theSummary.TotalBytes} dcCount= {theSummary.DCCount} fc= {theSummary.FileCount} rawTotal= {(float)theSummary.RawSize / (1024 * 1024)} gzTotal= {(float)theSummary.GzipSize / (1024 * 1024)} fees= {burnedDCFees.ToString("########.##")}");
 Console.WriteLine("--------------------------------------");
 
+if (s3Metrics)
+{
+    var metricsResponse = await DownloadS3Object(s3Client, metricsBucket, metricsKeyName, false);
+    var metricsData = metricsResponse.Item4;
+    metricsFile = Encoding.UTF8.GetString(metricsData, 0, metricsData.Length);
+    Console.WriteLine($"S3 metrics bucket={metricsBucket} key={metricsKeyName}");
+}
+else
+{
+    Console.WriteLine($"Output metrics file={metricsFile}");
+}
 var metrics = InitMetricsFile(metricsFile, dateTime, s3Metrics);
 
 int frTotal = 0;
@@ -317,7 +321,7 @@ static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime, bo
         }
         else
         {
-            File.ReadAllText(metricsFile);
+            jsonMetrics = File.ReadAllText(metricsFile);
         }
 
         LoRaWANMetrics? metrics = JsonSerializer.Deserialize<LoRaWANMetrics>(jsonMetrics);
