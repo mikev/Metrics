@@ -1,56 +1,75 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.Runtime;
+using Amazon.S3;
 using Amazon.S3.Model;
-using Google.Protobuf;
 using Helium.PacketRouter;
 using System.Collections.Concurrent;
 using System.CommandLine;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
+// Default values
 uint minutes = 24 * 60; // 24 * 60;
-var startString = ToUnixEpochTime("2023-6-12Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
-string ingestBucket = "foundation-iot-packet-ingest";
-var metricsFile = @"c:\temp\lorawan_metrics.json";
+// var startString = ToUnixEpochTime("2023-7-1Z"); // "2023-4-27 12:00:00 AM"// 1680332400;
+var startString = "yesterday";
+string ingestBucket = "foundation-poc-data-requester-pays";
+string metricsBucket = "foundation-iot-metrics";
+string metricsKeyName = "iot-metrics.json";
+string? metricsFile = @"c:\temp\iot-metrics.json";
 int hashSizeMaximum = 25000;
+bool s3Metrics = false;
 
 if (args.Length > 0)
 {
     var startOption = new Option<string?>(
         name: "--starttime",
         description: "The time to start processing files.",
-        getDefaultValue: () => "2023-4-1"
+        getDefaultValue: () => "yesterday"
     );
+    startOption.AddAlias("-s");
 
     var durationOption = new Option<uint?>(
         name: "--duration",
         description: "The number of minutes to process, e.g. duration is 60 minutes",
         getDefaultValue: () => 10
     );
+    durationOption.AddAlias("-d");
 
     var outputOption = new Option<string?>(
         name: "--output",
-        description: "Output json file. For example",
+        description: "Output json file",
         getDefaultValue: () => "metrics.json"
     );
+    outputOption.AddAlias("-o");
 
-    var rootCommand = new RootCommand("Sample app for System.CommandLine");
+    var s3MetricsOption = new Option<bool>(
+        name: "--s3metrics",
+        description: "Enable s3 metrics output"
+    );
+
+    var rootCommand = new RootCommand("IngestParser");
     rootCommand.AddOption(startOption);
     rootCommand.AddOption(durationOption);
     rootCommand.AddOption(outputOption);
+    rootCommand.AddOption(s3MetricsOption);
 
-    rootCommand.SetHandler((inStartTime, inMinutes, output) =>
+    rootCommand.SetHandler((inStartTime, inMinutes, output, s3MetricsFlag) =>
     {
-        startString = ToUnixEpochTime(inStartTime);
+        startString = ParseUnixEpochTime(inStartTime).ToString();
         minutes = inMinutes.GetValueOrDefault(10);
         metricsFile = output;
-    }, startOption, durationOption, outputOption);
+        s3Metrics = s3MetricsFlag;
+    }, startOption, durationOption, outputOption, s3MetricsOption);
 
-    await rootCommand.InvokeAsync(args);
+    var cmd = await rootCommand.InvokeAsync(args);
+    Console.WriteLine($"cmd={cmd}");
 }
 else
 {
+    startString = ParseUnixEpochTime(startString).ToString();
     Console.WriteLine("No arguments");
 }
 
@@ -58,22 +77,27 @@ var stopWatch = Stopwatch.StartNew();
 ulong startUnixExpected = 1680332653569;
 ulong startUnix = ulong.Parse(startString);
 
-string startAfterExpected = $"packetreport.{startUnixExpected}";
-string startAfter = $"packetreport.{startString}";
+string startAfterExpected = $"foundation-iot-packet-ingest/packetreport.{startUnixExpected}";
+string startAfter = $"foundation-iot-packet-ingest/packetreport.{startString}";
 
 var dateTime = UnixTimeMillisecondsToDateTime(double.Parse(startString) * 1000);
 
 Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
+Console.WriteLine($"S3Metrics is {s3Metrics}");
 
 // Create an S3 client object.
-var s3Client = new AmazonS3Client();
-
-var bucketList = ListBucketsAsync(s3Client);
-if (!bucketList.ToBlockingEnumerable<string>().ToList().Contains(ingestBucket))
+AmazonS3Client? s3Client = null;
+var ic = FetchEnvironmentCredentials();
+if (ic is null)
 {
-    throw new Exception($"{ingestBucket} not found");
+    Console.WriteLine("The environment variables were not set with AWS credentials.");
+    s3Client = new AmazonS3Client();
+}
+else
+{
+    s3Client = new AmazonS3Client(ic.AccessKey, ic.SecretKey, ic.Token, RegionEndpoint.USWest2);
 }
 
 ConcurrentBag<int> uniqueSet = new ConcurrentBag<int>();
@@ -89,13 +113,18 @@ List<string> itemList = new List<string>();
 
 var list = ListBucketKeysAsync(s3Client, ingestBucket, startUnix, minutes).ToBlockingEnumerable();
 var sortedList = list.OrderBy(s => s).ToList();
+if (!sortedList.Any())
+{
+    Console.WriteLine($"No bucket keys found for {ingestBucket} {startUnix}");
+    return;
+}
 var last = sortedList.Last();
 var listCount = sortedList.Count();
-Console.WriteLine($"Starting {ingestBucket} of key size {listCount}");
-foreach (var item in sortedList)
-{
-    Console.WriteLine($"Key {item}");
-}
+Console.WriteLine($"Starting {ingestBucket} of key size {listCount} for {dateTime.ToUniversalTime().ToShortDateString()}");
+//foreach (var item in sortedList)
+//{
+//    Console.WriteLine($"Key {item}");
+//}
 
 int frMax = 100000;
 int[] frArray = new int[frMax];
@@ -146,11 +175,23 @@ Console.WriteLine($"Start time is {dateTime.ToUniversalTime()}");
 Console.WriteLine($"S3 startAfter file is {startAfter}");
 Console.WriteLine($"Duration is {minutes} minutes");
 Console.WriteLine($"Elapsed time is {stopWatch.Elapsed}");
+Console.WriteLine($"S3Metrics is {s3Metrics}");
 Console.WriteLine("--------------------------------------");
 Console.WriteLine($"{startUnix} minutes={minutes} loraMsgTotal= {theSummary.MessageCount} dupes= {theSummary.DupeCount} byteTotal= {theSummary.TotalBytes} dcCount= {theSummary.DCCount} fc= {theSummary.FileCount} rawTotal= {(float)theSummary.RawSize / (1024 * 1024)} gzTotal= {(float)theSummary.GzipSize / (1024 * 1024)} fees= {burnedDCFees.ToString("########.##")}");
 Console.WriteLine("--------------------------------------");
 
-var metrics = InitMetricsFile(metricsFile, dateTime);
+if (s3Metrics)
+{
+    var metricsResponse = await DownloadS3Object(s3Client, metricsBucket, metricsKeyName, false);
+    var metricsData = metricsResponse.Item4;
+    metricsFile = Encoding.UTF8.GetString(metricsData, 0, metricsData.Length);
+    Console.WriteLine($"S3 metrics bucket={metricsBucket} key={metricsKeyName}");
+}
+else
+{
+    Console.WriteLine($"Output metrics file={metricsFile}");
+}
+var metrics = InitMetricsFile(metricsFile, dateTime, s3Metrics);
 
 int frTotal = 0;
 for (int i = 0; i < frMax; i++)
@@ -223,12 +264,39 @@ foreach (var vp in vpList3)
 };
 
 metrics.LastUpdate = dateTime.ToUniversalTime();
-WriteToMetricsFile(metricsFile, metrics, theSummary, dateTime, minutes);
+var metricsJson = GenerateMetricsJson(metrics, theSummary, dateTime, minutes);
+if (s3Metrics)
+{
+    await UploadToS3Async(s3Client, metricsBucket, metricsKeyName, metricsJson);
+}
+else
+{
+    File.WriteAllText(metricsFile, metricsJson);
+}
 return;
 
-static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
+static ImmutableCredentials? FetchEnvironmentCredentials()
 {
-    if (!File.Exists(metricsFile))
+    string accessKeyId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY");
+    string secretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+    string sessionToken = Environment.GetEnvironmentVariable("AWS_SESSION_TOKEN");
+
+    if (string.IsNullOrEmpty(accessKeyId) || string.IsNullOrEmpty(secretKey))
+    {
+        Console.WriteLine("The environment variables were not set with AWS credentials.");
+        return null;
+    }
+    else
+    {
+        Console.WriteLine("AWS Credentials found using environment variables.");
+        return new ImmutableCredentials(accessKeyId, secretKey, sessionToken);
+    } 
+}
+
+static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime, bool s3Metrics)
+{
+    //Console.WriteLine($"InitMetricsFile s3Metrics={s3Metrics} name={metricsFile}");
+    if (!s3Metrics && !File.Exists(metricsFile))
     {
         LoRaWANMetrics metrics = new LoRaWANMetrics()
         {
@@ -246,7 +314,15 @@ static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
     }
     else
     {
-        var jsonMetrics = File.ReadAllText(metricsFile);
+        string? jsonMetrics = String.Empty;
+        if (s3Metrics)
+        {
+            jsonMetrics = metricsFile;
+        }
+        else
+        {
+            jsonMetrics = File.ReadAllText(metricsFile);
+        }
 
         LoRaWANMetrics? metrics = JsonSerializer.Deserialize<LoRaWANMetrics>(jsonMetrics);
 
@@ -288,7 +364,7 @@ static LoRaWANMetrics? InitMetricsFile(string metricsFile, DateTime dateTime)
         return metrics;
     }
 }
-static void WriteToMetricsFile(string metricsFile, LoRaWANMetrics? metrics, ReportSummary report, DateTime dateTime, uint duration)
+static string? GenerateMetricsJson(LoRaWANMetrics? metrics, ReportSummary report, DateTime dateTime, uint duration)
 {
     var packetSummary = new PacketSummary()
     {
@@ -308,7 +384,7 @@ static void WriteToMetricsFile(string metricsFile, LoRaWANMetrics? metrics, Repo
     JsonSerializerOptions options = new() { WriteIndented = true };
     var jsonMetrics = JsonSerializer.Serialize<LoRaWANMetrics>(metrics, options);
 
-    File.WriteAllText(metricsFile, jsonMetrics);
+    return jsonMetrics;
 }
 
 static List<Task<ReportSummary>> LoopFiles(
@@ -355,31 +431,7 @@ static async Task<ReportSummary> GetPacketReportsAsync(
         var dataRate = mData.Datarate;
 
         var uniqueHash = mData.PayloadHash.ToIntHash();
-        //if (mData.NetId == 0x3c)
-        //{
-        //    Console.WriteLine($"0x3c message");
-        //}
-        //switch (mData.NetId)
-        //{
-        //    case 36:
-        //    case 9:
-        //    case 6291493:
-        //    case 12582938:
-        //    case 14680096:
-        //    case 14680208:
-        //    case 6291475:
-        //    case 14680099:
-        //    case 6291458:
-        //    case 12582995:
-        //        break;
-        //    default:
-        //        Console.WriteLine($"NetID={mData.NetId}");
-        //        break;
-        //}
-        //if (mData.Region == Helium.region.Au915Sb1)
-        //{
-        //    Console.WriteLine($"AS923_1C message");
-        //}
+
         if (mData.Region == Helium.region.Eu868 && mData.Datarate == Helium.data_rate.Sf12Bw125)
         {
             int freqCount = 0;
@@ -497,14 +549,31 @@ static DateTime UnixTimeMillisecondsToDateTime(double unixTimeStamp)
     dateTime = dateTime.AddMilliseconds(unixTimeStamp).ToLocalTime();
     return dateTime;
 }
+static string YesterdayUTC()
+{
+    string yesterday = DateTime.Now.AddDays(-1).ToUniversalTime().ToString("MM-dd-yyyyZ");
+    return yesterday;
+}
 
-static string ToUnixEpochTime(string textDateTime)
+static long ParseUnixEpochTime(string textTime)
+{
+    if (textTime.ToLower() == "yesterday")
+    {
+        textTime = YesterdayUTC();
+    }
+
+    var time2 = textTime?.TrimEnd('Z') + 'Z';
+    var epochTime = ToUnixEpochTime(time2);
+    return epochTime;
+}
+
+static long ToUnixEpochTime(string textDateTime)
 {
     // textString "2023-4-12 2:27:01 PM"
     var dateTime = DateTime.Parse(textDateTime).ToUniversalTime();
 
     DateTimeOffset dto = new DateTimeOffset(dateTime);
-    return dto.ToUnixTimeSeconds().ToString();
+    return dto.ToUnixTimeSeconds();
 }
 
 static List<byte[]> ExtractMessageList(byte[] data)
@@ -552,9 +621,41 @@ static bool TimeBoundaryTrigger(DateTime prior, DateTime later)
     return false;
 }
 
-static async Task<(DateTime, ulong, ulong, byte[])> DownloadS3Object(AmazonS3Client s3Client, string bucketName, string keyName)
+static async Task<bool> UploadToS3Async(
+    IAmazonS3 client,
+    string bucketName,
+    string objectName,
+    string objectContent)
 {
-    var getObjectResult = await s3Client.GetObjectAsync(bucketName, keyName);
+    var request = new PutObjectRequest
+    {
+        BucketName = bucketName,
+        Key = objectName,
+        ContentBody = objectContent,
+    };
+
+    var response = await client.PutObjectAsync(request);
+    if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
+    {
+        Console.WriteLine($"Successfully uploaded {objectName} to {bucketName}.");
+        return true;
+    }
+    else
+    {
+        Console.WriteLine($"Could not upload {objectName} to {bucketName}.");
+        return false;
+    }
+}
+
+static async Task<(DateTime, ulong, ulong, byte[])> DownloadS3Object(AmazonS3Client s3Client, string bucketName, string keyName, bool gzip = true)
+{
+    var request = new GetObjectRequest()
+    {
+        BucketName = bucketName,
+        Key = keyName,
+        RequestPayer = RequestPayer.Requester
+    };
+    var getObjectResult = await s3Client.GetObjectAsync(request);
     var modTime = getObjectResult.LastModified.ToUniversalTime();
     var gzipSize = getObjectResult.Headers.ContentLength;
     using var goStream = getObjectResult.ResponseStream;
@@ -566,7 +667,15 @@ static async Task<(DateTime, ulong, ulong, byte[])> DownloadS3Object(AmazonS3Cli
     memoryStream.Position = 0;
     memoryStream.Seek(0, SeekOrigin.Begin);
 
-    var unzip = DecompressSteam(memoryStream);
+    byte[]? unzip = null;
+    if (!gzip)
+    {
+        unzip = memoryStream.ToArray();
+    }
+    else
+    {
+        unzip = DecompressSteam(memoryStream);
+    }
     return (modTime, (ulong)gzipSize, (ulong)unzip.LongLength, unzip);
 }
 
@@ -597,27 +706,19 @@ static byte[] DecompressSteam(Stream gzip)
     }
 }
 
-static async IAsyncEnumerable<string> ListBucketsAsync(IAmazonS3 s3Client)
-{
-    var listResponse = await s3Client.ListBucketsAsync();
-    foreach (var b in listResponse.Buckets)
-    {
-        yield return b.BucketName;
-    }
-}
-
 static async IAsyncEnumerable<string> ListBucketKeysAsync(IAmazonS3 client, string bucketName, UInt64 unixTime, uint minutes)
 {
     if (unixTime < 10_000_000_000)
         unixTime = unixTime * 1000;
 
-    string startAfter = $"packetreport.{unixTime}";
+    string startAfter = $"foundation-iot-packet-ingest/packetreport.{unixTime}";
 
     var request = new ListObjectsV2Request
     {
         BucketName = bucketName,
         StartAfter = startAfter,
         MaxKeys = 100,
+        RequestPayer = RequestPayer.Requester
     };
 
     Console.WriteLine("--------------------------------------");
